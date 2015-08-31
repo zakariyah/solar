@@ -9,10 +9,10 @@ function postQuizQuestions(hasRecommenders, cummulativeScore, numberOfRounds)
   postQuizHtmlQuiz += "<input type='hidden' name='cummulativeScore' value='" +cummulativeScore +"'>";
   postQuizHtmlQuiz += "<input type='hidden' name='numberOfRounds' value='" + numberOfRounds +"'>";
 
-   postQuizHtmlQuiz += "<label for='exampleInputEmail1' class='col-sm-6 control-label'>Rate how smart your associate played the game</label><div class='col-sm-4'>";
+   postQuizHtmlQuiz += "<label for='exampleInputEmail1' class='col-sm-6 control-label'>Rate how intelligent your associate was </label><div class='col-sm-4'>";
 
-   postQuizHtmlQuiz += "<select name='smartOpponent'  class='form-control'  required='required'><option value='' selected='selected'>(please select one)</option><option value='STUPID'>He/She/It was stupid</option>"; 
-   postQuizHtmlQuiz += "<option value='AVERAGE'>He/She/It played with average intelligence</option><option value='SMART'>He/She/It played very smart</option>";
+   postQuizHtmlQuiz += "<select name='smartOpponent'  class='form-control'  required='required'><option value='' selected='selected'>(please select one)</option><option value='vey dumb'>very dumb</option>"; 
+   postQuizHtmlQuiz += "<option value='below AVERAGE'>below average</option><option value='AVERAGE'>average</option><option value='above AVERAGE'>above average</option><option value='Very SMART'>very smart</option>";
    postQuizHtmlQuiz += "</select></div></div>";
 
 
@@ -32,13 +32,6 @@ function postQuizQuestions(hasRecommenders, cummulativeScore, numberOfRounds)
    postQuizHtmlQuiz += "<option value='OBVIOUS'>I always knew how she he it would play</option></select>";
    postQuizHtmlQuiz += "</div></div>";
   
-   postQuizHtmlQuiz += "<div class='form-group'>";
-   postQuizHtmlQuiz += "<label for='exampleInputEmail1' class='col-sm-6 control-label'>Rate how 'Human' your associate was</label>";
-   postQuizHtmlQuiz += "<div class='col-sm-4'><select name='humanAssociate'  class='form-control'  required='required'>";
-   postQuizHtmlQuiz += "<option value='' selected='selected'>(please select one)</option><option value='HUMAN'>I played with another human </option>";
-   postQuizHtmlQuiz += "<option value='AGENT'>I played with a software agent</option>";
-   postQuizHtmlQuiz += "<option value='UNKNOWN'>I am undecided</option></select></div></div>";
-
    postQuizHtmlQuiz += "<div class='form-group'><label for='exampleInputEmail1' class='col-sm-6 control-label'>Rate how smart you played the game</label>";
    postQuizHtmlQuiz += "<div class='col-sm-4'><select name='smart'  class='form-control'  required='required'><option value='' selected='selected'>(please select one)</option>";
    postQuizHtmlQuiz += "<option value='STUPID'>I played stupid</option><option value='AVERAGE'>I played with average intelligence</option>";
@@ -63,24 +56,7 @@ function postQuizQuestions(hasRecommenders, cummulativeScore, numberOfRounds)
     
    postQuizHtmlQuiz += "<div class='col-sm-4'><textarea name='strategyOpponent' rows='3' cols='60' maxlength='200'></textarea></div></div>";
 
-if(hasRecommenders)
-{
-    postQuizHtmlQuiz += "<div class='row'><label><h2>";
-  postQuizHtmlQuiz += "In this part of the survey, please answer the following questions if you had options suggested to you during the action phase of  each round. If otherwise, kindly skip this part.  Each question has a different scale to be used";
-  postQuizHtmlQuiz += "</h2></label></div>";
-	postQuizHtmlQuiz += "<div id='hasRecommenders'><div class='form-group'><label for='exampleInputEmail1' class='col-sm-6 control-label'>Did you find the recommendation useful?</label>";
-    
-    postQuizHtmlQuiz += "<div class='col-sm-4'><select name='usefulRecommendation'  class='form-control'>";
-    postQuizHtmlQuiz += "<option value='' selected='selected'>(please select one)</option><option value='0'>Not at all</option>";
-    postQuizHtmlQuiz += "<option value='1'>Rarely</option><option value='2'>Sometimes</option><option value='3'>Frequently</option>";
-    postQuizHtmlQuiz += "<option value='4'>Very useful</option></select></div></div>";
 
-    postQuizHtmlQuiz += "<div class='form-group'><label for='exampleInputEmail1' class='col-sm-6 control-label'>How often did you follow the recommendation?</label>";
-    postQuizHtmlQuiz += "<div class='col-sm-4'><select name='followRecommendation'  class='form-control'>";
-    postQuizHtmlQuiz += "<option value='' selected='selected'>(please select one)</option><option value='0'>Never</option>";
-    postQuizHtmlQuiz += "<option value='1'>Rarely</option><option value='2'>Sometimes</option><option value='3'>Frequently</option>";
-    postQuizHtmlQuiz += "<option value='4'>All the time</option></select></div></div></div> ";	
-}
 
     postQuizHtmlQuiz += "<div class='form-group'><label><h2>";
   postQuizHtmlQuiz += "In this part of the survey, we will be asking questions related to your demography";
