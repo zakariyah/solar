@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)http://tamas.io/advanced-chat-using-node-js-and-socket-io-episode-1/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    
+    <title>Advanced chat using node.js and socket.io - Episode 1</title>
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="http://tamas.io/assets/images/favicon.ico">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="http://tamas.io/favicon.ico">
+
+    
+    <link rel="stylesheet" type="text/css" href="./Advanced chat using node.js and socket.io - Episode 1_files/screen.css">
+    <link rel="stylesheet" type="text/css" href="./Advanced chat using node.js and socket.io - Episode 1_files/css">
+
+    
+    <meta name="generator" content="Ghost 0.4">
+<link rel="alternate" type="application/rss+xml" title="You are IT!" href="http://tamas.io/rss/">
+<link rel="canonical" href="./Advanced chat using node.js and socket.io - Episode 1_files/Advanced chat using node.js and socket.io - Episode 1.html">
+    <div class="fit-vids-style" id="fit-vids-style" style="display: none;">­<style>.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style></div><script async="" src="./Advanced chat using node.js and socket.io - Episode 1_files/analytics.js"></script><script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-45893444-1', 'tamas.io');
+      ga('send', 'pageview');
+
+    </script>
+<link rel="stylesheet" type="text/css" href="./Advanced chat using node.js and socket.io - Episode 1_files/sunburst.css"></head>
+<body class="post-template" style="">
+
+    
+    
+
+
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        
+        <header class="post-header">
+            <a class="blog-logo" href="http://tamas.io/">
+                
+                    <img src="./Advanced chat using node.js and socket.io - Episode 1_files/1-1.png" alt="Blog Logo">
+                
+            </a>
+        </header>
+
+        
+        
+
+            <span class="post-meta"><time datetime="2013-07-15">15 Jul 2013</time> </span>
+
+            <h1 class="post-title">Advanced chat using node.js and socket.io - Episode 1</h1>
+
+            <section class="post-content">
+                <p>A few months ago I wrote an article to show the capabilities of socket.io - a very <a href="http://tamas.io/simple-chat-application-using-node-js-and-socket-io/" title="Simple Chat application using node.js and socket.io">simple &amp; basic chat application</a>.</p>
+
+<p>I decided to beef this up and make it a useful tool that, potentially, companies could use that as well internally as a chat/conferencing tool. As always there will be several pieces to the article series where I will try to explain some cool code features as well as a cool technology called 'WebRTC'.</p>
+
+<p>First of all let's have a look at the requirements; this application should:  </p>
+
+<ul>  
+    <li>Allow people to connect the server</li>
+    <li>Allow people to create rooms (one person can create only one room)</li>
+    <li>Allow other people to join the created rooms</li>
+    <li>Send messages to each other within the room</li>
+    <li>Handle the disconnect event from a room</li>
+        <li>Allow the room's owner to remove the room</li>
+    <li>Handle the disconnect from the server</li>
+</ul>
+
+<p>Most of the functionality was already implemented in the previous version of this chat app but for the sake of completeness I'm going to explain all parts again.</p>
+
+<p>I start by explaining the backend - <code>server.js</code> first. Essentially it is responsible for setting up the socket that the client will connect to and it's also responsible for all the room creation/message sending logic. To have a more readable and less clunky code I have created a separate module to hold all information about the rooms - that will be reused at a later stage. The first thing that we need to do in our <code>server.js</code> is to create the socket and import some other libraries (including <code>room.js</code>) as well as setup two objects that will contain information about the people and the rooms and an array that will hold the client objects.:</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="kwd">var</span><span class="pln"> io </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">"socket.io"</span><span class="pun">);</span><span class="pln">  
+</span><span class="kwd">var</span><span class="pln"> socket </span><span class="pun">=</span><span class="pln"> io</span><span class="pun">.</span><span class="pln">listen</span><span class="pun">(</span><span class="lit">8000</span><span class="pun">,</span><span class="pln"> </span><span class="str">"1.2.3.4"</span><span class="pun">);</span><span class="pln">  
+</span><span class="kwd">var</span><span class="pln"> </span><span class="typ">Room</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'./room.js'</span><span class="pun">);</span><span class="pln">  
+</span><span class="kwd">var</span><span class="pln"> uuid </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">require</span><span class="pun">(</span><span class="str">'node-uuid'</span><span class="pun">);</span><span class="pln">
+
+socket</span><span class="pun">.</span><span class="kwd">set</span><span class="pun">(</span><span class="str">"log level"</span><span class="pun">,</span><span class="pln"> </span><span class="lit">1</span><span class="pun">);</span><span class="pln">  
+</span><span class="kwd">var</span><span class="pln"> people </span><span class="pun">=</span><span class="pln"> </span><span class="pun">{};</span><span class="pln">  
+</span><span class="kwd">var</span><span class="pln"> rooms </span><span class="pun">=</span><span class="pln"> </span><span class="pun">{};</span><span class="pln">  
+</span><span class="kwd">var</span><span class="pln"> clients </span><span class="pun">=</span><span class="pln"> </span><span class="pun">[];</span><span class="pln">  </span></pre>
+
+<p>The next thing to look at is what happens when a person connects to the server, and there are a few things that the code will need to handle. Firstly, it needs to make sure that the people object is correctly populated. I'm using the unique ID generated by socket.io to key off the people object. As per the code snippet below - I'm also adding the <code>name</code> and <code>room</code> keys to the people object. The room key is especially important - as mentioned earlier, each person connected to the server will be able to create one room only. Upon creating a room, the right object's room key will be updated with the ID of the room (I'm going to explain this later with a code snippet), and once <code>room</code> key's value is not null, room creation will be forbidden. As part of the <code>join()</code> function the code also emits two messages to all the clients - a sort of welcome message and another one to list all the connected users - and one message to the connected client showing all the available rooms.</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">socket</span><span class="pun">.</span><span class="pln">on</span><span class="pun">(</span><span class="str">"connection"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pln"> </span><span class="pun">(</span><span class="pln">client</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+  client</span><span class="pun">.</span><span class="pln">on</span><span class="pun">(</span><span class="str">"join"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">name</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    roomID </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">;</span><span class="pln">
+    people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">]</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="pun">{</span><span class="str">"name"</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> name</span><span class="pun">,</span><span class="pln"> </span><span class="str">"room"</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> roomID</span><span class="pun">};</span><span class="pln">
+    client</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"You have connected to the server."</span><span class="pun">);</span><span class="pln">
+    socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">name </span><span class="pun">+</span><span class="pln"> </span><span class="str">" is online."</span><span class="pun">)</span><span class="pln">
+    socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update-people"</span><span class="pun">,</span><span class="pln"> people</span><span class="pun">);</span><span class="pln">
+    client</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"roomList"</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">rooms</span><span class="pun">:</span><span class="pln"> rooms</span><span class="pun">});</span><span class="pln">
+    clients</span><span class="pun">.</span><span class="pln">push</span><span class="pun">(</span><span class="pln">client</span><span class="pun">);</span><span class="pln"> </span><span class="com">//populate the clients array with the client object</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>As per the list of requirements, the next thing to implement is the room creation. Every person connected to the server is allowed to create one room. The function responsible for this needs to make sure that every room created has a unique identifier - to achieve this I'm using <code>node-uuid</code>, which is installable via npm: <code>npm install node-uuid</code>. The newly created rooms are essentially going to be new objects that have various properties. Let me talk about about the <code>room.js</code> file for a moment, which is very simple. Upon creating a new room (which is also equal to a new object enabled via the constructor) three parameters are required: name, id and owner. (Probably the owner parameter is not required as the ownership will also be represented in the <code>rooms</code> object located in <code>server.js</code>.</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="kwd">function</span><span class="pln"> </span><span class="typ">Room</span><span class="pun">(</span><span class="pln">name</span><span class="pun">,</span><span class="pln"> id</span><span class="pun">,</span><span class="pln"> owner</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+  </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">name </span><span class="pun">=</span><span class="pln"> name</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">id </span><span class="pun">=</span><span class="pln"> id</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">owner </span><span class="pun">=</span><span class="pln"> owner</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">people </span><span class="pun">=</span><span class="pln"> </span><span class="pun">[];</span><span class="pln">
+  </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">status </span><span class="pun">=</span><span class="pln"> </span><span class="str">"available"</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">};</span><span class="pln">
+
+</span><span class="typ">Room</span><span class="pun">.</span><span class="pln">prototype</span><span class="pun">.</span><span class="pln">addPerson </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">personID</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">this</span><span class="pun">.</span><span class="pln">status </span><span class="pun">===</span><span class="pln"> </span><span class="str">"available"</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">people</span><span class="pun">.</span><span class="pln">push</span><span class="pun">(</span><span class="pln">personID</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">};</span><span class="pln">
+
+</span><span class="kwd">module</span><span class="pun">.</span><span class="pln">exports </span><span class="pun">=</span><span class="pln"> </span><span class="typ">Room</span><span class="pun">;</span><span class="pln">  </span></pre>
+
+<p>It's time to utilise this code finally. When creating a room, I am also assigning the room's creator to the room immediately - this is achieved by using socket.io's <code>join()</code> method. The function accepts the room's name as a parameter - it is sent from the client. If a person creating a room doesn't have a room created (checked by looking at the <code>room</code> key in the people object) we process the request and attempt creating a room. The details of the room are then stored in the room object on the server, locally, which is keyed off by the unique ID generated by node-uuid.</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">client</span><span class="pun">.</span><span class="pln">on</span><span class="pun">(</span><span class="str">"createRoom"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">name</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">room </span><span class="pun">===</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> id </span><span class="pun">=</span><span class="pln"> uuid</span><span class="pun">.</span><span class="pln">v4</span><span class="pun">();</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> room </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> </span><span class="typ">Room</span><span class="pun">(</span><span class="pln">name</span><span class="pun">,</span><span class="pln"> id</span><span class="pun">,</span><span class="pln"> client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">);</span><span class="pln">
+    rooms</span><span class="pun">[</span><span class="pln">id</span><span class="pun">]</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> room</span><span class="pun">;</span><span class="pln">
+    socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"roomList"</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">rooms</span><span class="pun">:</span><span class="pln"> rooms</span><span class="pun">});</span><span class="pln"> </span><span class="com">//update the list of rooms on the frontend</span><span class="pln">
+    client</span><span class="pun">.</span><span class="pln">room </span><span class="pun">=</span><span class="pln"> name</span><span class="pun">;</span><span class="pln"> </span><span class="com">//name the room</span><span class="pln">
+    client</span><span class="pun">.</span><span class="pln">join</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">room</span><span class="pun">);</span><span class="pln"> </span><span class="com">//auto-join the creator to the room</span><span class="pln">
+    room</span><span class="pun">.</span><span class="pln">addPerson</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">);</span><span class="pln"> </span><span class="com">//also add the person to the room object</span><span class="pln">
+    people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">room </span><span class="pun">=</span><span class="pln"> id</span><span class="pun">;</span><span class="pln"> </span><span class="com">//update the room key with the ID of the created room</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"You have already created a room."</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>Now that there is a room created it's time to allow other (connected) people to join it. I like to double check everything on the server side (I just don't trust data received from the client) and even though I can easily hide/disable the 'join' button for the creator of the room and from people who have already joined, using Firebug or Chrome Dev Tools someone may be able to show/enable it again and use it for malicious purposes that may break the application. In light of this, I check whether the person attempting to join is the owner or whether the room contains their ID. If both of these checks fail, only then, I add the person to the room:</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">client</span><span class="pun">.</span><span class="pln">on</span><span class="pun">(</span><span class="str">"joinRoom"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">id</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+    </span><span class="kwd">var</span><span class="pln"> room </span><span class="pun">=</span><span class="pln"> rooms</span><span class="pun">[</span><span class="pln">id</span><span class="pun">];</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id </span><span class="pun">===</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">owner</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      client</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"You are the owner of this room and you have already been joined."</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      room</span><span class="pun">.</span><span class="pln">people</span><span class="pun">.</span><span class="pln">contains</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">found</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+          </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">found</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+              client</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"You have already joined this room."</span><span class="pun">);</span><span class="pln">
+          </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">inroom </span><span class="pun">!==</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="com">//make sure that one person joins one room at a time</span><span class="pln">
+              client</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"You are already in a room ("</span><span class="pun">+</span><span class="pln">rooms</span><span class="pun">[</span><span class="pln">people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">inroom</span><span class="pun">].</span><span class="pln">name</span><span class="pun">+</span><span class="str">"), please leave it first to join another room."</span><span class="pun">);</span><span class="pln">
+            </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+          room</span><span class="pun">.</span><span class="pln">addPerson</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">);</span><span class="pln">
+          people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">inroom </span><span class="pun">=</span><span class="pln"> id</span><span class="pun">;</span><span class="pln">
+          client</span><span class="pun">.</span><span class="pln">room </span><span class="pun">=</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">name</span><span class="pun">;</span><span class="pln">
+          client</span><span class="pun">.</span><span class="pln">join</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">room</span><span class="pun">);</span><span class="pln"> </span><span class="com">//add person to the room</span><span class="pln">
+          user </span><span class="pun">=</span><span class="pln"> people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">];</span><span class="pln">
+          socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="kwd">in</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">room</span><span class="pun">).</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> user</span><span class="pun">.</span><span class="pln">name </span><span class="pun">+</span><span class="pln"> </span><span class="str">" has connected to "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">name </span><span class="pun">+</span><span class="pln"> </span><span class="str">" room."</span><span class="pun">);</span><span class="pln">
+          client</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"Welcome to "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">name </span><span class="pun">+</span><span class="pln"> </span><span class="str">"."</span><span class="pun">);</span><span class="pln">
+          client</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"sendRoomID"</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">id</span><span class="pun">:</span><span class="pln"> id</span><span class="pun">});</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+          </span><span class="pun">}</span><span class="pln">
+      </span><span class="pun">});</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+  </span><span class="pun">});</span></pre>
+
+<p>There are people online (connected to the server), a room has been created so now it's time to write the function that actually allows the message sending - bearing in mind that only people who are connected to a room can send messages and to only people who belong to the same room. Fortunately, socket.io has this feature built in. By default, every person who connects to server is placed into an empty room - this is the normal socket.io functionality. The <code>client.room = room.name</code> will append the list of rooms and will assign the person to the room as well. For testing purposes feel free to try something similar out inside your script:</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">manager</span><span class="pun">.</span><span class="pln">roomClients</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">]);</span><span class="pln"> </span><span class="com">//should return { '': true }  </span><span class="pln">
+client</span><span class="pun">.</span><span class="pln">room </span><span class="pun">=</span><span class="pln"> </span><span class="str">'myroom'</span><span class="pun">;</span><span class="pln">  
+client</span><span class="pun">.</span><span class="pln">join</span><span class="pun">(</span><span class="str">'myroom'</span><span class="pun">);</span><span class="pln">  
+console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">manager</span><span class="pun">.</span><span class="pln">roomClients</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">]);</span><span class="pln"> </span><span class="com">//should return { '': true, '/myroom': true }  </span></pre>
+
+<p>Note that the / symbol is not a typing mistake, socket.io by default adds that to all room names, so when there is a comparison function, the code needs to take this into account as well. Let's see how the chat function would actually work:</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">client</span><span class="pun">.</span><span class="pln">on</span><span class="pun">(</span><span class="str">"send"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">msg</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">manager</span><span class="pun">.</span><span class="pln">roomClients</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">][</span><span class="str">'/'</span><span class="pun">+</span><span class="pln">client</span><span class="pun">.</span><span class="pln">room</span><span class="pun">]</span><span class="pln"> </span><span class="pun">!==</span><span class="pln"> </span><span class="kwd">undefined</span><span class="pln"> </span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="kwd">in</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">room</span><span class="pun">).</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"chat"</span><span class="pun">,</span><span class="pln"> people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">],</span><span class="pln"> msg</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    client</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"Please connect to a room."</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>It's time to explore how to handle (preferably gracefully) if a person disconnects from a particular room. The logic that is applicable here states that if the owner of the room disconnects, we need to destroy the room as well - only owners can remove rooms, but if the owner leaves the server, the room will stay there forever and can only be removed by restarting the backend server and that's really not a good option. If you recall, the room object contains an 'owner' property, which will be utilised inside the <code>leaveRoom()</code> function - which is invoked by a button click from the front-end. The code will also make sure that the <code>roomID</code> received from the client is in fact valid:</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">client</span><span class="pun">.</span><span class="pln">on</span><span class="pun">(</span><span class="str">"leaveRoom"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">id</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+  </span><span class="kwd">var</span><span class="pln"> room </span><span class="pun">=</span><span class="pln"> rooms</span><span class="pun">[</span><span class="pln">id</span><span class="pun">];</span><span class="pln">
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id </span><span class="pun">===</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">owner</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">while</span><span class="pun">(</span><span class="pln">i </span><span class="pun">&lt;</span><span class="pln"> clients</span><span class="pun">.</span><span class="pln">length</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="kwd">if</span><span class="pun">(</span><span class="pln">clients</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">id </span><span class="pun">==</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">people</span><span class="pun">[</span><span class="pln">i</span><span class="pun">])</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        people</span><span class="pun">[</span><span class="pln">clients</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">id</span><span class="pun">].</span><span class="pln">inroom </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">;</span><span class="pln">
+        clients</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">leave</span><span class="pun">(</span><span class="pln">room</span><span class="pun">.</span><span class="pln">name</span><span class="pun">);</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln">
+      </span><span class="pun">++</span><span class="pln">i</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><span class="kwd">delete</span><span class="pln"> rooms</span><span class="pun">[</span><span class="pln">id</span><span class="pun">];</span><span class="pln">
+    people</span><span class="pun">[</span><span class="pln">room</span><span class="pun">.</span><span class="pln">owner</span><span class="pun">].</span><span class="pln">owns </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">;</span><span class="pln"> </span><span class="com">//reset the owns object to null so new room can be added</span><span class="pln">
+    socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"roomList"</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">rooms</span><span class="pun">:</span><span class="pln"> rooms</span><span class="pun">});</span><span class="pln">
+    socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="kwd">in</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">room</span><span class="pun">).</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"The owner ("</span><span class="pln"> </span><span class="pun">+</span><span class="pln">user</span><span class="pun">.</span><span class="pln">name </span><span class="pun">+</span><span class="pln"> </span><span class="str">") is leaving the room. The room is removed."</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      room</span><span class="pun">.</span><span class="pln">people</span><span class="pun">.</span><span class="pln">contains</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">found</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">found</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="com">//make sure that the client is in fact part of this room</span><span class="pln">
+          </span><span class="kwd">var</span><span class="pln"> personIndex </span><span class="pun">=</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">people</span><span class="pun">.</span><span class="pln">indexOf</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">);</span><span class="pln">
+          room</span><span class="pun">.</span><span class="pln">people</span><span class="pun">.</span><span class="pln">splice</span><span class="pun">(</span><span class="pln">personIndex</span><span class="pun">,</span><span class="pln"> </span><span class="lit">1</span><span class="pun">);</span><span class="pln">
+          socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">name </span><span class="pun">+</span><span class="pln"> </span><span class="str">" has left the room."</span><span class="pun">);</span><span class="pln">
+          client</span><span class="pun">.</span><span class="pln">leave</span><span class="pun">(</span><span class="pln">room</span><span class="pun">.</span><span class="pln">name</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+     </span><span class="pun">});</span><span class="pln">
+   </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>People connected to the server and to a room can also decide to remove a room - but due to the ownership property, only owners can remove their own rooms. As seen above if a particular owner decided to leave the room, the code will make sure that every other person who belongs to that room is also removed from the room:</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">client</span><span class="pun">.</span><span class="pln">on</span><span class="pun">(</span><span class="str">"removeRoom"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">id</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+    </span><span class="kwd">var</span><span class="pln"> room </span><span class="pun">=</span><span class="pln"> rooms</span><span class="pun">[</span><span class="pln">id</span><span class="pun">];</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">room</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id </span><span class="pun">===</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">owner</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln"> </span><span class="com">//only the owner can remove the room</span><span class="pln">
+        </span><span class="kwd">var</span><span class="pln"> personCount </span><span class="pun">=</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">people</span><span class="pun">.</span><span class="pln">length</span><span class="pun">;</span><span class="pln">
+        </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">personCount </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">2</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+          console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">'there are still people in the room warning'</span><span class="pun">);</span><span class="pln"> </span><span class="com">//This will be handled later</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">  </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+          </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id </span><span class="pun">===</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">owner</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="kwd">in</span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">room</span><span class="pun">).</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"The owner ("</span><span class="pln"> </span><span class="pun">+</span><span class="pln">people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">name </span><span class="pun">+</span><span class="pln"> </span><span class="str">") removed the room."</span><span class="pun">);</span><span class="pln">
+            </span><span class="kwd">var</span><span class="pln"> i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln">
+            </span><span class="kwd">while</span><span class="pun">(</span><span class="pln">i </span><span class="pun">&lt;</span><span class="pln"> clients</span><span class="pun">.</span><span class="pln">length</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+              </span><span class="kwd">if</span><span class="pun">(</span><span class="pln">clients</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">id </span><span class="pun">===</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">people</span><span class="pun">[</span><span class="pln">i</span><span class="pun">])</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                people</span><span class="pun">[</span><span class="pln">clients</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">id</span><span class="pun">].</span><span class="pln">inroom </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">;</span><span class="pln">
+                clients</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">leave</span><span class="pun">(</span><span class="pln">room</span><span class="pun">.</span><span class="pln">name</span><span class="pun">);</span><span class="pln">
+              </span><span class="pun">}</span><span class="pln">
+                </span><span class="pun">++</span><span class="pln">i</span><span class="pun">;</span><span class="pln">
+            </span><span class="pun">}</span><span class="pln">
+                </span><span class="kwd">delete</span><span class="pln"> rooms</span><span class="pun">[</span><span class="pln">id</span><span class="pun">];</span><span class="pln">
+                people</span><span class="pun">[</span><span class="pln">room</span><span class="pun">.</span><span class="pln">owner</span><span class="pun">].</span><span class="pln">owns </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">;</span><span class="pln">
+            socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"roomList"</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">rooms</span><span class="pun">:</span><span class="pln"> rooms</span><span class="pun">});</span><span class="pln">
+
+          </span><span class="pun">}</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        client</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> </span><span class="str">"Only the owner can remove a room."</span><span class="pun">);</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></pre>
+
+<p>The very final piece is to handle if a particular user disconnects from the server completely. The way the code is written makes sure that it deletes the room where the previously connected person had a room ownership and it also makes sure that all connected clients that also belong to the room are disconnected:</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">client</span><span class="pun">.</span><span class="pln">on</span><span class="pun">(</span><span class="str">"disconnect"</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">])</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">inroom </span><span class="pun">===</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">name </span><span class="pun">+</span><span class="pln"> </span><span class="str">" has left the server."</span><span class="pun">);</span><span class="pln">
+        </span><span class="kwd">delete</span><span class="pln"> people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">];</span><span class="pln">
+        socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update-people"</span><span class="pun">,</span><span class="pln"> people</span><span class="pun">);</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln"> </span><span class="kwd">else</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">owns </span><span class="pun">!==</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+          </span><span class="kwd">var</span><span class="pln"> room</span><span class="pun">=</span><span class="pln"> rooms</span><span class="pun">[</span><span class="pln">people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">owns</span><span class="pun">];</span><span class="pln">
+          </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id </span><span class="pun">===</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">owner</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">var</span><span class="pln"> i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0</span><span class="pun">;</span><span class="pln">
+            </span><span class="kwd">while</span><span class="pun">(</span><span class="pln">i </span><span class="pun">&lt;</span><span class="pln"> clients</span><span class="pun">.</span><span class="pln">length</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+              </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">clients</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">id </span><span class="pun">===</span><span class="pln"> room</span><span class="pun">.</span><span class="pln">people</span><span class="pun">[</span><span class="pln">i</span><span class="pun">])</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                people</span><span class="pun">[</span><span class="pln">clients</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">id</span><span class="pun">].</span><span class="pln">inroom </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">;</span><span class="pln">
+                clients</span><span class="pun">[</span><span class="pln">i</span><span class="pun">].</span><span class="pln">leave</span><span class="pun">(</span><span class="pln">room</span><span class="pun">.</span><span class="pln">name</span><span class="pun">);</span><span class="pln">
+              </span><span class="pun">}</span><span class="pln">
+                  </span><span class="pun">++</span><span class="pln">i</span><span class="pun">;</span><span class="pln">
+            </span><span class="pun">}</span><span class="pln">
+            </span><span class="kwd">delete</span><span class="pln"> rooms</span><span class="pun">[</span><span class="pln">people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">owns</span><span class="pun">];</span><span class="pln">
+          </span><span class="pun">}</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+        socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update"</span><span class="pun">,</span><span class="pln"> people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">].</span><span class="pln">name </span><span class="pun">+</span><span class="pln"> </span><span class="str">" has left the server."</span><span class="pun">);</span><span class="pln">
+        </span><span class="kwd">delete</span><span class="pln"> people</span><span class="pun">[</span><span class="pln">client</span><span class="pun">.</span><span class="pln">id</span><span class="pun">];</span><span class="pln">
+        socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"update-people"</span><span class="pun">,</span><span class="pln"> people</span><span class="pun">);</span><span class="pln">
+        socket</span><span class="pun">.</span><span class="pln">sockets</span><span class="pun">.</span><span class="pln">emit</span><span class="pun">(</span><span class="str">"roomList"</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">rooms</span><span class="pun">:</span><span class="pln"> rooms</span><span class="pun">});</span><span class="pln">
+      </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+  </span><span class="pun">});</span></pre>
+
+<p>You may have noticed that I'm using a function called <code>contains</code> to check whether a particular object contains an element. That is not a JavaScript built-in function (unfortunately) so I'm using the following implementation:</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="typ">Array</span><span class="pun">.</span><span class="pln">prototype</span><span class="pun">.</span><span class="pln">contains </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">k</span><span class="pun">,</span><span class="pln"> callback</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+    </span><span class="kwd">var</span><span class="pln"> </span><span class="kwd">self</span><span class="pln"> </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">return</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">function</span><span class="pln"> check</span><span class="pun">(</span><span class="pln">i</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">i </span><span class="pun">&gt;=</span><span class="pln"> </span><span class="kwd">self</span><span class="pun">.</span><span class="pln">length</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">return</span><span class="pln"> callback</span><span class="pun">(</span><span class="kwd">false</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+        </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">self</span><span class="pun">[</span><span class="pln">i</span><span class="pun">]</span><span class="pln"> </span><span class="pun">===</span><span class="pln"> k</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">return</span><span class="pln"> callback</span><span class="pun">(</span><span class="kwd">true</span><span class="pun">);</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+        </span><span class="kwd">return</span><span class="pln"> process</span><span class="pun">.</span><span class="pln">nextTick</span><span class="pun">(</span><span class="pln">check</span><span class="pun">.</span><span class="pln">bind</span><span class="pun">(</span><span class="kwd">null</span><span class="pun">,</span><span class="pln"> i</span><span class="pun">+</span><span class="lit">1</span><span class="pun">));</span><span class="pln">
+    </span><span class="pun">}(</span><span class="lit">0</span><span class="pun">));</span><span class="pln">
+</span><span class="pun">};</span></pre>
+
+<p>That's it. In the next article I will discuss some more interesting bits as well as the front-end elements. Please find the <a href="https://github.com/tamaspiros/advanced-chat" title="Advanced Chat - GitHub" target="_blank">codebase for this article</a> on GitHub. Stay tuned.</p>
+            </section>
+
+            <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Tamas Piros</h4>
+                    <p>Experienced software engineer, blogger, author and teacher &amp; preacher of super-heroic web technologies.</p>
+                </section>
+
+                <section class="share">
+                    <h4>Share this post</h4>
+                    <a class="icon-twitter" href="http://twitter.com/share?text=Advanced%20chat%20using%20node.js%20and%20socket.io%20-%20Episode%201&url=http://tamas.io/advanced-chat-using-node-js-and-socket-io-episode-1/" onclick="window.open(this.href, &#39;twitter-share&#39;, &#39;width=550,height=235&#39;);return false;">
+                        <span class="hidden">Twitter</span>
+                    </a>
+                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://tamas.io/advanced-chat-using-node-js-and-socket-io-episode-1/" onclick="window.open(this.href, &#39;facebook-share&#39;,&#39;width=580,height=296&#39;);return false;">
+                        <span class="hidden">Facebook</span>
+                    </a>
+                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://tamas.io/advanced-chat-using-node-js-and-socket-io-episode-1/" onclick="window.open(this.href, &#39;google-plus-share&#39;, &#39;width=490,height=530&#39;);return false;">
+                        <span class="hidden">Google+</span>
+                    </a>
+                </section>
+
+            </footer>
+
+        
+
+    </article>
+
+</main>
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="http://tamas.io/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="http://tamas.io/">You are IT!</a> © 2014 • All rights reserved.</section>
+             <section class="copyright"><a href="mailto:me@tamas.io" target="_blank">me@tamas.io</a> | <a href="https://twitter.com/tpiros" target="_blank">@tpiros</a></section>
+	     <section class="poweredby">Proudly published with <a class="icon-ghost" href="http://ghost.org/">Ghost</a></section>
+        </div>
+    </footer>
+
+    
+    <script src="./Advanced chat using node.js and socket.io - Episode 1_files/jquery.js"></script>
+
+    
+    <script type="text/javascript" src="./Advanced chat using node.js and socket.io - Episode 1_files/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="./Advanced chat using node.js and socket.io - Episode 1_files/index.js"></script>
+    
+
+
+</body></html>

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+        
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <style type="text/css">
+    div.new_html_code {
+      width:100%;
+      height:100%;
+      min-width:150px;
+      min-height:100%;
+      max-width:1000px;
+      max-height:100%;
+      overflow:auto;
+      display:block;
+      border:1px solid red;
+      background: black;
+      color: white;
+    }
+  
+  </style>
+    <script type='text/javascript'>
+    function validateAnswers()
+    {
+      var confirmation = document.getElementById('confirmation');
+      if(!(confirmation.checked))
+      {
+        alert("Please confirm that you accept the terms of the experiment on page 2");
+        return false;
+      }
+      var correct = true;
+      var correctAnswers = [-2, 0]
+      for(var i = 0; i < 2; i++)
+      {
+        var value = -1;
+        var radios = document.getElementsByName((i + 1) + "");
+        for (var j = 0; j < radios.length; j++) {
+          if (radios[j].checked) {
+          // get value, set checked flag or do whatever you need to
+          value = radios[j].value;       
+          }
+        }
+        if(value != correctAnswers[i])
+        {
+          alert("Some of the answers are incorrect. Please read the tutorial properly and answer the questions");
+          return false;
+        }
+      }
+      return true;
+    }
+
+    </script>
+  </head>
+  <body>
+    <div class='container'>
+<div class='col-lg-1'>
+</div>
+<div class='col-lg-10'>
+
+<div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="false">
+  
+  <ol class="carousel-indicators">
+    <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="5"></li>
+    <li data-target="#carousel-example-generic" data-slide-to="6"></li>
+  </ol>
+
+  
+  <div class="carousel-inner" role="listbox">
+    <div class="item active">
+            <div class="new_html_code"  style="height:500px">
+              </div>
+              <div class="carousel-caption">
+      <!-- <div> -->
+            
+              <h1>Instructions</h1>
+              <p> Thank you for your interest in the experiment. We are a research team at  Masdar Institute and Massachusetts Institute of Technology (MIT), and we seek your participation in furthering our understanding of human behavior in games.</p>
+              <p> Your participation in this game will take between <%= minTimeMins %> and <%= maxTimeMins %> minutes. If you play the game all the way to the end, you will receive <%= currency %><%= reward %>  as the reward for participating in the experiment. In addition to that, you can earn a bonus of up to <%= currency %><%= maxbonus %>, based on your performance in the game.<br/><br/>Your bonus earnings will be credited to your crowdflower account in addition to the show-up fee.</p>
+
+             <p><span class="label label-default" role="button">Page 1</span></p>
+            <!-- </div> -->
+            </div>
+    </div>
+
+    <div class="item">
+      <div class="new_html_code" style='height:2000px'>
+      </div>
+      <div class="carousel-caption">
+              <h1>CONSENT TO PARTICIPATE IN NON-BIOMEDICAL RESEARCH.</h1>
+              <p>Please read the terms of the following consent form carefully before procedding.</p>
+              <br/><br/>[Human Dynamics in Social Games]
+              <br/><br/> You are being asked to participate in a research study conducted by Dr. Iyad Rahwan and Dr. Jacob Crandall, from the Computing and Information Science Program at the Masdar Institute. You were selected as a possible participant in this study because you are a willing volunteer. You should read the information below before deciding whether or not to participate.
+              <br/><br/>
+              - PARTICIPATION AND WITHDRAWAL
+              <br/><br/> Your participation in this study is completely voluntary and you are free to choose whether to be in it or not. If you choose to be in this study, you may subsequently withdraw from it at any time without penalty or consequences of any kind. Also, the investigator may withdraw you from this research if circumstances arise which warrant doing so.  
+              <br/><br/>
+              - PURPOSE OF THE STUDY
+              <br/><br/> The purpose of this study is to investigate how different factors (e.g. social, or environmental) affect human reasoning and decision-making in different scenarios. The research will also help us design better systems that support human reasoning and decision-making both individually and in groups.
+              <br/><br/>
+              - OVERVIEW
+              <br/><br/> If you volunteer to participate in this study,you will receive a tutorial briefing on the game you will play. You will also have to answer a brief quiz that ensures you understand the game rules and experiment procedures before plating an unknown number of rounds. A round consists of two stages – action and review stage. In each round, you accumulate a score measured in terms of points.
+              After a certain number of rounds, the session ends. You will be presented with a summary screen informing you of your total score and how the score translates to monetary reward.
+              
+              - POTENTIAL RISKS AND DISCOMFORTS
+              <br/><br/>
+              Some participants may feel some discomfort if other players are not behaving as they expected. If participants do not perform well in the game, they may also feel some frustration. Note that all participants are anonymous to each other, so no one will be able to identify you. If you do experience discomforts and risks of any kind, you are free to withdraw from the study.
+              <br/><br/>
+              - POTENTIAL BENEFITS 
+              <br/><br/>
+              We hope that you enjoy your participation in the study. We anticipate that this study will also benefit society by helping us all to better understand how to design better systems to support human reasoning and decision making in an increasingly connected world. You will also receive a monetary reward based on your participation in the game.
+              - PAYMENT FOR PARTICIPATION
+              <br/><br/>
+              Your compensation consists of two elements of both show-up fee and bonus.
+              <br/> Show-up fee is a  fixed show-up fee of <%= currency %><%= reward %> will be given to you. This fee will be paid regardless of performance in the game, provided you stay until the end of the session. If you choose to leave before the completion of the game, you will not be paid as the completion code for payment is only given at the end of the game.
+              <br/>Bonus (a.k.a. Reward): This is an additional amount, up to <%= currency %><%= maxbonus %>, awarded based on your performance (i.e. number of points you accumulate).
+              <br/><br/>
+              - CONFIDENTIALITY
+              <br/><br/>
+              Any information that is obtained in connection with this study and that can be identified with you will remain confidential and will be disclosed only with your permission or as required by law. Additionally, all information gathered will not be tied to your name. All electronic information will be stored on a password-protected computer.
+              <br/><br/>
+              
+              
+              - RIGHTS OF RESEARCH SUBJECTS
+              <br/>
+              You are not waiving any legal claims, rights or remedies because of your participation in this research study.  If you feel you have been treated unfairly, or you have questions regarding your rights as a research subject, you may contact:  
+              <br/><br/>
+          Dr. Jerald Yoo
+<br/>Chairman of the Human Subjects Research Ethics Committee
+<br/>Masdar Institute, PO Box 54224
+<br/>Abu Dhabi
+<br/>email: jyoo@masdar.ac.ae
+<br/><br/>
+<p>Please confirm that you are willing to participate in good faith, using the following checkbox to indicate your acceptance of the above terms of consent. If you are not willing to do so, please close the browser. If you do not click the checkbox, you will not be allowed to take part in the experiment.</p>
+
+<p><input type='checkbox' id='confirmation'> I understand that this game requires my undivided attention for up to <%= maxTimeMins %> minutes, and I am willing to commit said time and attention until the game comes to an end.I understand the procedures described above. I agree to participate in this study.</p>
+  
+  <p><span class="label label-default" role="button">Page 2</span></p>
+            </div>
+    </div>
+    
+    <div class="item">
+      <div class="new_html_code" style='height:400px'></div>
+      <div class="carousel-caption">
+              <h1>Instructions.</h1>
+              <p> As a participant in this experiment, you will play a simple game consisting of a number of rounds with an agent. You are matched with an agent  across all rounds within a given game.
+              </p>
+	<p><span class="label label-default" role="button">Page 3</span></p>
+            </div>
+    </div>
+
+    <div class="item">
+      <div class="new_html_code" style='height:800px'></div>
+      <div class="carousel-caption">
+              <h1>This is the <u>Action Phase</u>..</h1>
+              <p class="alert alert-success">Payoff Structure</p><table class='table table-bordered table-condensed'><tr><th>Option</th> <th>You will get</th> <th>The agent  will get</th> </tr><tr><td><input type="radio" name="choiceAction" id='first' checked='checked' value="1"> A: </td><td>-2</td><td>5</td></tr><tr><td><input type="radio" name="choiceAction" id='second' value="2"> B: </td><td>0</td><td>0</td></tr></table>
+
+              <p >Each round of the game consists of 2 stages. In the action (first) stage, you and the agent  will be offered a choice (individually) between two options as shown above. The payoff you receive at the end of each round depends on the options that both you and the agent chose. Your payoff in each round of the experiment is thus the sum of your payoff from your chosen option and your payoff from the agent's chosen option. You choose an option by clicking the radio button labelled 'A' or 'B'. You must select your option before the timer runs out. If you do not do so, a random option will be chosen for you and you will not be paid for that round. You have 20 seconds to make a decision.</br>
+              <br/>For Example, if you choose A and your opponent chooses A, you will get -2 + 5 = 3.
+              <br/> The timer below will be counting down in real play.
+    <div class="alert alert-info">10 seconds remaining...</div>
+          <br/>
+              <p><span class="label label-default" role="button">Page 4</span></p>
+            </div>
+    </div>
+
+    <div class="item">
+      <div class="new_html_code" style='height:600px'></div>
+      <div class="carousel-caption">
+              <h1>Review Phase</h1>
+              <table class='table table-bordered'><tr><td></td><td></td><td> You got</td></tr>
+<tr><td>Your Choice : </td><td>A <span class="badge  pull-right">R</span></td><td> -2 </td></tr>"
+    <tr><td>Opponent Choice : </td><td>B</td><td>0</td></tr>
+    <tr><td>Total</td><td></td><td>-2</td></tr></table>
+              <p>In the review (second) stage, both you and the agent are presented with the options chosen in the previous stage. You are also shown the payoff you received from your chosen action, the payoff you received from the agent's chosen option and your resulting total score. The cumulative total score at the end of all rounds is multiplied by $0.01 to give your total bonus. You will be given 10 seconds to reflect on the result after which a new round starts automatically. The <span class="badge">R</span>  indicates that the you did not choose anything within the time frame</p>
+                 <p><span class="label label-default" role="button">Page 5</span></p>
+            </div>
+    </div>
+
+    <div class="item">
+      <div class="new_html_code" style='height:600px'></div>
+      <div class="carousel-caption">
+              <h1>Comprehension Questions</h1>
+              <p> You will now answer 2 short questions to show that you understood the instructions and how to play the game. After answering successfully, you will be placed in a waiting room where you will wait until you are assigned another participant to play the game with. The game will start as soon as a partner has joined the game, at which point a beep will alert you. Once a game has started, leaving the game before the final summary screen will result in you not getting paid AT ALL.
+              </p>Please note the two circumstances which could make you forfeit your entire payment:</p>
+              <ul>
+              <li>Once in the waiting room, you leave the waiting room before the waiting room timer runs out.</li>
+              <li>Once in a game, you stop or close a game at any time before the final payment screen.</li></p>
+              <p><span class="label label-default" role="button">Page 6</span></p>
+            </div>
+    </div>
+
+    
+    <div class="item">
+      <div class="new_html_code" style="height:750px">
+      <div class="carousel-caption">
+              <p>We hope the tutorial was useful. You may proceed to the waiting room for the game,
+               once you submit correct answers to all the following questions regarding the payoff structure below:</p>
+              <h1> Payoff Structure</h1>
+                 <table class='table table-bordered table-condensed'>
+                 <tr><th>Option</th> <th>You will get</th> <th>The agent  will get</th> </tr>
+                 <tr><td>A: </td><td>-2</td><td>5</td></tr>
+                 <tr><td>B: </td><td>0</td><td>0</td></tr>
+                 </table>
+                 <h6> Questions </h6>
+                <form class='form' method='post' action='./entry'  onsubmit="return validateAnswers()">
+                  <div class="form-group">
+                 <label>1.  How much do you get if you choose action A but the agent  chooses action B</label>
+                 
+                  <label class="radio-inline">
+        <input type="radio" name="1" value="3"> 3
+        </label>
+                <label class="radio-inline">
+            <input type="radio" name="1" value="5"> 5
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="1" value="-2"> -2
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="1" value="0"> 0
+          </label>
+          
+</div>
+
+          <div class="form-group">
+          <label>2.  How much do you get if you choose action B but the agent chooses action B</label>
+                  <label class="radio-inline">
+        <input type="radio" name="2" value="3"> 3
+        </label>
+                <label class="radio-inline">
+            <input type="radio" name="2" value="5"> 5
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="2" value="-2"> -2
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="2" value="0"> 0
+          </label>
+</div>
+<div class="form-group">
+                  <button class='btn btn-default' type='submit'>Submit </button>
+  </div>
+                  </form>     
+            </div>
+    </div>
+
+  </div>
+
+  
+</div>
+
+<a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+    <span class="sr-only">Previous</span>
+  </a>
+  <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+    <span class="sr-only">Next</span>
+  </a>
+
+</div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+
+<link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+</body>
+</html>

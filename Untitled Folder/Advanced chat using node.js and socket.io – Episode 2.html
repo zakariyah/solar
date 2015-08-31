@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)http://tamas.io/advanced-chat-using-node-js-and-socket-io-episode-2/ -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    
+    <title>Advanced chat using node.js and socket.io – Episode 2</title>
+    <meta name="description" content="">
+    <link rel="shortcut icon" href="http://tamas.io/assets/images/favicon.ico">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="MobileOptimized" content="320">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="shortcut icon" href="http://tamas.io/favicon.ico">
+
+    
+    <link rel="stylesheet" type="text/css" href="./Advanced chat using node.js and socket.io – Episode 2_files/screen.css">
+    <link rel="stylesheet" type="text/css" href="./Advanced chat using node.js and socket.io – Episode 2_files/css">
+
+    
+    <meta name="generator" content="Ghost 0.4">
+<link rel="alternate" type="application/rss+xml" title="You are IT!" href="http://tamas.io/rss/">
+<link rel="canonical" href="./Advanced chat using node.js and socket.io – Episode 2_files/Advanced chat using node.js and socket.io – Episode 2.html">
+    <div class="fit-vids-style" id="fit-vids-style" style="display: none;">­<style>.fluid-width-video-wrapper{width:100%;position:relative;padding:0;}.fluid-width-video-wrapper iframe,.fluid-width-video-wrapper object,.fluid-width-video-wrapper embed {position:absolute;top:0;left:0;width:100%;height:100%;}</style></div><script async="" src="./Advanced chat using node.js and socket.io – Episode 2_files/analytics.js"></script><script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-45893444-1', 'tamas.io');
+      ga('send', 'pageview');
+
+    </script>
+<link rel="stylesheet" type="text/css" href="./Advanced chat using node.js and socket.io – Episode 2_files/sunburst.css"></head>
+<body class="post-template" style="">
+
+    
+    
+
+
+
+<main class="content" role="main">
+
+    <article class="post">
+
+        
+        <header class="post-header">
+            <a class="blog-logo" href="http://tamas.io/">
+                
+                    <img src="./Advanced chat using node.js and socket.io – Episode 2_files/1-1.png" alt="Blog Logo">
+                
+            </a>
+        </header>
+
+        
+        
+
+            <span class="post-meta"><time datetime="2013-07-16">16 Jul 2013</time> </span>
+
+            <h1 class="post-title">Advanced chat using node.js and socket.io – Episode 2</h1>
+
+            <section class="post-content">
+                In this post I will try to do a very basic introduction to <a href="http://www.webrtc.org/" title="WebRTC" target="_blank">WebRTC</a> and I will also show a small code example that will enable video calling between two clients using a custom signalling server written in socket.io. The ultimate goal is to combine the signalling server and the chat server written in the <a href="http://tamas.io/advanced-chat-using-node-js-and-socket-io-episode-1/" title="Advanced chat using node.js and socket.io – Episode 1" target="_blank">previous article</a> to form a video call / chat solution.  
+<!--more-->  
+
+<p>WebRTC is an open project that enables web browsers with Real-Time Communications (RTC) capabilities via simple Javascript APIs and it's currently being worked on in collaboration between Google, Mozilla and Opera. (Why would Microsoft support any of this, right?). Because of this, the browser support is also limited to Chrome 23+, Firefox 22+ and Opera 12+ for the PCs and Chrome 28+, Firefox 24+ Opera Mobile 12+ for Android.</p>
+
+<p>There are three major components that make up WebRTC:  </p>
+
+<ul>  
+<li>getUserMedia</li>  
+<li>PeerConnection</li>  
+<li>DataChannels</li>  
+</ul>
+
+<p>The examples on this page are either the work of Sam Dutton or they are based on his examples - please have a look at his <a href="http://www.html5rocks.com/en/tutorials/webrtc/basics/" title="Sam Dutton - WebRTC html5rocks.com" target="_blank">article</a> and <a href="https://github.com/samdutton?tab=repositories" title="Sam Dutton - GitHub repositories" target="_blank">repositories</a> for a more in-depth overview of WebRTC.</p>
+
+<p><strong>getUserMedia and PeerConnection</strong> <br>
+As the name suggests this component allows the browser to access the camera and the microphone of the user. A very basic example written in JavaScript could look similar to this (this assumes that your html page contains a <code>&lt;video /&gt;</code> element.</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="pln">navigator</span><span class="pun">.</span><span class="pln">getUserMedia </span><span class="pun">=</span><span class="pln"> navigator</span><span class="pun">.</span><span class="pln">getUserMedia </span><span class="pun">||</span><span class="pln"> navigator</span><span class="pun">.</span><span class="pln">webkitGetUserMedia </span><span class="pun">||</span><span class="pln"> navigator</span><span class="pun">.</span><span class="pln">mozGetUserMedia</span><span class="pun">;</span><span class="pln">
+
+</span><span class="kwd">var</span><span class="pln"> constraints </span><span class="pun">=</span><span class="pln"> </span><span class="pun">{</span><span class="pln">video</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">};</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> successCallback</span><span class="pun">(</span><span class="pln">localMediaStream</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+  window</span><span class="pun">.</span><span class="pln">stream </span><span class="pun">=</span><span class="pln"> localMediaStream</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">var</span><span class="pln"> video </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">querySelector</span><span class="pun">(</span><span class="str">"video"</span><span class="pun">);</span><span class="pln">
+  video</span><span class="pun">.</span><span class="pln">src </span><span class="pun">=</span><span class="pln"> window</span><span class="pun">.</span><span class="pln">URL</span><span class="pun">.</span><span class="pln">createObjectURL</span><span class="pun">(</span><span class="pln">localMediaStream</span><span class="pun">);</span><span class="pln">
+  video</span><span class="pun">.</span><span class="pln">play</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> errorCallback</span><span class="pun">(</span><span class="pln">error</span><span class="pun">){</span><span class="pln">  
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"navigator.getUserMedia error: "</span><span class="pun">,</span><span class="pln"> error</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+navigator</span><span class="pun">.</span><span class="pln">getUserMedia</span><span class="pun">(</span><span class="pln">constraints</span><span class="pun">,</span><span class="pln"> successCallback</span><span class="pun">,</span><span class="pln"> errorCallback</span><span class="pun">);</span><span class="pln">  </span></pre>
+
+<p>Open this page on <code>localhost</code> and after allowing your browser access to your camera, you should see yourself. Well done.</p>
+
+<p>Now let's take this a bit further. We are going to create a local video and a remote video feed on the same page. Admittedly, this doesn't have much of a use but it's a good way to demo the <code>RTCPeerConnection</code>. Let's create the following HTML template:</p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="tag">&lt;video</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"localVideo"</span><span class="pln"> </span><span class="atn">autoplay</span><span class="tag">&gt;&lt;/video&gt;</span><span class="pln">  
+</span><span class="tag">&lt;video</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"remoteVideo"</span><span class="pln"> </span><span class="atn">autoplay</span><span class="tag">&gt;&lt;/video&gt;</span><span class="pln">
+</span><span class="tag">&lt;button</span><span class="pln"> </span><span class="atn">id</span><span class="pun">=</span><span class="atv">"callButton"</span><span class="tag">&gt;</span><span class="pln">Make a call</span><span class="tag">&lt;/button&gt;</span></pre>
+
+<p>The JavaScript code will slightly be more complicated than the previous example:  </p>
+
+<pre class="prettyprint prettyprinted" style=""><span class="kwd">var</span><span class="pln"> localStream</span><span class="pun">,</span><span class="pln"> localPeerConnection</span><span class="pun">,</span><span class="pln"> remotePeerConnection</span><span class="pun">;</span><span class="pln">
+
+</span><span class="kwd">var</span><span class="pln"> localVideo </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">getElementById</span><span class="pun">(</span><span class="str">"localVideo"</span><span class="pun">);</span><span class="pln">  
+</span><span class="kwd">var</span><span class="pln"> remoteVideo </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">getElementById</span><span class="pun">(</span><span class="str">"remoteVideo"</span><span class="pun">);</span><span class="pln">
+
+</span><span class="kwd">var</span><span class="pln"> callButton </span><span class="pun">=</span><span class="pln"> document</span><span class="pun">.</span><span class="pln">getElementById</span><span class="pun">(</span><span class="str">"callButton"</span><span class="pun">);</span><span class="pln">
+
+callButton</span><span class="pun">.</span><span class="pln">disabled </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">  
+callButton</span><span class="pun">.</span><span class="pln">onclick </span><span class="pun">=</span><span class="pln"> call</span><span class="pun">;</span><span class="pln">
+
+navigator</span><span class="pun">.</span><span class="pln">getUserMedia </span><span class="pun">=</span><span class="pln"> navigator</span><span class="pun">.</span><span class="pln">getUserMedia </span><span class="pun">||</span><span class="pln">  
+    navigator</span><span class="pun">.</span><span class="pln">webkitGetUserMedia </span><span class="pun">||</span><span class="pln"> navigator</span><span class="pun">.</span><span class="pln">mozGetUserMedia</span><span class="pun">;</span><span class="pln">
+  navigator</span><span class="pun">.</span><span class="pln">getUserMedia</span><span class="pun">({</span><span class="pln">audio</span><span class="pun">:</span><span class="kwd">true</span><span class="pun">,</span><span class="pln"> video</span><span class="pun">:</span><span class="kwd">true</span><span class="pun">},</span><span class="pln"> gotStream</span><span class="pun">,</span><span class="pln"> </span><span class="com">//note that we are adding both audio and video</span><span class="pln">
+    </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">error</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">error</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="com">//Everything above this line should be familiar from the previous example</span><span class="pln">
+</span><span class="kwd">function</span><span class="pln"> gotStream</span><span class="pun">(</span><span class="pln">stream</span><span class="pun">){</span><span class="pln">  
+  localVideo</span><span class="pun">.</span><span class="pln">src </span><span class="pun">=</span><span class="pln"> URL</span><span class="pun">.</span><span class="pln">createObjectURL</span><span class="pun">(</span><span class="pln">stream</span><span class="pun">);</span><span class="pln">
+  localStream </span><span class="pun">=</span><span class="pln"> stream</span><span class="pun">;</span><span class="pln">
+  callButton</span><span class="pun">.</span><span class="pln">disabled </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">false</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> call</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">  
+  callButton</span><span class="pun">.</span><span class="pln">disabled </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">;</span><span class="pln">
+
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">localStream</span><span class="pun">.</span><span class="pln">getVideoTracks</span><span class="pun">().</span><span class="pln">length </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">0</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">'Using video device: '</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> localStream</span><span class="pun">.</span><span class="pln">getVideoTracks</span><span class="pun">()[</span><span class="lit">0</span><span class="pun">].</span><span class="pln">label</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">localStream</span><span class="pun">.</span><span class="pln">getAudioTracks</span><span class="pun">().</span><span class="pln">length </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">0</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">'Using audio device: '</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> localStream</span><span class="pun">.</span><span class="pln">getAudioTracks</span><span class="pun">()[</span><span class="lit">0</span><span class="pun">].</span><span class="pln">label</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+
+  </span><span class="kwd">var</span><span class="pln"> servers </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">null</span><span class="pun">;</span><span class="pln">
+
+  localPeerConnection </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> webkitRTCPeerConnection</span><span class="pun">(</span><span class="pln">servers</span><span class="pun">);</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="pln">localPeerConnection</span><span class="pun">)</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Created local peer connection object localPeerConnection"</span><span class="pun">);</span><span class="pln">
+  localPeerConnection</span><span class="pun">.</span><span class="pln">onicecandidate </span><span class="pun">=</span><span class="pln"> gotLocalIceCandidate</span><span class="pun">;</span><span class="pln">
+
+  remotePeerConnection </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">new</span><span class="pln"> webkitRTCPeerConnection</span><span class="pun">(</span><span class="pln">servers</span><span class="pun">);</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Created remote peer connection object remotePeerConnection"</span><span class="pun">);</span><span class="pln">
+  remotePeerConnection</span><span class="pun">.</span><span class="pln">onicecandidate </span><span class="pun">=</span><span class="pln"> gotRemoteIceCandidate</span><span class="pun">;</span><span class="pln">
+  remotePeerConnection</span><span class="pun">.</span><span class="pln">onaddstream </span><span class="pun">=</span><span class="pln"> gotRemoteStream</span><span class="pun">;</span><span class="pln">
+
+  localPeerConnection</span><span class="pun">.</span><span class="pln">addStream</span><span class="pun">(</span><span class="pln">localStream</span><span class="pun">);</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Added localStream to localPeerConnection"</span><span class="pun">);</span><span class="pln">
+  localPeerConnection</span><span class="pun">.</span><span class="pln">createOffer</span><span class="pun">(</span><span class="pln">gotLocalDescription</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> gotLocalDescription</span><span class="pun">(</span><span class="pln">description</span><span class="pun">){</span><span class="pln">  
+  localPeerConnection</span><span class="pun">.</span><span class="pln">setLocalDescription</span><span class="pun">(</span><span class="pln">description</span><span class="pun">);</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Offer from localPeerConnection: \n"</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> description</span><span class="pun">.</span><span class="pln">sdp</span><span class="pun">);</span><span class="pln">
+  remotePeerConnection</span><span class="pun">.</span><span class="pln">setRemoteDescription</span><span class="pun">(</span><span class="pln">description</span><span class="pun">);</span><span class="pln">
+  remotePeerConnection</span><span class="pun">.</span><span class="pln">createAnswer</span><span class="pun">(</span><span class="pln">gotRemoteDescription</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> gotRemoteDescription</span><span class="pun">(</span><span class="pln">description</span><span class="pun">){</span><span class="pln">  
+  remotePeerConnection</span><span class="pun">.</span><span class="pln">setLocalDescription</span><span class="pun">(</span><span class="pln">description</span><span class="pun">);</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Answer from remotePeerConnection: \n"</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> description</span><span class="pun">.</span><span class="pln">sdp</span><span class="pun">);</span><span class="pln">
+  localPeerConnection</span><span class="pun">.</span><span class="pln">setRemoteDescription</span><span class="pun">(</span><span class="pln">description</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> gotRemoteStream</span><span class="pun">(</span><span class="kwd">event</span><span class="pun">){</span><span class="pln">  
+  remoteVideo</span><span class="pun">.</span><span class="pln">src </span><span class="pun">=</span><span class="pln"> URL</span><span class="pun">.</span><span class="pln">createObjectURL</span><span class="pun">(</span><span class="kwd">event</span><span class="pun">.</span><span class="pln">stream</span><span class="pun">);</span><span class="pln">
+  console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Received remote stream"</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> gotLocalIceCandidate</span><span class="pun">(</span><span class="kwd">event</span><span class="pun">){</span><span class="pln">  
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">event</span><span class="pun">.</span><span class="pln">candidate</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    remotePeerConnection</span><span class="pun">.</span><span class="pln">addIceCandidate</span><span class="pun">(</span><span class="kwd">new</span><span class="pln"> </span><span class="typ">RTCIceCandidate</span><span class="pun">(</span><span class="kwd">event</span><span class="pun">.</span><span class="pln">candidate</span><span class="pun">));</span><span class="pln">
+    console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Local ICE candidate: \n"</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> </span><span class="kwd">event</span><span class="pun">.</span><span class="pln">candidate</span><span class="pun">.</span><span class="pln">candidate</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+
+</span><span class="kwd">function</span><span class="pln"> gotRemoteIceCandidate</span><span class="pun">(</span><span class="kwd">event</span><span class="pun">){</span><span class="pln">  
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="kwd">event</span><span class="pun">.</span><span class="pln">candidate</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    localPeerConnection</span><span class="pun">.</span><span class="pln">addIceCandidate</span><span class="pun">(</span><span class="kwd">new</span><span class="pln"> </span><span class="typ">RTCIceCandidate</span><span class="pun">(</span><span class="kwd">event</span><span class="pun">.</span><span class="pln">candidate</span><span class="pun">));</span><span class="pln">
+    console</span><span class="pun">.</span><span class="pln">log</span><span class="pun">(</span><span class="str">"Remote ICE candidate: \n "</span><span class="pln"> </span><span class="pun">+</span><span class="pln"> </span><span class="kwd">event</span><span class="pun">.</span><span class="pln">candidate</span><span class="pun">.</span><span class="pln">candidate</span><span class="pun">);</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">}</span></pre>
+
+<p>So what does this code do exactly? Firstly it shares both the local and the remote descriptions in a format of SDP (Session Description Protocol) of the local media conditions. Simply put, SDP is a format describing streaming media init parameters and within an SDP message there are three main sections, each having multiple timing and media descriptions:</p>
+
+<pre><strong>Session description</strong>
+    v=  (protocol version number, currently only 0)
+    o=  (originator and session identifier : username, id, version number, network address)
+    s=  (session name : mandatory with at least one UTF-8-encoded character)
+    i=* (session title or short information)
+    u=* (URI of description)
+    e=* (zero or more email address with optional name of contacts)
+    p=* (zero or more phone number with optional name of contacts)
+    c=* (connection information—not required if included in all media)
+    b=* (zero or more bandwidth information lines)
+    One or more Time descriptions ("t=" and "r=" lines; see below)
+    z=* (time zone adjustments)
+    k=* (encryption key)
+    a=* (zero or more session attribute lines)
+    Zero or more Media descriptions (each one starting by an "m=" line; see below)
+<strong>Time description (mandatory)</strong>
+    t=  (time the session is active)
+    r=* (zero or more repeat times)
+<strong>Media description (if present)</strong>
+    m=  (media name and transport address)
+    i=* (media title or information field)
+    c=* (connection information — optional if included at session level)
+    b=* (zero or more bandwidth information lines)
+    k=* (encryption key)
+    a=* (zero or more media attribute lines — overriding the Session attribute lines)
+</pre>
+
+<p>If you examine your browser log (either via the Chrome Dev Tools or Firebug) after making the call (i.e. pressing the 'call' button), you should the SDP messages:</p>
+
+<pre>Offer from localPeerConnection: 
+v=0
+o=- 5053101937256588725 2 IN IP4 127.0.0.1
+s=-
+t=0 0
+a=group:BUNDLE audio video
+a=msid-semantic: WMS ZnmeTGwKdfmIroYzED3XNP5j57oqkZ1OfvBA
+m=audio 1 RTP/SAVPF 111 103 104 0 8 107 106 105 13 126
+c=IN IP4 0.0.0.0
+a=rtcp:1 IN IP4 0.0.0.0
+a=ice-ufrag:a5/AbngUmbkkAspQ
+a=ice-pwd:tYWWF1vcjr062ZXPZQ4eaeVN
+a=ice-options:google-ice
+a=extmap:1 urn:ietf:params:rtp-hdrext:ssrc-audio-level
+a=sendrecv
+a=mid:audio
+a=rtcp-mux
+a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:qC+pZ4UVB+ySS4pBLbynScoRJZ084pzQV0VJsvtm
+a=rtpmap:111 opus/48000/2
+a=fmtp:111 minptime=10
+a=rtpmap:103 ISAC/16000
+a=rtpmap:104 ISAC/32000
+a=rtpmap:0 PCMU/8000
+a=rtpmap:8 PCMA/8000
+a=rtpmap:107 CN/48000
+a=rtpmap:106 CN/32000
+a=rtpmap:105 CN/16000
+a=rtpmap:13 CN/8000
+a=rtpmap:126 telephone-event/8000
+a=maxptime:60
+a=ssrc:838296445 cname:Kk/fTwoZrkPHQips
+a=ssrc:838296445 msid:ZnmeTGwKdfmIroYzED3XNP5j57oqkZ1OfvBA ZnmeTGwKdfmIroYzED3XNP5j57oqkZ1OfvBAa0
+a=ssrc:838296445 mslabel:ZnmeTGwKdfmIroYzED3XNP5j57oqkZ1OfvBA
+a=ssrc:838296445 label:ZnmeTGwKdfmIroYzED3XNP5j57oqkZ1OfvBAa0
+m=video 1 RTP/SAVPF 100 116 117
+c=IN IP4 0.0.0.0
+a=rtcp:1 IN IP4 0.0.0.0
+a=ice-ufrag:a5/AbngUmbkkAspQ
+a=ice-pwd:tYWWF1vcjr062ZXPZQ4eaeVN
+a=ice-options:google-ice
+a=extmap:2 urn:ietf:params:rtp-hdrext:toffset
+a=sendrecv
+a=mid:video
+a=rtcp-mux
+a=crypto:1 AES_CM_128_HMAC_SHA1_80 inline:qC+pZ4UVB+ySS4pBLbynScoRJZ084pzQV0VJsvtm
+a=rtpmap:100 VP8/90000
+a=rtcp-fb:100 ccm fir
+a=rtcp-fb:100 nack 
+a=rtcp-fb:100 goog-remb 
+a=rtpmap:116 red/90000
+a=rtpmap:117 ulpfec/90000
+a=ssrc:2160303907 cname:Kk/fTwoZrkPHQips
+a=ssrc:2160303907 msid:ZnmeTGwKdfmIroYzED3XNP5j57oqkZ1OfvBA ZnmeTGwKdfmIroYzED3XNP5j57oqkZ1OfvBAv0
+a=ssrc:2160303907 mslabel:ZnmeTGwKdfmIroYzED3XNP5j57oqkZ1OfvBA
+a=ssrc:2160303907 label:ZnmeTGwKdfmIroYzED3XNP5j57oqkZ1OfvBAv0
+</pre>
+
+<p>If you'd like to investigate further what is going on behind the scenes, chrome comes with a WebRTC Internals page, to access it point your browser to <code>chrome://webrtc-internals</code> where you can access statistical information about the PeerConnection. I found a few of them interesting, such as <code> googTransmitBitrate</code> and <code>audioInputLevel</code> (with this one, try to make some noises and see how the value goes up -- a true time waster to sit in front of your computer whistling the main theme of <a href="https://www.youtube.com/watch?v=83bmsluWHZc" title="Bridge on River Kwai - Theme" target="_blank">Bridge on the River Kwai</a>.) Further to this you can also have access to various charts that can help you monitor the performance of your video call. I haven't looked into this deeper.</p>
+
+<p>So I discussed SDP, the other bit that is important in the code above is the Interactive Connectivity Establishment (aka ICE). There are two ways in WebRTC to establish connections across various types of networks, STUN and ICE. To understand more about these technologies please check out this <a href="https://www.youtube.com/watch?v=p2HzZkd2A40" title="WebRTC - Google I/O 2013" target="_blank">excellent Google I/O presentation</a> on the topic.</p>
+
+<p>Once all the connections are established, the remote video will receive the stream from the local video object -- this is enabled by the <code>gotRemoteStream()</code> function.</p>
+
+<p>Now comes probably the most complicated bit. Setting up a signalling server that will emit messages between connected clients therefore allowing two separate instances to share the stream. In this post I'm going to explain how a standalone signalling server would work and in the next post, I will try my best to explain how I have merged the chat server functionality with the previously mentioned signalling server's functionality to have one, enclosed solution.</p>
+
+<p>The signalling server has to make sure that it emits the right message to people who have joined the same room. If you recall, in episode 1 of the article series I have discussed how to create rooms and how to join connected people to them. That piece of code will have to be extended and some major additions will also have to be made to the client side. To give you an idea, please check out <a href="https://bitbucket.org/webrtc/codelab/src/6daf0496dc78/complete/step6?at=master" title="Sam Dutton - WebRTC" target="_blank">this repository</a>. I will use this as the base of my modifications and I will explain all this in the upcoming post. Essentially I'd like to extend my chat app in a way that it doesn't only allow you to send chat messages but it also allows you to make a video call - but only to people who have joined the same room and people will have to be allowed to drop out from a call. This task won't be easy and it will probably take me some time but please bear with me.</p>
+
+<p>Incidentally WebRTC also comes with a features that can be used to send chat messages only - at this time I do not plan on implementing this, I will stick to the current socket.io/node.js implementation.</p>
+
+<p><strong>DataConnection</strong> <br>
+I talked a lot about <code>getUserMedia</code> and the <code>RTCPeerConnectin</code> so let's change the topic to the DataConnection. This post focuses on the video chat element, however for the sake of completeness I also need to talk a bit about DataConnection. The chat app that I introduced in the previous article can (could?) easily be rewritten using the RTCDataConnection. The functionality is very similar to setting up a video call, pretty much the same methodology is applied, ICE and SDP. For a very good example please see the <a href="http://simpl.info/rtcdatachannel/" title="RTCDataChannel - Simpl.info" target="_blank">RTCDataChannel in action</a> with the <a href="https://github.com/samdutton/simpl/blob/master/rtcdatachannel/js/main.js" title="GitHub - RTCDataChannel" target="_blank">source code</a>.</p>
+
+<p>I really hope that WebRTC development will fasten up as I believe it has a great future - and it will allow developers to create great Peer to Peer applications using the web browser only - the apps out there are truly amazing, such as this <a href="https://github.com/peer5/sharefest" title="ShareFest - GitHub" target="_blank">file sharing app</a> only based on HTML5 and WebRTC. Wouldn't it be great to get rid of all communication tools such as Skype, Google Hangouts and have one, centralised communications platform (maybe internal to a company) that allows people to chat, have video conferences and share files and their screens.</p>
+
+<p>Okay, this is it about WebRTC, massive thanks for all the posts written by Sam Dutton - they did help me a lot understanding WebRTC. I will be working hard on trying to transforming my chat server into a WebRTC signalling server. Stay tuned and we shall all see what happens.</p>
+            </section>
+
+            <footer class="post-footer">
+
+                <section class="author">
+                    <h4>Tamas Piros</h4>
+                    <p>Experienced software engineer, blogger, author and teacher &amp; preacher of super-heroic web technologies.</p>
+                </section>
+
+                <section class="share">
+                    <h4>Share this post</h4>
+                    <a class="icon-twitter" href="http://twitter.com/share?text=Advanced%20chat%20using%20node.js%20and%20socket.io%20%E2%80%93%20Episode%202&url=http://tamas.io/advanced-chat-using-node-js-and-socket-io-episode-2/" onclick="window.open(this.href, &#39;twitter-share&#39;, &#39;width=550,height=235&#39;);return false;">
+                        <span class="hidden">Twitter</span>
+                    </a>
+                    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://tamas.io/advanced-chat-using-node-js-and-socket-io-episode-2/" onclick="window.open(this.href, &#39;facebook-share&#39;,&#39;width=580,height=296&#39;);return false;">
+                        <span class="hidden">Facebook</span>
+                    </a>
+                    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://tamas.io/advanced-chat-using-node-js-and-socket-io-episode-2/" onclick="window.open(this.href, &#39;google-plus-share&#39;, &#39;width=490,height=530&#39;);return false;">
+                        <span class="hidden">Google+</span>
+                    </a>
+                </section>
+
+            </footer>
+
+        
+
+    </article>
+
+</main>
+
+    <footer class="site-footer">
+        <a class="subscribe icon-feed" href="http://tamas.io/rss/"><span class="tooltip">Subscribe!</span></a>
+        <div class="inner">
+             <section class="copyright">All content copyright <a href="http://tamas.io/">You are IT!</a> © 2014 • All rights reserved.</section>
+             <section class="copyright"><a href="mailto:me@tamas.io" target="_blank">me@tamas.io</a> | <a href="https://twitter.com/tpiros" target="_blank">@tpiros</a></section>
+	     <section class="poweredby">Proudly published with <a class="icon-ghost" href="http://ghost.org/">Ghost</a></section>
+        </div>
+    </footer>
+
+    
+    <script src="./Advanced chat using node.js and socket.io – Episode 2_files/jquery.js"></script>
+
+    
+    <script type="text/javascript" src="./Advanced chat using node.js and socket.io – Episode 2_files/jquery.fitvids.js"></script>
+    <script type="text/javascript" src="./Advanced chat using node.js and socket.io – Episode 2_files/index.js"></script>
+    
+
+
+</body></html>
