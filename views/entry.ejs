@@ -155,9 +155,9 @@ function endGame(cummulativeScore, numberOfRounds)
         // goToURL("./postquizsurvey");
         document.getElementById('recommender').innerHTML = '';
 }
-// var socket = io.connect('http://ec2-54-191-154-185.us-west-2.compute.amazonaws.com:4000/');
+var socket = io.connect('http://ec2-54-191-154-185.us-west-2.compute.amazonaws.com:4000/');
 
-var socket = io.connect('http://localhost:4000');
+// var socket = io.connect('http://localhost:4000');
     // var socketid = socket.id;
 socket.on('serverMessage', function(content) {
     var options = ['A', 'B'];
