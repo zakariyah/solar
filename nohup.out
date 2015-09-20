@@ -16762,3 +16762,29 @@ round up on here
 [90mGET /stylesheets/style.css [32m200 [90m19ms - 14.47kb[0m
 [90mGET /stylesheets/bootstrap.min.css [32m200 [90m626ms - 106.95kb[0m
 [90mGET /favicon.ico [33m404 [90m13ms - 992b[0m
+Failed to load c++ bson extension, using pure JS version
+Thu, 17 Sep 2015 13:48:48 GMT express-session deprecated undefined resave option; provide resave option at app.js:27:9
+Thu, 17 Sep 2015 13:48:48 GMT express-session deprecated undefined saveUninitialized option; provide saveUninitialized option at app.js:27:9
+You have logged in undefined times
+Mongoose connected at:  mongodb://127.0.0.1/mayadaTest
+[90mGET /information [32m200 [90m253ms - 1.23kb[0m
+[90mGET /stylesheets/bootstrap.min.css [36m304 [90m6ms[0m
+[90mGET /stylesheets/style.css [36m304 [90m4ms[0m
+[90mGET /favicon.ico [33m404 [90m19ms - 1002b[0m
+Mongoose default connection disconnected through app termination
+Failed to load c++ bson extension, using pure JS version
+Thu, 17 Sep 2015 13:51:17 GMT express-session deprecated undefined resave option; provide resave option at app.js:27:9
+Thu, 17 Sep 2015 13:51:17 GMT express-session deprecated undefined saveUninitialized option; provide saveUninitialized option at app.js:27:9
+You have logged in undefined times
+Mongoose connected at:  mongodb://127.0.0.1/mayadaTest
+[90mGET /information [36m304 [90m33ms[0m
+[90mGET /stylesheets/bootstrap.min.css [36m304 [90m8ms[0m
+[90mGET /stylesheets/style.css [36m304 [90m6ms[0m
+hiitNumber 125
+[90mPOST /tutorial [32m200 [90m39ms - 15.94kb[0m
+[90mGET /stylesheets/style.css [36m304 [90m10ms[0m
+[90mGET /stylesheets/bootstrap.min.css [36m304 [90m11ms[0m
+[90mGET /javascripts/bootstrap.min.js [32m200 [90m34ms - 31.07kb[0m
+[90mGET /fonts/glyphicons-halflings-regular.woff [32m200 [90m38ms - 22.77kb[0m
+[90mGET /tutorial [33m404 [90m4ms - 1018b[0m
+Mongoose default connection disconnected through app termination
