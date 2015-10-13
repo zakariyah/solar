@@ -761,3 +761,11 @@ td.phasearrow {
   color: #FFFFFF;
   background-color: #77FF77;
 }
+
+.rcorners1 {
+    border-radius: 25px;
+    background: #8AC007;
+    padding: 20px; 
+    width: 200px;
+    height: 150px; 
+}

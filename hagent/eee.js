@@ -1,5 +1,6 @@
 var eee = function(_me, _lambda, _numExperts)
 {
+	this.expertName = 'eee';
 	this.me = _me;
 	this.numExperts = _numExperts;
 	this.lambda = _lambda;

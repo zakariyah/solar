@@ -63,6 +63,11 @@ function player(id)
 		var playerGotFromOpponent = this.gameMatrix[this.history[lastIndex][2] - 1][1];
 		var total = playerGotFromItself + playerGotFromOpponent;
 		var playerChoiceWasRandom = (this.history[lastIndex][4] == 0);
+
+		// new value to be sent
+		var briefInfo = {playerChoiceInNumber : this.history[lastIndex][0], opponentChoiceInNumber : this.history[lastIndex][2], fromItself: playerGotFromItself, fromOpponent: playerGotFromOpponent, isRandom : playerChoiceWasRandom};
+
+
 		var randomLabel = playerChoiceWasRandom ? "<span class=\"badge  pull-right\">R</span>" : "";
 		briefAnswer += "<table class='table table-bordered'><tr><td></td><td></td><td> You got</td></tr>";
 		briefAnswer += "<tr><td>Your Choice : </td><td>" + playerChoice + randomLabel + "</td><td>" + playerGotFromItself+"</td></tr>";
@@ -86,7 +91,7 @@ function player(id)
 		// html += " <tr><td colspan=3> <h3><span class=\"label label-primary\">CUMMULATIVE SCORES </span></h3></td><td>" +
 		// "<h3><span class=\"label " + color1 + "\">" + this.getCummulativeValue() +
 		//         "</span></h3></td><td><h3><span class=\"label "+ color2 +" \">" + this.getOpponentCummulativeValue() + "</span></h3></td></tr></table>";
-		return  briefAnswer;
+		return  briefInfo;
 	};
 }
 

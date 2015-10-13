@@ -1,5 +1,6 @@
 var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
 {
+	this.expertName = 'REExpert';
 	this.M = _M;
 	this.A = [];
 	this.A[0] = _A[0];
@@ -24,6 +25,7 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
 	this.acts[1] = [this.s1 % this.A[1], this.s2 % this.A[1]];
 
 	this.barR = [];
+	// expected payoff target
 	// console.log(this.acts);
 	this.barR[0] = ( this.M[0][this.acts[0][0]][this.acts[1][0]] + this.M[0][this.acts[0][1]][this.acts[1][1]])/ 2.0;
 	this.barR[1] = ( this.M[1][this.acts[0][0]][this.acts[1][0]] + this.M[1][this.acts[0][1]][this.acts[1][1]])/ 2.0;
@@ -129,7 +131,7 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
 					this.guilt = 0.0;
 				}
 				else
-				{
+					{
 					this.guilty = true;
 				}
 			}

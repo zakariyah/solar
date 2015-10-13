@@ -4,8 +4,9 @@ var playgames = require('../tester/playgames');
 
 var A  = [2, 2];
 var agent = new agen('S++', 0, A, 0.99, false );
+var agent2 = new agen('S++', 0, A, 0.99, false );
 var TFTagent = new TFT();
-var game = new playgames(TFTagent, agent, 200);
+var game = new playgames(TFTagent, agent, 20);
 console.log(game.playGame());
 
 
@@ -19,3 +20,6 @@ console.log(game.playGame());
 // previousMove = agentMove;
 // console.log(i + ', ' + acts);		
 // }
+
+what the value of the target solution
+guilt

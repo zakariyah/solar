@@ -1,5 +1,6 @@
 var minimax = function(_nActions)
 {	
+	this.expertName = 'minimax';
 	this.SENTINAL =  -999999;  // this is a constant
 	this.GRANULARITY = 0.000001; // this is a constant
 	this.ms = []; //array of double of size _nActions

@@ -768,3 +768,24 @@ td.phasearrow {
   color: #FFFFFF;
   background-color: #77FF77;
 }
+
+
+/*.table th, .table td { 
+     border-top: none !important; 
+ }*/
+
+.rcorners1 {
+    border-radius: 25px;
+    background: #8AC007;
+    padding: 2px; 
+    /*width: 200px;
+    height: 150px; */
+}
+
+.rcorners2 {
+    border-radius: 25px;
+    background: #FFC007;
+    padding: 0px; 
+    /*width: 200px;
+    height: 150px; */
+}

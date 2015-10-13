@@ -1,5 +1,6 @@
 var iModel = function(_me, _A, _omega)
 {
+	this.expertName = 'iModel';
 	var constants = require('./constants');
 	this.NUM_PLAYERS = constants.NUM_PLAYERS;
 	// console.log(this.NUM_PLAYERS);
@@ -73,22 +74,6 @@ var iModel = function(_me, _A, _omega)
 			this.lastTime[estado] = _t;
 		}
 	}
-
-	// this.matchOmegaStrategy = function(thars)
-	// {
-	// 	var s;
-	// 	for(s = 0; s < thars.numStates; s++)
-	// 	{
-	// 		if(this.lastSeen[s] >= 0)
-	// 		{
-	// 			if(thars.pi[s][this.lastSeen[s]] < 0.9999)
-	// 			{
-	// 				return false;
-	// 			}
-	// 		}
-	// 	}
-	// 	return true;
-	// }
 
 
 	this.match = function(pi)

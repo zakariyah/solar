@@ -1,5 +1,6 @@
 var Rmax = function(_me, _A, _M, _omega, _K, _gamma)
-{
+{ // best response
+	this.expertName = 'RMax';
 	var constants = require('./constants');
 	this.MAXLENGTH = constants.MAXLENGTH;
 	this.me = _me;

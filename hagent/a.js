@@ -1,5 +1,6 @@
 var a = function(_me, _A, _M, _lambda, _numExperts)
-{
+{  // used to select the expert to use amongst various experts
+	this.expertName = 'a';
 	this.me = _me;
 	this.numExperts = _numExperts;
 	this.lambda = _lambda;
@@ -46,7 +47,7 @@ var a = function(_me, _A, _M, _lambda, _numExperts)
 
 		if(cnt == 0)
 		{
-			console.log(" no choices aspiration " + this.aspiration);
+			console.log("no choices aspiration " + this.aspiration);
 		}
 
 		var highestNumber = 37572;

@@ -55,6 +55,12 @@ var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nom
 		// the method is to print out the user state.
 		return this.myJefePlus.experto;
 	}
+
+	this.getAgentVariables = function()
+	{
+		return this.myJefePlus.getAgentVariables();
+	}
+
 }
 
 module.exports = agent;

@@ -5,6 +5,7 @@
     <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script src='/javascripts/postquiz.js'></script>
+    <script src="/javascripts/canvas.js"></script>
     <script type="text/javascript">
      function playSound(){   
                 document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="/audio.notification.mp3" type="audio/mpeg" /><source src="/audio.notification.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="/audio.notification.mp3" /></audio>';
@@ -21,8 +22,9 @@ window.onbeforeunload = function() {
     }
 // var alreadyStarted
 var timeOfAction = -1;
-var timeGivenForAction = 20;    
+var timeGivenForAction = 5;    
 var hasRecommender = 0;
+var myCanvasContainer =  new canvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff');
 
 function makeSelectionImpossible()
 {
@@ -35,18 +37,17 @@ function showRecommendation(reco)
   var options = ['A', 'B'];
   var recomend = document.getElementById('recommender');
   if(reco != null)
-    {
+  {
       var message = "Recommended Action: " + options[reco - 1];
       recomend.innerHTML = message;
-    }
+  }
 }
+
 function setTimeOfEvent()
 {
-  
   var countRemain = document.getElementById("countRemain").innerHTML;
   timeOfAction = timeGivenForAction - countRemain;
   // alert(timeOfAction);
-
 }
 
 function changeProgressBar(barId, rvalue, totalValue)
@@ -59,9 +60,9 @@ function changeProgressBar(barId, rvalue, totalValue)
 
 function setTimer(reco)
 {
-  // alert('I was caleed');
-  var mainCount = 20;
-  var count = 20;
+  myCanvasContainer.clearPlayersPayoffText();
+  var mainCount = 5;
+  var count = 5;
   var interval = 1000;
   var before = new Date();
   var leftValue = 0;
@@ -77,18 +78,18 @@ function setTimer(reco)
     count = mainCount - elapsedTime;
     if (count < 0)
     {
-      document.getElementById("timer").innerHTML = "<span id='countRemain'>Please, we are still expecting the agent's choice......</span>"; // watch for spelling
       chatRoom();
-      makeSelectionImpossible();
+      document.getElementById("timer").innerHTML = "<span id='countRemain'>Please, we are still expecting the agent's choice......</span>"; // watch for spelling
+      // makeSelectionImpossible();
       clearInterval(counter);
       return;
     }
   document.getElementById("timer").innerHTML = "<span id='countRemain'>" + count + "</span> secs remaining..."; // watch for spelling
-    changeProgressBar('progressBarMain', count, 20);
+    changeProgressBar('progressBarMain', count, 5);
   }
 }
 
-var countBeginning = 30;
+var countBeginning = 2;
 function setTimerBeginning()
 {
   
@@ -112,12 +113,17 @@ function showGamePayoffMatrix()
 {
   var htmlString = "<div class=\"alert alert-warning\"> NEW ROUND </div>";
   htmlString += "";
-  htmlString += ("<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p><table class='table table-bordered table-condensed'><tr class=\"danger\"><th>Option</th> <th>You will get</th> <th>The agent  will get</th> </tr><tr  class=\"danger\"><td><input type=\"radio\" name=\"choiceAction\" id=\'first\' onclick=\'return setTimeOfEvent()\' value=\"1\"> A: </td><td>-2</td><td>5</td></tr><tr  class=\"danger\"><td><input type=\"radio\" name=\"choiceAction\" id=\'second\' onclick=\'return setTimeOfEvent()\' value=\"2\"> B: </td><td>0</td><td>0</td></tr></table><div style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>"); 
-
-
+  // htmlString += ("<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p><table class='table table-bordered table-condensed'><tr class=\"danger\"><th>Option</th> <th>You will get</th> <th>The agent  will get</th> </tr><tr  class=\"danger\"><td><input type=\"radio\" name=\"choiceAction\" id=\'first\' onclick=\'return setTimeOfEvent()\' value=\"1\"> A: </td><td>-2</td><td>5</td></tr><tr  class=\"danger\"><td><input type=\"radio\" name=\"choiceAction\" id=\'second\' onclick=\'return setTimeOfEvent()\' value=\"2\"> B: </td><td>0</td><td>0</td></tr></table><div style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>"); 
+// var chosenColor = position == 0 ? "#FF0000" : "#FF00FF";
+  htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
+  htmlString += "<div id='myOptions' class='row'></div>";
+  htmlString += "<div id='opOptions' class='row'></div>";
+  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left; color:#FF0000; font-size: 30'></td><td></td><td></td><td></td><td id='otherPayoff'  style='text-align:right; color:#FF00FF; font-size: 30'></td></tr></table></div>";
+  htmlString += "<div style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
 
   var actionElement = document.getElementById('actions');
     actionElement.innerHTML = htmlString;    
+    myCanvasContainer.startGame();
 }
 
 function showPlayerChoicesForGivenTime(reco)
@@ -137,8 +143,8 @@ function showPlayerChoicesForGivenTime(reco)
       return;
     }
     // alert('done');
-  document.getElementById("nextRoundCounter").innerHTML = "<span style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'>Next round starts in " +  timeForChoices + " seconds ... </span>"; // watch for spelling
-  changeProgressBar('progressBar', timeForChoices, 10);
+  document.getElementById("timer").innerHTML = "<span style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'>Next round starts in " +  timeForChoices + " seconds ... </span>"; // watch for spelling
+  changeProgressBar('progressBarMain', timeForChoices, 10);
   }
 }
 
@@ -157,16 +163,22 @@ function endGame(cummulativeScore, numberOfRounds)
 }
 // var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
 
-var socket = io.connect('http://localhost:4000');
+function setAgentState(state) 
+{
+  var toset = agentSettings.getStatesText(state);
+  document.getElementById('agentState').innerHTML =  toset;
+}
+
+    var socket = io.connect('http://localhost:4000');
     // var socketid = socket.id;
-socket.on('serverMessage', function(content) {
+    socket.on('serverMessage', function(content) {
     var options = ['A', 'B'];
-  //   alert('server message was called');
-  // var defectElement = document.getElementById('voice');
-    var defectElement = document.getElementById('actions'); // block actions for some time
-    defectElement.innerHTML = content.text;
-  
-    
+    //   alert('server message was called');
+    // var defectElement = document.getElementById('voice');
+    // var defectElement = document.getElementById('actions'); // block actions for some time
+    // defectElement.innerHTML = content.text;
+
+    var briefInfo = content.text;
     var numberOfRounds = content.rounds;
     // alert("numberOfRounds is " + numberOfRounds);
     var reco = content.recommendation;
@@ -186,7 +198,13 @@ socket.on('serverMessage', function(content) {
     else if(content.count < numberOfRounds)
     {
       // alert('here2');
+      myCanvasContainer.makeSelectionImpossible();
+      myCanvasContainer.setOpponentVisible(briefInfo.opponentChoiceInNumber);
+      myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
+      myCanvasContainer.setPlayersPayoffText();
+      setAgentState(content.agentState);
       showPlayerChoicesForGivenTime(reco);
+
       // setTimer();
     }
     else
@@ -199,9 +217,9 @@ socket.on('serverMessage', function(content) {
 
   socket.on('start', function() {
   // alert('here1');
-   showGamePayoffMatrix();
+  showGamePayoffMatrix();
     // alert('here');
-    countBeginning = 0;
+  countBeginning = 0;
  
 });
 
@@ -222,15 +240,8 @@ function waitingRoomEnded()
 
 function chatRoom()
 {
-  var val = 0;
-  if(document.getElementById('first').checked)
-  {
-    val = 1;
-  }
-  else if(document.getElementById('second').checked)
-  {
-    val = 2;
-  }
+  var val = myCanvasContainer.getPlayerSelection();
+  myCanvasContainer.makeSelectionImpossible();
   socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : timeOfAction});  
   // alert("was called");
   // socket.emit('clientMessage', val); 
@@ -250,10 +261,14 @@ setTimerBeginning();
     <div class='container'>
 <!-- <div class='col-md-1'>
 </div> -->
-<div class='col-md-1'></div>
+<div class="row" id='agentState'>
+  </div>
+<div class='col-md-1'>
+</div>
 <div class='col-md-10'>
     <div class='row' id='actions'>
       <p>Welcome</p>
+      <div class='row'><table class='table'><tr><td id='myPayoff'></td><td></td><td></td><td></td><td id='otherPayoff'></td></tr></table></div>
       <div class="alert alert-warning"> Please wait while we initiate the agent.  <span id='timerBegin'></span></div>
 </div>
 <div class="row alert alert-warning" id='recommender'>

@@ -1,5 +1,6 @@
 var ucb = function(_me, _lambda, _numExperts)
 {
+	this.expertName = 'ucb';
 	this.me = _me;
 	this.numExperts = _numExperts;
 	this.lambda = _lambda;

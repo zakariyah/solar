@@ -1,15 +1,29 @@
-function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
-{
-	this.A = [];
+function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
+{  
+	this.distinctExpertWasChosen = false;
+	this.anExpertHasBeenExecutedForCompleteCycle = false;
+	this.satisfiedWithLastRound = false;
+	this.forgivesOtherPlayer = false;
+	this.defectedAgainstSPlusPlus = false;
+	this.profitedFromDefection = false;
+	this.punishedGuiltyPartner = false;
+	this.succeededInPunishingGuiltyPartner = false;
+	this.CanReceiveHigherPayoff = false;
+
+	this.expertName;
+	// learner is a for S++
+	// br is RMAx
+	// re = REExperts
+	this.A = []; // [2,2] for pd: number of players on both sides
 	this.A[0] = _A[0];
 	this.A[1] = _A[1];
-	this.me = _me;
+	this.me = _me; // player index
 	this.game = [];
-	this.M = _M;
+	this.M = _M; // game Matrix
 	// this.strcpy(this.game, _game); check
 
-	this.numStates = this.A[0] * this.A[1];
-	this.t = 0;
+	this.numStates = this.A[0] * this.A[1]; // possible actions
+	this.t = 0; // most likely round number
 
 	this.beenThere = [];
 	this.experto = -1;
@@ -27,8 +41,8 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	var minimaxLog  = require('./minmax');
 
 
-	this.REcount = 0;
-	this.br ; // placeholder for br
+	this.REcount = 0; // number of set of experts
+	this.br ; // placeholder for best response
 	this.satisficingExperts = [];
 	
 	this.attack0;
@@ -90,13 +104,14 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	}
 
 	this.createSolutionPairs = function(Theta)
-	{
+	{ // Theta is an empty list to be initiated
+		// I dont get what it is capturing
 		var c = 0;
 		for(var i = 0; i < this.numStates; i++)
 		{
 			for(var j = i; j < this.numStates; j++)
 			{
-				Theta[c] = new SolutionPair();
+				Theta[c] = new SolutionPair(); // just an object with no methods
 				Theta[c].s1 = i;
 				Theta[c].s2 = j;
 				Theta[c].one = (this.pay(0, Theta[c].s1) + this.pay(0, Theta[c].s2)) / 2.0;
@@ -117,12 +132,15 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 
 	this.resetCycle = function()
 	{
+		// this function initialize the following variables. 
+		// to be called at the start of a cycle (verify)
+		// beenThere indcates that a cycle has occurred
 		this.tau = 0;
 		this.R = 0.0;
-		for(var i = 0; i < this.numStates; i++)
+		for(var i = 0; i < this.numStates; i++) // numStates = 4 for pd 
 			this.beenThere[i] = false;
 
-		if(this.estado >= 0)
+		if(this.estado >= 0) // this.estado most likely stating the state the algorithm is in
 			this.beenThere[this.estado] = true;
 	}
 
@@ -131,7 +149,7 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var numSolutionPairs = 0;
 		for(var i = 0; i < this.numStates; i++)
 		{
-			numSolutionPairs += (i + 1);
+			numSolutionPairs += (i + 1);  // 10 for pd
 		}
 
 		var Theta = [];
@@ -152,6 +170,7 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			if((Theta[i].one >= this.mnmx[0].mv) && (Theta[i].one > 0) && (Theta[i].two >= this.mnmx[1].mv) && (Theta[i].two > 0))
 			{
 				// console.log("creating something");
+				// creating an expert for solution pairs that are greater than maximin for both players
 				this.re[this.REcount] = new REExpert(this.me, this.M, this.A, Theta[i].s1, Theta[i].s2, this.attack0, this.attack1);
 				this.REcount ++;
 			}
@@ -160,6 +179,7 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 
 	this.determineExperts = function()
 	{
+		//initialize a number of variables and select the set of experts to be used for the game
 		this.resetCycle();
 		this.determineStrategyPairs();
 		var numEs = this.REcount * 2 + 2;
@@ -174,7 +194,7 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 
 	
 
-	this.numExperts = this.determineExperts();
+ 	this.numExperts = this.determineExperts(); // most likely number of experts including maximin and best response
 	// console.log("numExperts " + this.numExperts);
 
 	this.cycleFull = true;
@@ -210,6 +230,7 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	this.setAspirationFolkEgal = function()
 	{
 		// console.log("I was caled");
+		// set the aspiration 
 		if(this.REcount == 0)
 		{
 			this.learner.aspiration = this.mnmx[this.me].mv;
@@ -223,7 +244,8 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var theMin;
 		var s;
 		for(i = 0; i < this.REcount; i++)
-		{
+		{// trying to find the maximum of the least of the two values
+			// this in some way gets the best solution
 			theMin = this.re[i].barR[this.me];
 			if(theMin > this.re[i].barR[1 - this.me])
 				theMin = this.re[i].barR[1 - this.me];
@@ -238,10 +260,10 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		this.learner.aspiration = this.re[index].barR[this.me];
 		if(this.learner.aspiration < this.mnmx[this.me].mv)
 			this.learner.aspiration = this.mnmx[this.me].mv;
-		console.log(" initial aspiration levele = " + this.me + ", " + this.learner.aspiration);
+		// console.log(" initial aspiration levele = " + this.me + ", " + this.learner.aspiration);
 	}
 
-	this.setAspirationFolkEgal();
+	this.setAspirationFolkEgal(); //sets the aspiration level for the learner
 	this.mu = 0.0;
 
 	this.vu = [];
@@ -320,10 +342,12 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var highestNumber = 37542;
 		if(this.estado < 0)
 		{
+			// console.log('estado is less than zero');
 			return Math.floor(Math.random() * highestNumber) % this.A[this.me];
 		}
 		if(this.cycled)
 		{
+			// a new cycle begins
 			var oldExperto = this.experto;
 			this.resetCycle();
 			this.determineSatisficingExperts();
@@ -334,44 +358,77 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 					this.numSatExperts ++;
 			}
 
-			this.experto = this.learner.select(this.satisficingExperts);
+			this.experto = this.learner.select(this.satisficingExperts); // to get the expert to be used
+			// console.log('cycled ' + this.learner.expertName);
 			if((this.experto > 1) && (this.experto != oldExperto))
 			{
 				var ind = this.experto - 2;
 				if(ind >= this.REcount)
 					ind -= this.REcount;
 				// console.log("previousActs " + this.previousActs);
+				// this.re stands for the experts array
+				// this tries to reset the chosen expert.
 				this.re[ind].reset(this.previousActs);
 			}
+			// to know if old expert was chosen. 
+			// my own code
+			if(this.experto == oldExperto)
+			{
+				// previous expert was chosen
+			}
+			else
+			{
+				this.distinctExpertWasChosen = true;
+			}
+
 			this.cycled = false;
 		}
 
 		var a;
-		// console.log(this.br.estado);
+		// console.log('experto is :' + this.experto + ' at t ' + this.t);
 		// this.experto = 1;
 		if(this.experto == 0)
+		{//maximin
 			a = this.generateAction(this.me, this.mnmx[this.me].ms);
+			// console.log('minimax used');
+			this.expertName = 'maximin basis';
+		}
 		else if(this.experto == 1)
+		{// best response
 			a = this.br.moveGreedy();
+			// console.log('expert is ' + this.br.expertName);
+			this.expertName = 'best response';
+		}
 		else if((this.experto % 2) == 0)
+		{ // leader part of algorithm
 			a = this.re[(this.experto - 2) / 2].act(this.me);
+			// console.log('expert is ' + this.re[(this.experto - 2) / 2].expertName);
+			this.expertName = 'leader';
+		}
 		else
+		{ // follower part of algorithm
 			a = this.generateAction(this.me, this.re[Math.floor((this.experto - 2)/ 2)].asTheFollower.follower[this.estado]);
-
+			// console.log('expert is ' + this.re[Math.floor((this.experto - 2)/ 2)].expertName + ' :follower');
+			this.expertName = 'follower';			
+		}
 		return a;
 	}
 
 	this.update = function(acts)
 	{
+		this.anExpertHasBeenExecutedForCompleteCycle = false;
+		this.distinctExpertWasChosen = false;
 		this.previousActs[0] = acts[0];
 		this.previousActs[1] = acts[1];
 		this.R += this.M[this.me][acts[0]][acts[1]];
 		this.mu += this.M[this.me][acts[0]][acts[1]];
 
-		this.br.update(acts);
-		if(this.estado >= 0)
+		this.br.update(acts); // br is an obect of Rmax
+		if(this.estado >= 0) // state is greater than zero
 		{
-			this.im.update(acts, this.estado, this.t);
+			// im is an object of iModel
+			// update method 
+			this.im.update(acts, this.estado, this.t); 
 		}
 
 		this.estado = this.encodeJointAction(acts);
@@ -387,6 +444,11 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		{
 			var ind = Math.floor((this.experto - 2)/ 2);
 			this.re[ind].update(this.me, acts);
+			this.profitedFromDefection = this.re[ind].guilty;
+		}
+		else
+		{
+			this.profitedFromDefection = false;
 		}
 
 		this.usage[this.experto]++;
@@ -399,12 +461,18 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		if(this.cycleFull)
 		{
 			if(this.tau == (this.numStates - 1))
-				this.cycled = true;
+				{
+					this.cycled = true;
+					this.anExpertHasBeenExecutedForCompleteCycle = true;
+				}
 		}
 		else
 		{
 			if(this.beenThere[this.estado])
+			{
 				this.cycled = true;
+				this.anExpertHasBeenExecutedForCompleteCycle = true;
+			}
 		}
 
 		this.beenThere[this.estado] = true;
@@ -474,7 +542,7 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var verbose = false;
 		if(this.verbose)
 		{
-			console.log("Satisficing Experts for " + this.me + " alpha = " + this.learner.aspiration);
+			// console.log("Satisficing Experts for " + this.me + " alpha = " + this.learner.aspiration);
 			this.im.print();
 		}
 
@@ -669,6 +737,18 @@ function   jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	this.encodeJointAction = function(_actions)
 	{
 		return this.A[1] * _actions[0] + _actions[1];
+	}
+
+	this.getAgentVariables = function()
+	{
+		var targetForOpponent = null;
+		var target = null;
+		if(this.experto > 1)
+		{
+			target = this.re[Math.floor((this.experto - 2) / 2)].s1;
+			targetForOpponent = this.re[Math.floor((this.experto - 2) / 2)].s2;
+		}
+		return [this.distinctExpertWasChosen, this.anExpertHasBeenExecutedForCompleteCycle, this.profitedFromDefection, this.expertName, this.learner.aspiration, target, targetForOpponent ]
 	}
 }
 

@@ -102,6 +102,15 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 		return null;
 	}
 
+	this.getAgentVariables = function()
+	{
+		if(isAgent)
+		{
+			return this.agent.getAgentVariables();
+		}
+		return null;
+	}
+
 	this.gameStore = [];
 
 	this.getRecommenderType = function()
