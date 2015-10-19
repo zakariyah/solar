@@ -181,9 +181,9 @@ var OneCanvas = function(canvasId, position, payoff)
 	var canvasContext = canvasElement.getContext("2d");
 	var width = canvasElement.width;
 	var height = canvasElement.height;
-	var chosenColor = position == 0 ? "#FF0000" : "#FF00FF";
+	var chosenColor = position == 0 ? "#006400" : "#006400";
 	
-	canvasContext.fillStyle = "#303030";
+	canvasContext.fillStyle = "#D3D3D3";
 	
 	var presentYStart = height / 2;
 	var startingY = presentYStart - (height/20);
@@ -212,7 +212,7 @@ var OneCanvas = function(canvasId, position, payoff)
 	
 	this.fillCanvasColor = function()
 	{
-		canvasContext.fillStyle = "#0000FF";
+		canvasContext.fillStyle = "#006400";
 		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
 		drawTriangle();
 		canvasContext.fillStyle = chosenColor;
@@ -221,7 +221,7 @@ var OneCanvas = function(canvasId, position, payoff)
 
 	this.returnColorToDefault = function()
 	{
-		canvasContext.fillStyle = "#303030";
+		canvasContext.fillStyle = "#D3D3D3";
 		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
 		drawTriangle();
 		canvasContext.fillText(payoff,textStartingX,textStartingY);
@@ -237,7 +237,7 @@ var StraightLineCanvas = function(canvasId)
 	var width = canvasElement.width;
 	var height = canvasElement.height;
 	
-	canvasContext.fillStyle = "#303030";
+	canvasContext.fillStyle = "#D3D3D3";
 	
 	var presentYStart = height / 2;
 	var startingY = presentYStart - (height/20);
@@ -248,13 +248,13 @@ var StraightLineCanvas = function(canvasId)
 
 	this.fillCanvasColor = function()
 	{
-		canvasContext.fillStyle = "#0000FF";
+		canvasContext.fillStyle = "#006400";
 		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
 	}	
 
 	this.returnColorToDefault = function()
 	{
-		canvasContext.fillStyle = "#303030";
+		canvasContext.fillStyle = "#D3D3D3";
 		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
 	}
 }
@@ -321,7 +321,6 @@ var canvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 		document.getElementById(opPayoffTableId).innerHTML = '';
 	}
 
-
 }
 
 var AgentStateSettings = function()
@@ -366,12 +365,5 @@ var AgentStateSettings = function()
 	}
 }
 
-// canvasContainerT = new canvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff');
-// canvasContainerT.startGame();
-// canvasContainerT.setOpponentVisible(1);
-// canvasContainerT.setPlayersPayoffText();
-
-
-// expert values
 
 agentSettings = new AgentStateSettings();

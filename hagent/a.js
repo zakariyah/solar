@@ -74,10 +74,16 @@ var a = function(_me, _A, _M, _lambda, _numExperts)
 	this.update = function(R, tau)
 	{
 		// var aspiration = 0;
+		// console.log('R is ' + R);
+		// console.log('Tau is ' + tau);
+		// console.log('lambda is ' + this.lambda);
+		// console.log('Aspiration before is ' + this.aspiration);
 		for(var i = 0; i < tau; i++)
 		{
 			this.aspiration = this.lambda * this.aspiration + (1.0 - this.lambda) * R;
 		}
+
+		// console.log('Aspiration is ' + this.aspiration);
 
 		this.rho = R / this.aspiration;
 		if(this.rho > 1.0)

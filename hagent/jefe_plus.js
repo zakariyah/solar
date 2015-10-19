@@ -342,7 +342,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var highestNumber = 37542;
 		if(this.estado < 0)
 		{
-			// console.log('estado is less than zero');
+			console.log('estado is less than zero');
 			return Math.floor(Math.random() * highestNumber) % this.A[this.me];
 		}
 		if(this.cycled)
@@ -420,9 +420,17 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		this.distinctExpertWasChosen = false;
 		this.previousActs[0] = acts[0];
 		this.previousActs[1] = acts[1];
+		
+		// console.log('R before ' + this.R);
+		// console.log('acts before ' + acts);
+		// console.log('M before ' + this.M[this.me][acts[0]][acts[1]]);
+
+
 		this.R += this.M[this.me][acts[0]][acts[1]];
 		this.mu += this.M[this.me][acts[0]][acts[1]];
 
+		// console.log('R after ' + this.R);
+		
 		this.br.update(acts); // br is an obect of Rmax
 		if(this.estado >= 0) // state is greater than zero
 		{
@@ -745,8 +753,8 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var target = null;
 		if(this.experto > 1)
 		{
-			target = this.re[Math.floor((this.experto - 2) / 2)].s1;
-			targetForOpponent = this.re[Math.floor((this.experto - 2) / 2)].s2;
+			target = this.re[Math.floor((this.experto - 2) / 2)].barR[0].toFixed(2);
+			targetForOpponent = this.re[Math.floor((this.experto - 2) / 2)].barR[1].toFixed(2);
 		}
 		return [this.distinctExpertWasChosen, this.anExpertHasBeenExecutedForCompleteCycle, this.profitedFromDefection, this.expertName, this.learner.aspiration, target, targetForOpponent ]
 	}

@@ -1,13 +1,28 @@
 var agen = require('./agent');
 var TFT = require('../tester/TFT');
+var randAgent = require('../tester/randAgent');
 var playgames = require('../tester/playgames');
+var player = require('./gameplayer');
+var testRecommend = require('../tester/testRecommend');
+
 
 var A  = [2, 2];
 var agent = new agen('S++', 0, A, 0.99, false );
 var agent2 = new agen('S++', 0, A, 0.99, false );
 var TFTagent = new TFT();
-var game = new playgames(TFTagent, agent, 20);
-console.log(game.playGame());
+var randA = new randAgent();
+// var game = new playgames(agent2, agent, 200);
+// console.log(game.playGame());
+
+
+
+var soc = {id: 'rfyrfuyfruyfuy67565'};
+player1 = new player(12, soc, false, 1, 656576);
+player1.setHasRecommender(false);
+
+
+var testRecommend = new testRecommend(player1, randA, TFTagent, 200);
+testRecommend.playGame();
 
 
 // var previousMove = 1;
@@ -21,5 +36,5 @@ console.log(game.playGame());
 // console.log(i + ', ' + acts);		
 // }
 
-what the value of the target solution
-guilt
+// what the value of the target solution
+// guilt

@@ -89,7 +89,7 @@ function setTimer(reco)
   }
 }
 
-var countBeginning = 2;
+var countBeginning = 200;
 function setTimerBeginning()
 {
   
@@ -118,7 +118,7 @@ function showGamePayoffMatrix()
   htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
   htmlString += "<div id='myOptions' class='row'></div>";
   htmlString += "<div id='opOptions' class='row'></div>";
-  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left; color:#FF0000; font-size: 30'></td><td></td><td></td><td></td><td id='otherPayoff'  style='text-align:right; color:#FF00FF; font-size: 30'></td></tr></table></div>";
+  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left; font-size: 30'></td><td></td><td></td><td></td><td id='otherPayoff'  style='text-align:right; font-size: 30'></td></tr></table></div>";
   htmlString += "<div style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
 
   var actionElement = document.getElementById('actions');
@@ -165,8 +165,12 @@ function endGame(cummulativeScore, numberOfRounds)
 
 function setAgentState(state) 
 {
-  var toset = agentSettings.getStatesText(state);
-  document.getElementById('agentState').innerHTML =  toset;
+  console.log(state);
+  if(state)
+  {
+    var toset = agentSettings.getStatesText(state);
+    document.getElementById('agentState').innerHTML =  toset;  
+  }
 }
 
     var socket = io.connect('http://localhost:4000');
@@ -203,6 +207,7 @@ function setAgentState(state)
       myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
       myCanvasContainer.setPlayersPayoffText();
       setAgentState(content.agentState);
+      console.log('content is ' + JSON.stringify(content));
       showPlayerChoicesForGivenTime(reco);
 
       // setTimer();

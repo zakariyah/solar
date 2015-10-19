@@ -64,7 +64,6 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 	{
 		if(this.hasRecommender)
 		{
-			console.log("was called");
 			var acts = [playerMove - 1, opponentMove - 1];
 			this.recommender.update(acts);
 		}
@@ -107,6 +106,16 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 		if(isAgent)
 		{
 			return this.agent.getAgentVariables();
+		}
+		return null;
+	}
+
+	this.getRecommenderVariables = function()
+	{	
+		// console.log('was called');
+		if(this.hasRecommender)
+		{
+			return this.recommender.getAgentVariables();
 		}
 		return null;
 	}
