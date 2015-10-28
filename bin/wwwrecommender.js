@@ -230,7 +230,8 @@ ionew.sockets.on('connection', function (socket) {
 						// console.log("number of rounds :" + numberOfRounds);
 						var recommenderOption = playerToSendMessage.hasRecommender ? 1 : 0;
 						var recc = playerToSendMessage.getRecommendation();
-						playerToSendMessage.sessionSocket.emit('serverMessage', {count : 0, text : message, rounds : numberOfRounds, recommenderOptionValue : recommenderOption, recommendation : recc});
+						var agentState = playerToSendMessage.getRecommenderVariables();
+						playerToSendMessage.sessionSocket.emit('serverMessage', {count : 0, text : message, rounds : numberOfRounds, recommenderOptionValue : recommenderOption, recommendation : recc, agentState : agentState});
 						playerToSendMessage.sessionSocket.emit('start');
 				}
 			}
@@ -303,11 +304,13 @@ ionew.sockets.on('connection', function (socket) {
 				var soc1 = roomObject.player1;
 				var soc2 = roomObject.player2;
 				if(!soc1.isAgent)
-				{ // returns null if it has no recommender and also does nothing in update recommender
+				{ 
+					// returns null if it has no recommender and also does nothing in update recommender
 					soc1.updateRecommender(store.answererSet[soc1.id].chosenAnswer, store.answererSet[soc2.id].chosenAnswer);
 					var cummScore = store.players[soc1.id].getCummulativeValue();
-					var agentState = soc1.getRecommenderVariables(); // recommender
-					var message = {count : store.round, text : store.players[soc1.id].printResults(), recommendation : soc1.getRecommendation(), rounds : roomObject.getGameRounds(), cumm : cummScore, agentState: agentState};
+					var recommendedValue = soc1.getRecommendation();
+					var agentState = soc1.getRecommenderVariables(); // recommender variables should be after the move
+					var message = {count : store.round, text : store.players[soc1.id].printResults(), recommendation : recommendedValue , rounds : roomObject.getGameRounds(), cumm : cummScore, agentState: agentState};
 					soc1.sessionSocket.emit('serverMessage', message);						
 				}
 				else
@@ -317,10 +320,13 @@ ionew.sockets.on('connection', function (socket) {
 
 				if(!soc2.isAgent)
 				{
+					
 					soc2.updateRecommender(store.answererSet[soc2.id].chosenAnswer, store.answererSet[soc1.id].chosenAnswer);
 					var cummScore = store.players[soc2.id].getCummulativeValue();
-					var agentState = soc2.getRecommenderVariables(); // recommender
-					var message2 = {count : store.round, text : store.players[soc2.id].printResults(), recommendation : soc2.getRecommendation(), rounds : roomObject.getGameRounds(), cumm :cummScore, agentState: agentState};
+					
+					var recommendedValue = soc2.getRecommendation();
+					var agentState = soc2.getRecommenderVariables(); // recommender variables should be after move
+					var message2 = {count : store.round, text : store.players[soc2.id].printResults(), recommendation : recommendedValue, rounds : roomObject.getGameRounds(), cumm :cummScore, agentState: agentState};
 					soc2.sessionSocket.emit('serverMessage', message2);						
 				}
 				else
@@ -398,7 +404,7 @@ socket.on('disconnect', function()
 			{ // store is not filled
 				console.log("presentSocketGameCounter : disconnect3:  " + presentSocketGameCounter);
 				roomObject.gameRounds = store.round;  // set the present round to last round to end the game
-			}	
+			}
 		}
 	}
 });

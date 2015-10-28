@@ -6,9 +6,6 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 	var allPayoffs = [[[-2, 5], [0,0]], [[5, -2], [0,0]]];
 	var payoff = allPayoffs[playerType-1];
 
-
-
-
 	var getALine = function(lineNumber)
 	{
 		var optionsValues = ['A', 'B'];
@@ -36,11 +33,11 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 		return [lineHtml, canvasIds];
 	}
 
-
 	var canvasId = [];
 	var container = document.getElementById(containerId);
-	var heading = (playerType == 1) ? 'Your Actions' : 'The Other Player\'s Actions';
-	var containerHTML = '<table border="1"><tr><td></td><td></td><td style="text-align:left"><b>' + heading +'</b></td><td></td><td></td></tr>';
+	// var heading = (playerType == 1) ? 'Your Actions' : 'The Other Player\'s Actions';
+	var containerHTML = '<table border="1">';
+	// containerHTML +=  '<tr><td></td><td></td><td style="text-align:left"><b>' + heading +'</b></td><td></td><td></td></tr>';
 	containerHTML += '<tr><td style="text-align:left">Your Payoff</td><td></td><td></td><td></td><td  style="text-align:right">Other Player\'s Payoff</td></tr>';
 	for(var i = 0; i < 2 ; i++)
 	{
@@ -57,8 +54,8 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 	// var payoffTableWordings = (playerType == 1) ? 'Your Payoff: ' : 'The Other Player\'s Payoff: ';
 	var recordScores = function(buttonId, payoffTableIdLocal, opPayoffTableIdLocal)
 	{
-		document.getElementById(payoffTableIdLocal).innerHTML = 'Sum: ' + (payoff[buttonId][0]) + ' + __';
-		document.getElementById(opPayoffTableIdLocal).innerHTML = 'Sum: ' + (payoff[buttonId][1]) + ' + __';
+		document.getElementById(payoffTableIdLocal).innerHTML = 'Your Total: ' + (payoff[buttonId][0]) + ' + __';
+		document.getElementById(opPayoffTableIdLocal).innerHTML = ''; //: ' + (payoff[buttonId][1]) + ' + __';
 	}
 
 	// onclick handler for radio buttons
@@ -107,15 +104,15 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 			var id = canvasId[i][j];
 			if(j == 0)
 			{
-				canvasses[i].push(new OneCanvas(id, 0, payoff[i][0]));
+				canvasses[i].push(new OneCanvas(id, 0, payoff[i][0], playerType));
 			}
 			else if(j == canvasId[i].length - 1)
 			{
-				canvasses[i].push(new OneCanvas(id, 1, payoff[i][1]));	
+				canvasses[i].push(new OneCanvas(id, 1, payoff[i][1], playerType));	
 			}
 			else
 			{
-				canvasses[i].push(new StraightLineCanvas(id));
+				canvasses[i].push(new StraightLineCanvas(id, playerType));
 			}
 		}
 	}
@@ -172,16 +169,28 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 		options[1].disabled = availability;
 	}
 
+	this.returnColorToDefault = function()
+	{
+		for(var i = 0; i < canvasses.length; i++)
+		{
+			for(var j = 0; j < canvasId[i].length; j++)
+			{
+				canvasses[i][j].returnColorToDefault();
+			}
+		}
+	}
+
+
 }
 
-var OneCanvas = function(canvasId, position, payoff)
+var OneCanvas = function(canvasId, position, payoff, playerType)
 {
 	// position 0 for left and 1 for right
 	var canvasElement = document.getElementById(canvasId);
 	var canvasContext = canvasElement.getContext("2d");
 	var width = canvasElement.width;
 	var height = canvasElement.height;
-	var chosenColor = position == 0 ? "#006400" : "#006400";
+	var chosenColor = playerType == 1 ? "#006400" : "#FFFF00";
 	
 	canvasContext.fillStyle = "#D3D3D3";
 	
@@ -212,7 +221,7 @@ var OneCanvas = function(canvasId, position, payoff)
 	
 	this.fillCanvasColor = function()
 	{
-		canvasContext.fillStyle = "#006400";
+		canvasContext.fillStyle = chosenColor;
 		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
 		drawTriangle();
 		canvasContext.fillStyle = chosenColor;
@@ -229,14 +238,15 @@ var OneCanvas = function(canvasId, position, payoff)
 }
 
 
-var StraightLineCanvas = function(canvasId)
+var StraightLineCanvas = function(canvasId, playerType)
 {
 	// position 0 for left and 1 for right
 	var canvasElement = document.getElementById(canvasId);
 	var canvasContext = canvasElement.getContext("2d");
 	var width = canvasElement.width;
 	var height = canvasElement.height;
-	
+	var chosenColor = playerType == 1 ? "#006400" : "#FFFF00";
+
 	canvasContext.fillStyle = "#D3D3D3";
 	
 	var presentYStart = height / 2;
@@ -248,7 +258,7 @@ var StraightLineCanvas = function(canvasId)
 
 	this.fillCanvasColor = function()
 	{
-		canvasContext.fillStyle = "#006400";
+		canvasContext.fillStyle = chosenColor;
 		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
 	}	
 
@@ -260,11 +270,39 @@ var StraightLineCanvas = function(canvasId)
 }
 
 
-var canvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayoffTableId, opPayoffTableId)
+var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayoffTableId, opPayoffTableId, socket)
 {
 	
 	var myOptions;
 	var opponentOptions;
+	var submitButton;
+
+	this.nextRound = function(forceSubmission)
+	{	
+		var that = this;
+		return function()
+		{
+			// alert('eas ewefrgfr');
+			var optionSelected = myOptions.getSelection();
+			if(optionSelected == 0)
+			{
+				if(!forceSubmission)
+				{
+					alert('please make a selection before submitting');
+					return;
+				}
+			}
+
+		  var val = that.getPlayerSelection();
+		  that.makeSelectionImpossible();
+		  that.getGameTimer().stopTimer();
+		  that.setSubmitButtonVisible(false);
+		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : 0});
+		  // console.log('emitted');  
+		}
+	}
+
+
 
 	this.startGame = function()
 	{
@@ -297,6 +335,8 @@ var canvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 		myOptions.makeSelection(false);
 		myOptions.clearSelection();
 		opponentOptions.clearSelection();
+		myOptions.returnColorToDefault();
+		opponentOptions.returnColorToDefault();
 	}
 
 	this.makeSelectionImpossible = function()
@@ -321,6 +361,13 @@ var canvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 		document.getElementById(opPayoffTableId).innerHTML = '';
 	}
 
+	this.setSubmitButtonVisible  = function(visibility)
+	{
+		var submitButton = document.getElementById('nextButton');
+		submitButton.style.display = visibility ? 'inline' : 'none';
+		submitButton.disabled = !visibility ;
+	}
+
 }
 
 var AgentStateSettings = function()
@@ -338,32 +385,268 @@ var AgentStateSettings = function()
 		targetForOpponent = states[6];
 	}
 
-	this.getStatesText = function(states)
+	this.getStatesText = function(states, recommendation)
 	{
+		if(!states)
+		{
+			return '';
+		}
 		this.setStates(states);
-		var stateText = '<p>';
+		var stateText = ' ' ; //<p>';
 		if(distinctExpertWasChosen)
 		{
-			stateText += ' A distinct expert has been chosen. ';
+			stateText += '<p> A distinct expert has been chosen. ';
 		}
 		if(anExpertHasBeenExecutedForCompleteCycle)
 		{
-			stateText += ' The expert has executed a complete cycle. ';
+			stateText += '<p> The expert has executed a complete cycle. ';
 		}
 		if(profitedFromDefection)
 		{
-			stateText += ' The opponent profited from the defection and is thus guilty. ';
+			stateText += '<p> The opponent profited from the defection and is thus guilty. ';
 		}
 
-		stateText += ' Expert Type ' + expertType + '. ';
-		stateText += ' Aspiration ' + aspiration + '. ';
-		stateText += ' Target ' + target + '. ';
-		stateText += ' Target for opponent ' + targetForOpponent + '. ';
+		var options = ['A', 'B'];
+		stateText += ' <p>Expert Type ' + expertType + '. ';
+		stateText += ' <p>Aspiration ' + aspiration + '. ';
+		stateText += ' <p>Target ' + target + '. ';
+		stateText += ' <p>Target for opponent ' + targetForOpponent + '. ';
+		stateText += '<p> Recommended action : ' + options[recommendation - 1] + ' ';
 		stateText += '</p>';
 
 		return stateText;
 	}
 }
 
+var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction, initialFunction)
+{
+	if(initialFunction)
+	{
+		initialFunction();
+	}
 
-agentSettings = new AgentStateSettings();
+	var before;
+	var count = countIn;
+	var interval = intervalIn;
+	var mainCount = countIn;
+	var counter;
+
+	var timer = function()
+	{
+		var now = new Date();
+	    var elapsedTime = (now.getTime() - before.getTime());
+	    elapsedTime = Math.floor(elapsedTime/interval); 
+	    // leftValue += Math.floor(elapsedTime/interval);
+	    count = mainCount - elapsedTime;
+	    if (count < 0)
+	    {
+		    endFunction();
+		    clearInterval(counter);
+		    return;
+		}
+		periodicFunction(count);
+	}
+
+	this.startTimer = function()
+	{
+		before = new Date();
+		counter = setInterval(timer, interval);
+	}	
+
+	this.stopTimer = function()
+	{
+		clearInterval(counter);
+	}
+ }
+
+var WaitingTimeElapsed = function(socket)
+{
+	var totalWaitingTime = 50;
+	var intervalWaiting = 1000;
+	var waitingTimePeriodicFunction = function(count)
+	{
+		document.getElementById('timerBegin').innerHTML = count + " secs remaining";
+	}
+
+	var waitingTimeEndFunction = function()
+	{
+		socket.emit('waitingTimeElapsed');
+	}
+
+	var that = new TimerFunction(totalWaitingTime, intervalWaiting, waitingTimePeriodicFunction, waitingTimeEndFunction);
+
+	return that;
+}
+
+var GameTimer = function(socket, gameTimeEndFunction)
+{
+	var totalGameTime = 10;
+	var intervalGame = 1000;
+	var gameTimePeriodicFunction = function(count)
+	{
+		document.getElementById('timerBegin').innerHTML = count + " secs remaining";
+	}
+
+	var that = new TimerFunction(totalGameTime, intervalGame, gameTimePeriodicFunction, gameTimeEndFunction);
+
+	return that;
+}
+
+
+var ResultTimer = function(socket, resultTimeEndFunction)
+{
+	var totalResultTime = 5;
+	var intervalResult = 1000;
+	
+	var resultTimePeriodicFunction = function(count)
+	{
+		document.getElementById('timerBegin').innerHTML = count + " secs remaining";
+	}
+
+	
+
+	var that = new TimerFunction(totalResultTime, intervalResult, resultTimePeriodicFunction, resultTimeEndFunction);
+
+	return that;
+}
+
+
+
+var PrisonersDilemma = function()
+{	
+	var hiitNumber = document.getElementById("hiitNumber").innerHTML;
+	var socket = io.connect('http://localhost:4000');
+	var myCanvasContainer =  new CanvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff', socket);
+	var hasRecommender;
+
+	agentSettings = new AgentStateSettings();
+
+	var gameTimerEnd = function()
+	{
+		myCanvasContainer.nextRound(true)();
+	}
+
+	// waiting Time 
+	var waitingTimeElapsed = new WaitingTimeElapsed(socket);
+
+	var gameTimer = new GameTimer(socket, gameTimerEnd);
+
+
+	var resultTimeEndFunction = function()
+	{
+		myCanvasContainer.clearPlayersPayoffText();
+		myCanvasContainer.setSubmitButtonVisible(true);
+		myCanvasContainer.clearPlayersPayoffText();
+		myCanvasContainer.resetAll();
+		gameTimer.startTimer();
+	}
+
+
+	var resultTimer = new ResultTimer(socket, resultTimeEndFunction);
+
+
+	// add the timers to the game containers
+	myCanvasContainer.getGameTimer = function()
+	{
+		return gameTimer;
+	}
+
+	myCanvasContainer.getResultTimer = function()
+	{
+		return resultTimer;
+	}
+
+
+	var startGame = function()
+	{
+				
+	}
+
+	var startRealGame = function()
+	{
+	  var htmlString = "<div class=\"alert alert-warning\" id=\"roundNumber\"> ROUND 1 </div>";
+	  htmlString += "";
+
+	  htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
+	  htmlString += "<div id='myOptions' class='row'></div>";
+  	  htmlString += "<div id='opOptions' class='row'></div>";
+  	  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left;'></td><td></td><td></td><td></td><td id='otherPayoff'  style='text-align:right;'></td></tr></table></div>";
+  	  htmlString += "<div id='nextRound' style='text-align: center;'><button class='button' id='nextButton'>Submit</button></div>";
+  	  htmlString += "<div style='border: 1px #bce8f1 solid; font-size: 18px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
+
+	  var actionElement = document.getElementById('actions');
+	  actionElement.innerHTML = htmlString;    
+	  myCanvasContainer.startGame();
+
+	  document.getElementById('nextButton').onclick = myCanvasContainer.nextRound();
+
+	}
+
+
+	var endGame = function(cummulative, numberOfRounds, playerHadRecommender)
+	{
+		var htmlString = "<div class=\"alert alert-warning\"> Thank you very much, The game is over. You had a total of " + cummulative  +" points</div>";
+        htmlString += "<div class=\"panel panel-default  col-sm-8 col-sm-offset-2 \"><div class=\"panel-heading\"> Please fill in the survey below</div><div class=\"panel-body\">";
+        htmlString += postQuizQuestions(playerHadRecommender, cummulative, numberOfRounds);
+
+        htmlString += "</div></div>";
+        var actionsElement = document.getElementById('actions');
+        actionsElement.innerHTML = htmlString;
+        document.getElementById('recommender').innerHTML = '';
+	}
+
+	var serverMessage = function(content)
+	{
+		if(content.count == 0)
+		{
+			waitingTimeElapsed.stopTimer();
+			hasRecommender = content.recommenderOptionValue;
+			startRealGame();
+			gameTimer.startTimer();
+			var agentStates = agentSettings.getStatesText(content.agentState, content.recommendation);
+			document.getElementById('agentState').innerHTML = agentStates;
+		}
+		else if(content.count < content.rounds)
+		{
+			var briefInfo = content.text;
+			myCanvasContainer.makeSelectionImpossible();
+		    myCanvasContainer.setOpponentVisible(briefInfo.opponentChoiceInNumber);
+		    myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
+		    myCanvasContainer.setPlayersPayoffText();
+		    // setAgentState(content.agentState);
+		// showPlayerChoicesForGivenTime(reco);
+			document.getElementById('recommender').innerHTML = '';
+			resultTimer.startTimer();
+			var agentStates = agentSettings.getStatesText(content.agentState, content.recommendation);
+			document.getElementById('agentState').innerHTML = agentStates;
+			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
+		}
+		else
+		{
+      		var cummulative = content.cumm;
+      		var numberOfRounds = content.rounds;
+      		endGame(cummulative, numberOfRounds,hasRecommender)
+		}
+	}
+
+
+	var disconnectGame = function(content)
+	{
+		endGame(content.cummScoreK, content.roundK, hasRecommender);
+	}
+
+	socket.on('serverMessage', serverMessage);
+	socket.on('start', startGame);
+	socket.on('disconnectMessage', disconnectGame);
+
+
+	socket.emit('join', hiitNumber);
+	
+	waitingTimeElapsed.startTimer();
+}
+
+pd = new PrisonersDilemma();
+
+// fix the disconnect
+//  fix the end of game
+// draw a dictionary of instances to speak some words

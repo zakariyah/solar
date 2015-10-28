@@ -5,7 +5,7 @@
     <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <script src='/javascripts/postquiz.js'></script>
-    <script src="/javascripts/canvas.js"></script>
+    
     <script type="text/javascript">
      function playSound(){   
                 document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="/audio.notification.mp3" type="audio/mpeg" /><source src="/audio.notification.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="/audio.notification.mp3" /></audio>';
@@ -20,268 +20,272 @@
 window.onbeforeunload = function() {
         return "Please do not leave this page except through the 'Go to payment' button. \n If not, you will be disqualified and will not be paid";
     }
-// var alreadyStarted
-var timeOfAction = -1;
-var timeGivenForAction = 5;    
-var hasRecommender = 0;
-var myCanvasContainer =  new canvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff');
+// var socket = io.connect('http://localhost:4000');
+// // var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
 
-function makeSelectionImpossible()
-{
-  document.getElementById('first').disabled = true;
-  document.getElementById('second').disabled = true;
-}
+// // var alreadyStarted
+// var timeOfAction = -1;
+// var timeGivenForAction = 5;    
+// var hasRecommender = 0;
+// var myCanvasContainer =  new canvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff', socket);
 
-function showRecommendation(reco)
-{
-  var options = ['A', 'B'];
-  var recomend = document.getElementById('recommender');
-  if(reco != null)
-  {
-      var message = "Recommended Action: " + options[reco - 1];
-      recomend.innerHTML = message;
-  }
-}
+// function makeSelectionImpossible()
+// {
+//   document.getElementById('first').disabled = true;
+//   document.getElementById('second').disabled = true;
+// }
 
-function setTimeOfEvent()
-{
-  var countRemain = document.getElementById("countRemain").innerHTML;
-  timeOfAction = timeGivenForAction - countRemain;
-  // alert(timeOfAction);
-}
+// function showRecommendation(reco)
+// {
+//   var options = ['A', 'B'];
+//   var recomend = document.getElementById('recommender');
+//   if(reco != null)
+//   {
+//       var message = "Recommended Action: " + options[reco - 1];
+//       recomend.innerHTML = message;
+//   }
+// }
 
-function changeProgressBar(barId, rvalue, totalValue)
-{
-  var value = totalValue - rvalue;
-  var ariaNow = value  * 100.0 / totalValue;
-  var progressBar = document.getElementById(barId);
-  progressBar.style.width = Math.floor(ariaNow) + "%";
-}
+// function setTimeOfEvent()
+// {
+//   var countRemain = document.getElementById("countRemain").innerHTML;
+//   timeOfAction = timeGivenForAction - countRemain;
+//   // alert(timeOfAction);
+// }
 
-function setTimer(reco)
-{
-  myCanvasContainer.clearPlayersPayoffText();
-  var mainCount = 5;
-  var count = 5;
-  var interval = 1000;
-  var before = new Date();
-  var leftValue = 0;
-  var counter=setInterval(timer, 1000);
-  showRecommendation(reco);
-  function timer()
-  {
-    // count = count - 1;
-    var now = new Date();
-    var elapsedTime = (now.getTime() - before.getTime());
-    elapsedTime = Math.floor(elapsedTime/interval); 
-    // leftValue += Math.floor(elapsedTime/interval);
-    count = mainCount - elapsedTime;
-    if (count < 0)
-    {
-      chatRoom();
-      document.getElementById("timer").innerHTML = "<span id='countRemain'>Please, we are still expecting the agent's choice......</span>"; // watch for spelling
-      // makeSelectionImpossible();
-      clearInterval(counter);
-      return;
-    }
-  document.getElementById("timer").innerHTML = "<span id='countRemain'>" + count + "</span> secs remaining..."; // watch for spelling
-    changeProgressBar('progressBarMain', count, 5);
-  }
-}
+// function changeProgressBar(barId, rvalue, totalValue)
+// {
+//   var value = totalValue - rvalue;
+//   var ariaNow = value  * 100.0 / totalValue;
+//   var progressBar = document.getElementById(barId);
+//   progressBar.style.width = Math.floor(ariaNow) + "%";
+// }
 
-var countBeginning = 200;
-function setTimerBeginning()
-{
+// function setTimer(reco)
+// {
+//   myCanvasContainer.clearPlayersPayoffText();
+//   var mainCount = 30;
+//   var count = 30;
+//   var interval = 1000;
+//   var before = new Date();
+//   var leftValue = 0;
+//   var counter=setInterval(timer, 1000);
+//   showRecommendation(reco);
+//   function timer()
+//   {
+//     // count = count - 1;
+//     var now = new Date();
+//     var elapsedTime = (now.getTime() - before.getTime());
+//     elapsedTime = Math.floor(elapsedTime/interval); 
+//     // leftValue += Math.floor(elapsedTime/interval);
+//     count = mainCount - elapsedTime;
+//     if (count < 0)
+//     {
+//       chatRoom();
+//       document.getElementById("timer").innerHTML = "<span id='countRemain'>Please, we are still expecting the agent's choice......</span>"; // watch for spelling
+//       // makeSelectionImpossible();
+//       clearInterval(counter);
+//       return;
+//     }
+//   document.getElementById("timer").innerHTML = "<span id='countRemain'>" + count + "</span> secs remaining..."; // watch for spelling
+//     changeProgressBar('progressBarMain', count, 30);
+//   }
+// }
+
+// var countBeginning = 200;
+// function setTimerBeginning()
+// {
   
-  var counter=setInterval(timer, 1000);
-  // alert('called here');
-function timer()
-  {
-    countBeginning = countBeginning - 1;
-    if (countBeginning < 0)
-    {
-      waitingRoomEnded();
-      clearInterval(counter);
-      return;
-    }
-    // alert('done');
-  document.getElementById("timerBegin").innerHTML = countBeginning + " secs remaining"; // watch for spelling
-  }
-}
+//   var counter=setInterval(timer, 1000);
+//   // alert('called here');
+// function timer()
+//   {
+//     countBeginning = countBeginning - 1;
+//     if (countBeginning < 0)
+//     {
+//       waitingRoomEnded();
+//       clearInterval(counter);
+//       return;
+//     }
+//     // alert('done');
+//   document.getElementById("timerBegin").innerHTML = countBeginning + " secs remaining"; // watch for spelling
+//   }
+// }
 
-function showGamePayoffMatrix()
-{
-  var htmlString = "<div class=\"alert alert-warning\"> NEW ROUND </div>";
-  htmlString += "";
-  // htmlString += ("<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p><table class='table table-bordered table-condensed'><tr class=\"danger\"><th>Option</th> <th>You will get</th> <th>The agent  will get</th> </tr><tr  class=\"danger\"><td><input type=\"radio\" name=\"choiceAction\" id=\'first\' onclick=\'return setTimeOfEvent()\' value=\"1\"> A: </td><td>-2</td><td>5</td></tr><tr  class=\"danger\"><td><input type=\"radio\" name=\"choiceAction\" id=\'second\' onclick=\'return setTimeOfEvent()\' value=\"2\"> B: </td><td>0</td><td>0</td></tr></table><div style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>"); 
-// var chosenColor = position == 0 ? "#FF0000" : "#FF00FF";
-  htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
-  htmlString += "<div id='myOptions' class='row'></div>";
-  htmlString += "<div id='opOptions' class='row'></div>";
-  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left; font-size: 30'></td><td></td><td></td><td></td><td id='otherPayoff'  style='text-align:right; font-size: 30'></td></tr></table></div>";
-  htmlString += "<div style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
+// function showGamePayoffMatrix()
+// {
+//   var htmlString = "<div class=\"alert alert-warning\"> NEW ROUND </div>";
+//   htmlString += "";
+//   // htmlString += ("<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p><table class='table table-bordered table-condensed'><tr class=\"danger\"><th>Option</th> <th>You will get</th> <th>The agent  will get</th> </tr><tr  class=\"danger\"><td><input type=\"radio\" name=\"choiceAction\" id=\'first\' onclick=\'return setTimeOfEvent()\' value=\"1\"> A: </td><td>-2</td><td>5</td></tr><tr  class=\"danger\"><td><input type=\"radio\" name=\"choiceAction\" id=\'second\' onclick=\'return setTimeOfEvent()\' value=\"2\"> B: </td><td>0</td><td>0</td></tr></table><div style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>"); 
+// // var chosenColor = position == 0 ? "#FF0000" : "#FF00FF";
+//   htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
+//   htmlString += "<div id='myOptions' class='row'></div>";
+//   htmlString += "<div id='opOptions' class='row'></div>";
+//   htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left; font-size: 30'></td><td></td><td></td><td></td><td id='otherPayoff'  style='text-align:right; font-size: 30'></td></tr></table></div>";
+//   htmlString += "<div id='nextRound' style='text-align: center;'><button class='button' onclick='" + myCanvasContainer.nextRound() + "'>Submit</button></div>";
+//   htmlString += "<div style='border: 1px #bce8f1 solid; font-size: 18px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
 
-  var actionElement = document.getElementById('actions');
-    actionElement.innerHTML = htmlString;    
-    myCanvasContainer.startGame();
-}
+//   var actionElement = document.getElementById('actions');
+//     actionElement.innerHTML = htmlString;    
+//     myCanvasContainer.startGame();
+// }
 
-function showPlayerChoicesForGivenTime(reco)
-{
-  var timeForChoices = 10;
-  document.getElementById('recommender').innerHTML = '';
-  var counter=setInterval(timer, 1000);
-  // alert('called here');
-  function timer()
-  {
-    timeForChoices = timeForChoices - 1;
-    if (timeForChoices < 0)
-    {
-      setTimer(reco);
-      showGamePayoffMatrix();
-      clearInterval(counter);
-      return;
-    }
-    // alert('done');
-  document.getElementById("timer").innerHTML = "<span style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'>Next round starts in " +  timeForChoices + " seconds ... </span>"; // watch for spelling
-  changeProgressBar('progressBarMain', timeForChoices, 10);
-  }
-}
+// function showPlayerChoicesForGivenTime(reco)
+// {
+//   var timeForChoices = 10;
+//   document.getElementById('recommender').innerHTML = '';
+//   var counter=setInterval(timer, 1000);
+//   // alert('called here');
+//   function timer()
+//   {
+//     timeForChoices = timeForChoices - 1;
+//     if (timeForChoices < 0)
+//     {
+//       setTimer(reco);
+//       showGamePayoffMatrix();
+//       clearInterval(counter);
+//       return;
+//     }
+//     // alert('done');
+//   document.getElementById("timer").innerHTML = "<span style='border: 1px #bce8f1 solid;   line-height: 120%;   font-size: 36px;  text-align: center; background-color: #d9edf7;   margin: 5px;'>Next round starts in " +  timeForChoices + " seconds ... </span>"; // watch for spelling
+//   changeProgressBar('progressBarMain', timeForChoices, 10);
+//   }
+// }
 
 
-function endGame(cummulativeScore, numberOfRounds)
-{
-        var htmlString = "<div class=\"alert alert-warning\"> Thank you very much, The game is over. You had a total of " + cummulativeScore  +" points</div>";
-        htmlString += "<div class=\"alert alert-warning\"> Please fill in the survey below </div>";
-        var heHadRecommenders = (hasRecommender != 0);
-        htmlString += postQuizQuestions(heHadRecommenders, cummulativeScore, numberOfRounds);
+// function endGame(cummulativeScore, numberOfRounds)
+// {
+//         var htmlString = "<div class=\"alert alert-warning\"> Thank you very much, The game is over. You had a total of " + cummulativeScore  +" points</div>";
+//         htmlString += "<div class=\"alert alert-warning\"> Please fill in the survey below </div>";
+//         var heHadRecommenders = (hasRecommender != 0);
+//         htmlString += postQuizQuestions(heHadRecommenders, cummulativeScore, numberOfRounds);
 
-        var actionsElement = document.getElementById('actions');
-        actionsElement.innerHTML = htmlString;
-        // goToURL("./postquizsurvey");
-        document.getElementById('recommender').innerHTML = '';
-}
-// var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
+//         var actionsElement = document.getElementById('actions');
+//         actionsElement.innerHTML = htmlString;
+//         // goToURL("./postquizsurvey");
+//         document.getElementById('recommender').innerHTML = '';
+// }
 
-function setAgentState(state) 
-{
-  console.log(state);
-  if(state)
-  {
-    var toset = agentSettings.getStatesText(state);
-    document.getElementById('agentState').innerHTML =  toset;  
-  }
-}
 
-    var socket = io.connect('http://localhost:4000');
-    // var socketid = socket.id;
-    socket.on('serverMessage', function(content) {
-    var options = ['A', 'B'];
-    //   alert('server message was called');
-    // var defectElement = document.getElementById('voice');
-    // var defectElement = document.getElementById('actions'); // block actions for some time
-    // defectElement.innerHTML = content.text;
+// function setAgentState(state) 
+// {
+//   console.log(state);
+//   if(state)
+//   {
+//     var toset = agentSettings.getStatesText(state);
+//     document.getElementById('agentState').innerHTML =  toset;  
+//   }
+// }
 
-    var briefInfo = content.text;
-    var numberOfRounds = content.rounds;
-    // alert("numberOfRounds is " + numberOfRounds);
-    var reco = content.recommendation;
-    hasRecommender = content.recommenderOptionValue;
-    if(content.count == 0)
-    {
-      document.getElementById('hehasrecommender').innerHTML = hasRecommender + "";
-    }
     
-    if(content.count == 0)
-    {
-      // clearSelection();
-      setTimer(reco);
-      playSound();
-      // alert(reco);
-    }
-    else if(content.count < numberOfRounds)
-    {
-      // alert('here2');
-      myCanvasContainer.makeSelectionImpossible();
-      myCanvasContainer.setOpponentVisible(briefInfo.opponentChoiceInNumber);
-      myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
-      myCanvasContainer.setPlayersPayoffText();
-      setAgentState(content.agentState);
-      console.log('content is ' + JSON.stringify(content));
-      showPlayerChoicesForGivenTime(reco);
+//     // var socketid = socket.id;
+//     socket.on('serverMessage', function(content) {
+//     var options = ['A', 'B'];
+//     //   alert('server message was called');
+//     // var defectElement = document.getElementById('voice');
+//     // var defectElement = document.getElementById('actions'); // block actions for some time
+//     // defectElement.innerHTML = content.text;
 
-      // setTimer();
-    }
-    else
-    {
-      // alert("here " + content.count + ": " + numberOfRounds + ":" + JSON.stringify(content));
-      var cummulative = content.cumm;
-      endGame(cummulative, numberOfRounds);
-    }
-});
+//     var briefInfo = content.text;
+//     var numberOfRounds = content.rounds;
+//     // alert("numberOfRounds is " + numberOfRounds);
+//     var reco = content.recommendation;
+//     hasRecommender = content.recommenderOptionValue;
+//     if(content.count == 0)
+//     {
+//       document.getElementById('hehasrecommender').innerHTML = hasRecommender + "";
+//     }
+    
+//     if(content.count == 0)
+//     {
+//       // clearSelection();
+//       setTimer(reco);
+//       playSound();
+//       // alert(reco);
+//     }
+//     else if(content.count < numberOfRounds)
+//     {
+//       // alert('here2');
+//       myCanvasContainer.makeSelectionImpossible();
+//       myCanvasContainer.setOpponentVisible(briefInfo.opponentChoiceInNumber);
+//       myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
+//       myCanvasContainer.setPlayersPayoffText();
+//       setAgentState(content.agentState);
+//       console.log('content is ' + JSON.stringify(content));
+//       showPlayerChoicesForGivenTime(reco);
 
-  socket.on('start', function() {
-  // alert('here1');
-  showGamePayoffMatrix();
-    // alert('here');
-  countBeginning = 0;
+//       // setTimer();
+//     }
+//     else
+//     {
+//       // alert("here " + content.count + ": " + numberOfRounds + ":" + JSON.stringify(content));
+//       var cummulative = content.cumm;
+//       endGame(cummulative, numberOfRounds);
+//     }
+// });
+
+//   socket.on('start', function() {
+//   // alert('here1');
+//   showGamePayoffMatrix();
+//     // alert('here');
+//   countBeginning = 0;
  
-});
+// });
 
-// alert('I was called 24');
+// // alert('I was called 24');
 
-socket.on('disconnectMessage', function(content) {
-  // var defectElement = document.getElementById('disconnect');
-  //   defectElement.innerHTML = content;
-  endGame(cummulative, content.cummScoreK, content.roundK);
+// socket.on('disconnectMessage', function(content) {
+//   // var defectElement = document.getElementById('disconnect');
+//   //   defectElement.innerHTML = content;
+//   endGame(cummulative, content.cummScoreK, content.roundK);
 
-});
+// });
   
-function waitingRoomEnded()
-{
-  // alert("here man");
-  socket.emit('waitingTimeElapsed');  
-}
+// function waitingRoomEnded()
+// {
+//   // alert("here man");
+//   socket.emit('waitingTimeElapsed');  
+// }
 
-function chatRoom()
-{
-  var val = myCanvasContainer.getPlayerSelection();
-  myCanvasContainer.makeSelectionImpossible();
-  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : timeOfAction});  
-  // alert("was called");
-  // socket.emit('clientMessage', val); 
-  timeOfAction = -1; 
+// function chatRoom()
+// {
+//   var val = myCanvasContainer.getPlayerSelection();
+//   myCanvasContainer.makeSelectionImpossible();
+//   socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : timeOfAction});  
+//   // alert("was called");
+//   // socket.emit('clientMessage', val); 
+//   timeOfAction = -1; 
 
-  return true;
-}
+//   return true;
+// }
 
-//get hiit number
-var hiitNumber = document.getElementById("hiitNumber").innerHTML;
-// for starting game
-socket.emit('join', hiitNumber);
-// alert('called');
-setTimerBeginning();
-// for timer starting
+// //get hiit number
+// var hiitNumber = document.getElementById("hiitNumber").innerHTML;
+// // for starting game
+// socket.emit('join', hiitNumber);
+// // alert('called');
+// setTimerBeginning();
+// // for timer starting
 </script>
     <div class='container'>
 <!-- <div class='col-md-1'>
 </div> -->
-<div class="row" id='agentState'>
-  </div>
-<div class='col-md-1'>
+<div class='col-md-3' id='agentState'>
 </div>
-<div class='col-md-10'>
+<div class='col-md-8'>
     <div class='row' id='actions'>
       <p>Welcome</p>
+      <div class='alert alert-success'>Please wait while we initiate the agent.</div>
       <div class='row'><table class='table'><tr><td id='myPayoff'></td><td></td><td></td><td></td><td id='otherPayoff'></td></tr></table></div>
-      <div class="alert alert-warning"> Please wait while we initiate the agent.  <span id='timerBegin'></span></div>
 </div>
+<div class="alert alert-warning"> <span id='timerBegin'></span></div>
 <div class="row alert alert-warning" id='recommender'>
       
   </div>
   </div>
+  <div class="col-md-1"></div>
 <!--     <button onclick='return startgame()'>Start</button> -->
-    <div class='col-md-1'>
+    <!-- <div class='col-md-1'>
       <div class="row" id='voice'>
     
   </div>
@@ -291,7 +295,7 @@ setTimerBeginning();
       
     </div>
   </div>
-  </div>
+  </div> -->
 </div>
 <!-- <div class='col-md-1'>
 </div> -->
@@ -300,6 +304,6 @@ setTimerBeginning();
   </div>
 
 <div id="sound"></div>
-
+<script src="/javascripts/canvas.js"></script>
   </body>
 </html>
