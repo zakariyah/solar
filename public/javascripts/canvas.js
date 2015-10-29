@@ -190,7 +190,7 @@ var OneCanvas = function(canvasId, position, payoff, playerType)
 	var canvasContext = canvasElement.getContext("2d");
 	var width = canvasElement.width;
 	var height = canvasElement.height;
-	var chosenColor = playerType == 1 ? "#006400" : "#FFFF00";
+	var chosenColor = playerType == 1 ? "#006400" : "#E9AB17";
 	
 	canvasContext.fillStyle = "#D3D3D3";
 	
@@ -237,7 +237,6 @@ var OneCanvas = function(canvasId, position, payoff, playerType)
 	}
 }
 
-
 var StraightLineCanvas = function(canvasId, playerType)
 {
 	// position 0 for left and 1 for right
@@ -245,7 +244,7 @@ var StraightLineCanvas = function(canvasId, playerType)
 	var canvasContext = canvasElement.getContext("2d");
 	var width = canvasElement.width;
 	var height = canvasElement.height;
-	var chosenColor = playerType == 1 ? "#006400" : "#FFFF00";
+	var chosenColor = playerType == 1 ? "#006400" : "#E9AB17";
 
 	canvasContext.fillStyle = "#D3D3D3";
 	
@@ -268,7 +267,6 @@ var StraightLineCanvas = function(canvasId, playerType)
 		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
 	}
 }
-
 
 var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayoffTableId, opPayoffTableId, socket)
 {
@@ -416,6 +414,7 @@ var AgentStateSettings = function()
 
 		return stateText;
 	}
+
 }
 
 var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction, initialFunction)
@@ -444,7 +443,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 		    clearInterval(counter);
 		    return;
 		}
-		periodicFunction(count);
+		periodicFunction(count, mainCount);
 	}
 
 	this.startTimer = function()
@@ -478,13 +477,14 @@ var WaitingTimeElapsed = function(socket)
 	return that;
 }
 
-var GameTimer = function(socket, gameTimeEndFunction)
+var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
 {
 	var totalGameTime = 10;
 	var intervalGame = 1000;
-	var gameTimePeriodicFunction = function(count)
+	var gameTimePeriodicFunction = function(count, mainCount)
 	{
 		document.getElementById('timerBegin').innerHTML = count + " secs remaining";
+		progressbarFunction('progressBarMain', count, mainCount);
 	}
 
 	var that = new TimerFunction(totalGameTime, intervalGame, gameTimePeriodicFunction, gameTimeEndFunction);
@@ -493,30 +493,27 @@ var GameTimer = function(socket, gameTimeEndFunction)
 }
 
 
-var ResultTimer = function(socket, resultTimeEndFunction)
+var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 {
 	var totalResultTime = 5;
 	var intervalResult = 1000;
 	
-	var resultTimePeriodicFunction = function(count)
+	var resultTimePeriodicFunction = function(count, mainCount)
 	{
 		document.getElementById('timerBegin').innerHTML = count + " secs remaining";
+		progressbarFunction('progressBarMain', count, mainCount);
 	}
-
-	
 
 	var that = new TimerFunction(totalResultTime, intervalResult, resultTimePeriodicFunction, resultTimeEndFunction);
 
 	return that;
 }
 
-
-
 var PrisonersDilemma = function()
 {	
 	var hiitNumber = document.getElementById("hiitNumber").innerHTML;
-	// var socket = io.connect('http://localhost:4000');
-	var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
+	var socket = io.connect('http://localhost:4000');
+	// var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
 	var myCanvasContainer =  new CanvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff', socket);
 	var hasRecommender;
 
@@ -527,11 +524,20 @@ var PrisonersDilemma = function()
 		myCanvasContainer.nextRound(true)();
 	}
 
+	var changeProgressBar =  function(barId, rvalue, totalValue)
+	{
+	  var value = totalValue - rvalue;
+	  var ariaNow = value  * 100.0 / totalValue;
+	  var progressBar = document.getElementById(barId);
+	  progressBar.style.width = Math.floor(ariaNow) + "%";
+	}
+
 	// waiting Time 
 	var waitingTimeElapsed = new WaitingTimeElapsed(socket);
 
-	var gameTimer = new GameTimer(socket, gameTimerEnd);
+	var gameTimer = new GameTimer(socket, gameTimerEnd, changeProgressBar);
 
+	
 
 	var resultTimeEndFunction = function()
 	{
@@ -543,7 +549,7 @@ var PrisonersDilemma = function()
 	}
 
 
-	var resultTimer = new ResultTimer(socket, resultTimeEndFunction);
+	var resultTimer = new ResultTimer(socket, resultTimeEndFunction, changeProgressBar);
 
 
 	// add the timers to the game containers
@@ -560,7 +566,7 @@ var PrisonersDilemma = function()
 
 	var startGame = function()
 	{
-				
+		
 	}
 
 	var startRealGame = function()
@@ -594,6 +600,7 @@ var PrisonersDilemma = function()
         var actionsElement = document.getElementById('actions');
         actionsElement.innerHTML = htmlString;
         document.getElementById('recommender').innerHTML = '';
+        document.getElementById('timerBegin').innerHTML = '';
 	}
 
 	var serverMessage = function(content)
@@ -648,6 +655,6 @@ var PrisonersDilemma = function()
 
 pd = new PrisonersDilemma();
 
-// fix the disconnect
-//  fix the end of game
-// draw a dictionary of instances to speak some words
+// fix the progress progress-bar
+// look at all possibilities
+// read dynamic programming
