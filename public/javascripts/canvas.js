@@ -406,6 +406,10 @@ var AgentStateSettings = function()
 
 		var options = ['A', 'B'];
 		stateText += ' <p>Expert Type ' + expertType + '. ';
+		if(aspiration)
+		{
+			aspiration = aspiration.toFixed(3);
+		}
 		stateText += ' <p>Aspiration ' + aspiration + '. ';
 		stateText += ' <p>Target ' + target + '. ';
 		stateText += ' <p>Target for opponent ' + targetForOpponent + '. ';
@@ -658,3 +662,4 @@ pd = new PrisonersDilemma();
 // fix the progress progress-bar
 // look at all possibilities
 // read dynamic programming
+// fix the alert dialog
