@@ -30,9 +30,12 @@ var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nom
 
 
 	var jefe_plus  = require('../hagent/jefe_plus.js');
+	var agentState  = require('../hagent/stateOfAgent.js');
 	
 	this.myJefePlus = new jefe_plus(nombre, playerIndex, payOffMatrix, this.M,  lambda); // get those variables
-	
+	this.myAgentState = new agentState(this.myJefePlus);
+
+
 	this.createMove = function()
 	{ 
 		if(this.isRandom)
@@ -53,13 +56,13 @@ var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nom
 	this.getAgentState = function()
 	{
 		// the method is to print out the user state.
-		return this.myJefePlus.experto;
+		return this.myAgentState.getAgentState();
 	}
 
-	this.getAgentVariables = function()
-	{
-		return this.myJefePlus.getAgentVariables();
-	}
+	// this.getAgentVariables = function()
+	// {
+	// 	return this.myJefePlus.getAgentVariables();
+	// }
 
 }
 

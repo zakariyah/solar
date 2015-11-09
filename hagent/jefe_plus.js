@@ -9,6 +9,8 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	this.punishedGuiltyPartner = false;
 	this.succeededInPunishingGuiltyPartner = false;
 	this.CanReceiveHigherPayoff = false;
+	this.latestChoice = -1;
+	this.gameHistory = [];
 
 	this.expertName;
 	// learner is a for S++
@@ -343,7 +345,8 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		if(this.estado < 0)
 		{
 			console.log('estado is less than zero');
-			return Math.floor(Math.random() * highestNumber) % this.A[this.me];
+			this.latestChoice = Math.floor(Math.random() * highestNumber) % this.A[this.me];
+			return this.latestChoice;
 		}
 		if(this.cycled)
 		{
@@ -411,11 +414,13 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			// console.log('expert is ' + this.re[Math.floor((this.experto - 2)/ 2)].expertName + ' :follower');
 			this.expertName = 'follower';			
 		}
+		this.latestChoice = a;
 		return a;
 	}
 
 	this.update = function(acts)
 	{
+		this.gameHistory.push(acts);
 		this.anExpertHasBeenExecutedForCompleteCycle = false;
 		this.distinctExpertWasChosen = false;
 		this.previousActs[0] = acts[0];

@@ -10,7 +10,7 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 	{
 		var optionsValues = ['A', 'B'];
 		var lineHtml = '<tr>';
-		var numberOfColumns = 5;
+		var numberOfColumns = 4;
 		var canvasIds = [];
 		var optionClasses = ['rcorners1', 'rcorners2'];
 		for(var i=0; i<numberOfColumns; i++)
@@ -20,13 +20,14 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 				lineHtml += '<td class="'+ optionClasses[lineNumber - 1] +'" width="50" height="30"><input type="radio" name="playerAction" id="playerOption'+lineNumber +'" value="'+lineNumber +'"> <strong style="font-size: 15px;">'+ optionsValues[lineNumber-1] +':</strong></td>';
 				continue;
 			}
-			else if(playerType == 2 && i==3)
+			else if(playerType == 2 && i==numberOfColumns - 2)
 			{
 				lineHtml += '<td  class="'+ optionClasses[lineNumber - 1] +'"  width="50" height="30"><input type="radio" name="opponentAction" id="opponentOption'+lineNumber +'" value="'+lineNumber +'"> <strong style="font-size: 15px;">'+ optionsValues[lineNumber-1] +':</strong></td>';
 				continue;	
 			}
 			var ind = canvasHtmlId + lineNumber + '' + i;
-			lineHtml += '<td><canvas id="' + ind + '" height="30" width="200"></canvas></td>';
+			var canvasWidth = ((i == 0 || i == numberOfColumns - 1) ? 200 : 100);
+			lineHtml += '<td><canvas id="' + ind + '" height="30" width="' + canvasWidth +'"></canvas></td>';
 			canvasIds.push(ind);
 		}
 		lineHtml += '</tr>';
@@ -38,7 +39,7 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 	// var heading = (playerType == 1) ? 'Your Actions' : 'The Other Player\'s Actions';
 	var containerHTML = '<table border="1">';
 	// containerHTML +=  '<tr><td></td><td></td><td style="text-align:left"><b>' + heading +'</b></td><td></td><td></td></tr>';
-	containerHTML += '<tr><td style="text-align:left">Your Payoff</td><td></td><td></td><td></td><td  style="text-align:right">Other Player\'s Payoff</td></tr>';
+	containerHTML += '<tr><td style="text-align:left">Your Payoff</td><td></td><td></td><td  style="text-align:right">Other Player\'s Payoff</td></tr>';
 	for(var i = 0; i < 2 ; i++)
 	{
 		var htmlGot = getALine(i+1);
@@ -368,58 +369,6 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 
 }
 
-var AgentStateSettings = function()
-{
-	var distinctExpertWasChosen, anExpertHasBeenExecutedForCompleteCycle, profitedFromDefection;
-	var expertType, aspiration, target, targetForOpponent;
-	this.setStates = function(states)
-	{
-		distinctExpertWasChosen = states[0];
-		anExpertHasBeenExecutedForCompleteCycle  = states[1];
-		profitedFromDefection = states[2];
-		expertType = states[3];
-		aspiration = states[4];
-		target = states[5];
-		targetForOpponent = states[6];
-	}
-
-	this.getStatesText = function(states, recommendation)
-	{
-		if(!states)
-		{
-			return '';
-		}
-		this.setStates(states);
-		var stateText = ' ' ; //<p>';
-		if(distinctExpertWasChosen)
-		{
-			stateText += '<p> A distinct expert has been chosen. ';
-		}
-		if(anExpertHasBeenExecutedForCompleteCycle)
-		{
-			stateText += '<p> The expert has executed a complete cycle. ';
-		}
-		if(profitedFromDefection)
-		{
-			stateText += '<p> The opponent profited from the defection and is thus guilty. ';
-		}
-
-		var options = ['A', 'B'];
-		stateText += ' <p>Expert Type ' + expertType + '. ';
-		if(aspiration)
-		{
-			aspiration = aspiration.toFixed(3);
-		}
-		stateText += ' <p>Aspiration ' + aspiration + '. ';
-		stateText += ' <p>Target ' + target + '. ';
-		stateText += ' <p>Target for opponent ' + targetForOpponent + '. ';
-		stateText += '<p> Recommended action : ' + options[recommendation - 1] + ' ';
-		stateText += '</p>';
-
-		return stateText;
-	}
-
-}
 
 var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction, initialFunction)
 {
@@ -473,6 +422,7 @@ var WaitingTimeElapsed = function(socket)
 
 	var waitingTimeEndFunction = function()
 	{
+
 		socket.emit('waitingTimeElapsed');
 	}
 
@@ -483,7 +433,7 @@ var WaitingTimeElapsed = function(socket)
 
 var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
 {
-	var totalGameTime = 10;
+	var totalGameTime = 30;
 	var intervalGame = 1000;
 	var gameTimePeriodicFunction = function(count, mainCount)
 	{
@@ -499,13 +449,13 @@ var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
 
 var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 {
-	var totalResultTime = 5;
+	var totalResultTime = 15;
 	var intervalResult = 1000;
 	
 	var resultTimePeriodicFunction = function(count, mainCount)
 	{
 		document.getElementById('timerBegin').innerHTML = count + " secs remaining";
-		progressbarFunction('progressBarMain', count, mainCount);
+		// progressbarFunction('progressBarMain', count, mainCount);
 	}
 
 	var that = new TimerFunction(totalResultTime, intervalResult, resultTimePeriodicFunction, resultTimeEndFunction);
@@ -516,10 +466,13 @@ var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 var PrisonersDilemma = function()
 {	
 	var hiitNumber = document.getElementById("hiitNumber").innerHTML;
-	// var socket = io.connect('http://localhost:4000');
-	var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
+	var socket = io.connect('http://localhost:4000');
+	// var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
 	var myCanvasContainer =  new CanvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff', socket);
 	var hasRecommender;
+
+	var chatBox = new ChatBox('chatItems');
+	var questionsToAsk = new QuestionsToAsk('agentQuestion', 'feedbackQuestion', 'agentQuestionSubmit', 'feedbackSubmit', chatBox);
 
 	agentSettings = new AgentStateSettings();
 
@@ -549,7 +502,12 @@ var PrisonersDilemma = function()
 		myCanvasContainer.setSubmitButtonVisible(true);
 		myCanvasContainer.clearPlayersPayoffText();
 		myCanvasContainer.resetAll();
-		gameTimer.startTimer();
+		// gameTimer.startTimer(); // no more timing for game timer
+		if(hasRecommender)
+		{
+			document.getElementById('questionAndFeedback').style.display = 'block';	
+		}
+		
 	}
 
 
@@ -567,13 +525,12 @@ var PrisonersDilemma = function()
 		return resultTimer;
 	}
 
-
 	var startGame = function()
 	{
 		
 	}
 
-	var startRealGame = function()
+	var startRealGame = function(hasRecommender)
 	{
 	  var htmlString = "<div class=\"alert alert-warning\" id=\"roundNumber\"> ROUND 1 </div>";
 	  htmlString += "";
@@ -581,14 +538,19 @@ var PrisonersDilemma = function()
 	  htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
 	  htmlString += "<div id='myOptions' class='row'></div>";
   	  htmlString += "<div id='opOptions' class='row'></div>";
-  	  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left;'></td><td></td><td></td><td></td><td id='otherPayoff'  style='text-align:right;'></td></tr></table></div>";
+  	  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left;'></td><td></td><td></td><td id='otherPayoff'  style='text-align:right;'></td></tr></table></div>";
   	  htmlString += "<div id='nextRound' style='text-align: center;'><button class='button' id='nextButton'>Submit</button></div>";
-  	  htmlString += "<div style='border: 1px #bce8f1 solid; font-size: 18px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
+  	  htmlString += "<div style='border: 1px #bce8f1 solid; display: none; font-size: 18px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress' style='display:none'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
 
 	  var actionElement = document.getElementById('actions');
 	  actionElement.innerHTML = htmlString;    
 	  myCanvasContainer.startGame();
-
+	  if(hasRecommender)
+	  {
+	  	document.getElementById('chatBoxContainer').style.display = 'block';
+	  	document.getElementById('questionAndFeedback').style.display = 'block';	
+	  }
+	  
 	  document.getElementById('nextButton').onclick = myCanvasContainer.nextRound();
 
 	}
@@ -603,20 +565,26 @@ var PrisonersDilemma = function()
         htmlString += "</div></div>";
         var actionsElement = document.getElementById('actions');
         actionsElement.innerHTML = htmlString;
-        document.getElementById('recommender').innerHTML = '';
-        document.getElementById('timerBegin').innerHTML = '';
+        // document.getElementById('recommender').innerHTML = '';
+        // document.getElementById('timerBegin').innerHTML = '';
+        document.getElementById('chatBoxContainer').innerHTML = '';
+	  	document.getElementById('questionAndFeedback').innerHTML = '';	
 	}
 
 	var serverMessage = function(content)
-	{
+	{	
 		if(content.count == 0)
 		{
-			waitingTimeElapsed.stopTimer();
+			console.log('console is ' + JSON.stringify(content));
+			waitingTimeElapsed. stopTimer();
+			// document.getElementById('timerStart').innerHTML = ""; // remove the timer div
 			hasRecommender = content.recommenderOptionValue;
-			startRealGame();
-			gameTimer.startTimer();
-			var agentStates = agentSettings.getStatesText(content.agentState, content.recommendation);
-			document.getElementById('agentState').innerHTML = agentStates;
+			startRealGame(hasRecommender);
+			// gameTimer.startTimer();
+			//// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
+			//// document.getElementById('agentState').innerHTML = agentStates;
+			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
+			questionsToAsk.moveToNextRound(content);
 		}
 		else if(content.count < content.rounds)
 		{
@@ -627,11 +595,13 @@ var PrisonersDilemma = function()
 		    myCanvasContainer.setPlayersPayoffText();
 		    // setAgentState(content.agentState);
 		// showPlayerChoicesForGivenTime(reco);
-			document.getElementById('recommender').innerHTML = '';
+			// document.getElementById('recommender').innerHTML = '';
 			resultTimer.startTimer();
-			var agentStates = agentSettings.getStatesText(content.agentState, content.recommendation);
-			document.getElementById('agentState').innerHTML = agentStates;
+			// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
+			// document.getElementById('agentState').innerHTML = agentStates;
 			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
+			questionsToAsk.moveToNextRound(content);
+			document.getElementById('questionAndFeedback').style.display = 'none';
 		}
 		else
 		{
@@ -663,3 +633,7 @@ pd = new PrisonersDilemma();
 // look at all possibilities
 // read dynamic programming
 // fix the alert dialog
+
+// test the accordion itself
+// bNcmE8oz
+// bili41990@yahoo.com

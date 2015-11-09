@@ -105,7 +105,7 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 	{
 		if(isAgent)
 		{
-			return this.agent.getAgentVariables();
+			return this.agent.getAgentState();
 		}
 		return null;
 	}
@@ -115,7 +115,7 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 		// console.log('was called');
 		if(this.hasRecommender)
 		{
-			return this.recommender.getAgentVariables();
+			return this.recommender.getAgentState();
 		}
 		return null;
 	}
