@@ -95,6 +95,7 @@ var AgentStateSettings = function()
 
 var ChatBox = function(chatItemId)
 {
+	
 	var chatListObject = document.getElementById(chatItemId);
 	var contentFromServer;
 	var questions = ['Tell me about my opponent', 'What should I do now?', 'Why?', 'Why shouldn\'t I do otherwise?','How do I do better?'];
@@ -132,14 +133,21 @@ var ChatBox = function(chatItemId)
 		return chatItemHtml;
 	}
 
-	var showChat = function(chatItem)
+	var showChat = function(chatItem, buttonClicked)
 	{
 		var chatList = (chatListObject.innerHTML + chatItem);
 		chatListObject.innerHTML = chatList;
 		chatPanelBody.scrollTop = chatPanelBody.scrollHeight;
+		
+		var snd = new Audio("/audio/videoplayback"); // sound to be played
+		snd.play();
+		if(buttonClicked)
+		{
+			buttonClicked.disabled = false;
+		}
 	}
 
-	this.addToChatList = function(question, answer, roundNumber)
+	this.addToChatList = function(question, answer, roundNumber, buttonClicked)
 	{
 		var chatItem = createOneChatItem(true, 'You', question, roundNumber);
 		showChat(chatItem);
@@ -147,7 +155,14 @@ var ChatBox = function(chatItemId)
 		for(var i = 0 ; i < answer.length; i++)
 		{
 			chatItem = createOneChatItem(false, 'S-script', answer[i], roundNumber);
-			setTimeout(showChat, 2000 * (i + 1), chatItem);
+			if(i < answer.length - 1)
+			{
+				setTimeout(showChat, 2000 * (i + 1), chatItem);	
+			}
+			else
+			{
+				setTimeout(showChat, 2000 * (i + 1), chatItem, buttonClicked);
+			}
 		}		
 	}
 
@@ -197,12 +212,12 @@ var ChatBox = function(chatItemId)
 			return getAnswerToFeedbackNumber(questionNumber);
 		}
 	}
-	this.getSolutionToQuestion = function(questionNumber, isQuestion)
+	this.getSolutionToQuestion = function(questionNumber, isQuestion, buttonClicked)
 	{
 		var question = isQuestion ? questions[questionNumber] : feedbacks[questionNumber];
 		var answer = getAnswerToQuestion(questionNumber, isQuestion);	
 		var roundNumber = getRoundNumber();
-		this.addToChatList(question, answer, roundNumber);
+		this.addToChatList(question, answer, roundNumber, buttonClicked);
 	}
 }	
 
@@ -242,18 +257,20 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 		{
 			var questions = [];
 			var checkBoxToUse = isQuestion ? questionCheckBoxes : feedbackCheckBoxes; 
+			var buttonClicked = isQuestion ? questionSubmitButton : feedbackSubmitButton;
 			
 			var selectToUse = isQuestion ? questionSelect : feedbackSelect;
 			var valueSelected = selectToUse.value;
 			if(valueSelected == 0)
 			{
-				new ShowAlert('Selection Error', 'Please select an option!!');
+				new ShowAlert('Selection Error', 'Please select an option!');
 				// alert('Please select an option');
 				return;
 			}
 
+			buttonClicked.disabled = true;
 			checkBoxToUse[valueSelected-1].disabled = true;
-			chatBox.getSolutionToQuestion( valueSelected-1, isQuestion);
+			chatBox.getSolutionToQuestion( valueSelected-1, isQuestion, buttonClicked);
 			selectToUse.value = '0';
 		}
 	}

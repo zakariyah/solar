@@ -518,7 +518,9 @@ var PrisonersDilemma = function()
 
 	var chatBox = new ChatBox('chatItems');
 	var questionsToAsk = new QuestionsToAsk('agentQuestion', 'feedbackQuestion', 'agentQuestionSubmit', 'feedbackSubmit', chatBox);
+	
 
+	
 	agentSettings = new AgentStateSettings();
 
 	var gameTimerEnd = function()
