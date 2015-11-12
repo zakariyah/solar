@@ -38,6 +38,9 @@
 {
     overflow-y: scroll;
     height: 250px;
+}
+.panelchat-body
+{   
     background-image: url("/images/tutorial/whatapp.jpg");
 }
 

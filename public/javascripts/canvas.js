@@ -1,3 +1,46 @@
+var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
+{
+	var options = ['A', 'B'];
+	var gameHistoryDiv = document.getElementById(gameHistoryTableId);
+	var containerDiv = document.getElementById(containerDivId);
+	var totalSpan = document.getElementById(totalSpanId);
+
+	var history = [];
+	var myTotalScore = 0;
+
+	this.addToHistory = function(lastHistory)
+	{
+		// console.log('last history : ' + lastHistory);
+		history.push([options[lastHistory[0] - 1], options[lastHistory[1] - 1], lastHistory[2]]);
+		myTotalScore += lastHistory[2];
+	}
+
+	this.getHistory = function()
+	{
+		return history;
+	}
+
+	this.setHistoryDivHtml = function()
+	{
+		// console.log('history ' + history);
+		var historyHtml = '<table class="table table-bordered">';
+		historyHtml += '<tr><td>My Choice</td><td>Other Player\'s Choice</td><td>My Score</td></tr>';
+		for(var i = 0; i < history.length; i++)
+		{
+			historyHtml += ('<tr><td>' + history[i][0]  + '</td><td>'  + history[i][1] + '</td><td>'  + history[i][2] + '</td></tr>');
+		}
+		historyHtml += '</table>';
+		gameHistoryDiv.innerHTML = historyHtml;
+		totalSpan.innerHTML = myTotalScore;
+		containerDiv.style.display = 'block';
+	}
+
+	this.clearPanel = function()
+	{
+		containerDiv.innerHTML = '';
+	}
+}
+
 var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 {
 	var optionsName = (playerType == 1) ? 'playerAction' : 'opponentAction';
@@ -48,7 +91,7 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 	}
 	
 	containerHTML += '</table>';
-	console.log('container id is ' + containerId);
+	// console.log('container id is ' + containerId);
 	container.innerHTML = containerHTML;
 
 
@@ -466,6 +509,7 @@ var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 
 var PrisonersDilemma = function()
 {	
+	var gameHistory = new GameHistory('gameHistory', 'gameHistoryTable', 'myTotalPayoff');
 	var hiitNumber = document.getElementById("hiitNumber").innerHTML;
 	var socket = io.connect('http://localhost:4000');
 	// var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
@@ -533,7 +577,7 @@ var PrisonersDilemma = function()
 
 	var startRealGame = function(hasRecommender)
 	{
-	  var htmlString = '<div class="alert alert-warning"><span id="roundNumber" class="pull-left"></span> ROUND 1 <span class="pull-right" id="timerBegin"></span></div>';
+	  var htmlString = '<div class="alert alert-warning"><span id="roundNumber" class="pull-left"></span> <span class="pull-right" id="timerBegin"></span></div>';
 	  htmlString += "";
 
 	  htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
@@ -574,7 +618,6 @@ var PrisonersDilemma = function()
 	{	
 		if(content.count == 0)
 		{
-			console.log('console is ' + JSON.stringify(content));
 			waitingTimeElapsed. stopTimer();
 			hasRecommender = content.recommenderOptionValue;
 			startRealGame(hasRecommender);
@@ -586,7 +629,10 @@ var PrisonersDilemma = function()
 		}
 		else if(content.count < content.rounds)
 		{
+			// console.log('content ' + JSON.stringify(content));
 			var briefInfo = content.text;
+			var myTotalPayoff = briefInfo.fromItself + briefInfo.fromOpponent;
+			gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
 			myCanvasContainer.makeSelectionImpossible();
 		    myCanvasContainer.setOpponentVisible(briefInfo.opponentChoiceInNumber);
 		    myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
@@ -600,9 +646,11 @@ var PrisonersDilemma = function()
 			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
 			questionsToAsk.moveToNextRound(content);
 			document.getElementById('questionAndFeedback').style.display = 'none';
+			gameHistory.setHistoryDivHtml();
 		}
 		else
 		{
+			gameHistory.clearPanel();
       		var cummulative = content.cumm;
       		var numberOfRounds = content.rounds;
       		endGame(cummulative, numberOfRounds,hasRecommender)

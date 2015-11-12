@@ -66,31 +66,6 @@ function player(id)
 
 		// new value to be sent
 		var briefInfo = {playerChoiceInNumber : this.history[lastIndex][0], opponentChoiceInNumber : this.history[lastIndex][2], fromItself: playerGotFromItself, fromOpponent: playerGotFromOpponent, isRandom : playerChoiceWasRandom};
-
-
-		var randomLabel = playerChoiceWasRandom ? "<span class=\"badge  pull-right\">R</span>" : "";
-		briefAnswer += "<table class='table table-bordered'><tr><td></td><td></td><td> You got</td></tr>";
-		briefAnswer += "<tr><td>Your Choice : </td><td>" + playerChoice + randomLabel + "</td><td>" + playerGotFromItself+"</td></tr>";
-		briefAnswer += "<tr><td>Agent Choice : </td><td>" + opponentChoice+ "</td><td>" + playerGotFromOpponent +"</td></tr>";
-		briefAnswer += "<tr><td>Total</td><td></td><td>" + total + "</td></tr></table>";
-		// if(this.history[lastIndex][4] == 0)
-		// {
-		// 	briefAnswer += "";
-		// 	briefAnswer += "<div class=\"alert alert-success\">You did not choose anything. Thus a random choice of " + this.gameChoices[this.history[lastIndex][0] - 1] + 
-		// 	" was generated for you. </div><div class=\"alert alert-success\"> The other player chose " + this.gameChoices[this.history[lastIndex][2] - 1] +". </div><div class=\"alert alert-success\">Therefore you got ";
-		// 	briefAnswer += this.history[lastIndex][1] + " points </div>"; 
-		// }
-		// else
-		// {
-		// 	briefAnswer += 	"<div class=\"alert alert-success\">You chose " + this.gameChoices[this.history[lastIndex][0] - 1] + " </div><div class=\"alert alert-success\">The other player chose " + this.gameChoices[this.history[lastIndex][2] - 1] +".</div><div class=\"alert alert-success\"> Therefore you got ";
-		// 	briefAnswer += this.history[lastIndex][1] + " points</div>"; 
-		// }
-		
-		briefAnswer += "<p id='nextRoundCounter'> Next round starts in 10 seconds</p>";
-		briefAnswer += "<div class='progress'><div id='progressBar' class='progress-bar progress-bar-striped progress-bar-danger active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
-		// html += " <tr><td colspan=3> <h3><span class=\"label label-primary\">CUMMULATIVE SCORES </span></h3></td><td>" +
-		// "<h3><span class=\"label " + color1 + "\">" + this.getCummulativeValue() +
-		//         "</span></h3></td><td><h3><span class=\"label "+ color2 +" \">" + this.getOpponentCummulativeValue() + "</span></h3></td></tr></table>";
 		return  briefInfo;
 	};
 }
