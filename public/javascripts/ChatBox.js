@@ -1,3 +1,12 @@
+var ShowAlert = function(header, body)
+{
+	var modalHeader = document.getElementById('myModalLabel');
+	var modalBody = document.getElementById('myModalBody');
+	modalHeader.innerHTML = header;
+	modalBody.innerHTML = body;
+	$(myModal).modal('show')
+}
+
 var AgentStateSettings = function()
 {
 	var distinctExpertWasChosen, anExpertHasBeenExecutedForCompleteCycle, profitedFromDefection;
@@ -55,9 +64,9 @@ var AgentStateSettings = function()
 		var niceness = opponentState[1];
 		var bully = opponentState[2];
 
-		var info = '<p>Reciprocity : ' + reciprocity + '%';
-		info += '<p>Niceness : ' + niceness + '';
-		info += '<p>Bully : ' + bully + '%';
+		var info = ['Reciprocity : ' + reciprocity + '%'];
+		info.push('Niceness : ' + niceness + '');
+		info.push('Bully : ' + bully + '%');
 		return info;
 	}
 
@@ -65,22 +74,22 @@ var AgentStateSettings = function()
 	{
 		console.log(JSON.stringify(agentState));
 		var options = ['A', 'B'];
-		return 'Recommended action : ' + options[agentState.agentChoice] + ' '; 
+		return ['Recommended action : ' + options[agentState.agentChoice] + ' ']; 
 	}
 
 	this.getReason = function(agentState)
 	{
-		return 'reason';
+		return ['reason'];
 	}
 	
 	this.getReasonProhibitingOtherAction = function(agentState)
 	{
-		return 'reason for not doing otherwise';
+		return ['reason for not doing otherwise'];
 	}
 	
 	this.getHowToDoBetter = function(agentState)
 	{
-		return 'how to do better';
+		return ['how to do better'];
 	}
 }
 
@@ -91,43 +100,55 @@ var ChatBox = function(chatItemId)
 	var questions = ['Tell me about my opponent', 'What should I do now?', 'Why?', 'Why shouldn\'t I do otherwise?','How do I do better?'];
 	var feedbacks = ['You were wrong!', 'You were right'];
 	var agentSettings = new AgentStateSettings();
+	var roundsAlreadyAsked = {};
+	var chatPanelBody = document.getElementById('panelBody');
+
+	var createRoundHeader = function(roundNumber)
+	{
+		roundsAlreadyAsked[roundNumber] = true;
+		var roundHeader = '';
+		roundHeader += '<li><div class="col-sm-offset-4 col-sm-4"><div style="background-color: #E6E6FA; border-radius: 25px; text-align: center;" class="well-sm">';
+		roundHeader += 'Round ' + (roundNumber + 1);
+		roundHeader += '</div></div></li>';
+
+		return roundHeader;
+	}
 
 	var createOneChatItem = function(isHuman, header, body, roundNumber)
-	{
+	{	
+		var chatItemHtml = '';
+		if(!(roundNumber in roundsAlreadyAsked))
+		{
+			chatItemHtml += createRoundHeader(roundNumber);
+			console.log('chatItemHtml : ' + chatItemHtml);
+		}
 		var position = isHuman ? 'right' : 'left';
-		var bdColor = isHuman ? '#edf7d9' : '#d9edf7';
-		var chatItemHtml = '<li><div class="' + (isHuman ? 'col-sm-offset-2 ': '') + 'col-sm-10">';
-		chatItemHtml += '<div style="background-color: ' +bdColor +'; border-bottom: 5px #ffffff solid;" class="pull-' + position +'">';
+		var bdColor = isHuman ? '#D3FB9f' : '#ffffff';
+		chatItemHtml += '<li><div class="' + (isHuman ? 'col-sm-offset-2 ': '') + 'col-sm-10" style="padding: 0px">';
+		chatItemHtml += '<div style="background-color: ' +bdColor +';" class="well-sm pull-' + position +'">';
 		chatItemHtml += body;
-		chatItemHtml += '</div></li>';
-		// var chatItemHtml = '<li class="' + position + ' clearfix">';
-		// chatItemHtml += '<span class="chat-img pull-' + position + '">';
-		// chatItemHtml += '<img ' + (isHuman ? 'src="http://placehold.it/50/55C1E7/fff&text=U"': 'src="http://placehold.it/50/55C1E7/fff&text=S"') + ' alt="User Avatar" class="img-circle" /></span>';
-		// chatItemHtml += '<div class="chat-body clearfix"><div class="header">';
-		// if(isHuman)
-		// {
-		// 	chatItemHtml += '<strong class="primary-font">' + header + '</strong> <small class="pull-right text-muted"><span class="glyphicon glyphicon-time"></span>Round '+ (roundNumber + 1) +'</small>';
-		// }
-		// else
-		// {
-		// 	chatItemHtml += '<small class=" text-muted"><span class="glyphicon glyphicon-time"></span>Round ' + roundNumber+'</small><strong class="pull-right primary-font">'+ header +'</strong>';
-		// }
-
-		// chatItemHtml += '</div><p>';
-		// chatItemHtml += body;
-		// chatItemHtml += '</p></div></li>';
-
-
+		chatItemHtml += '</div></div></li>';
 
 		return chatItemHtml;
+	}
+
+	var showChat = function(chatItem)
+	{
+		var chatList = (chatListObject.innerHTML + chatItem);
+		chatListObject.innerHTML = chatList;
+		chatPanelBody.scrollTop = chatPanelBody.scrollHeight;
 	}
 
 	this.addToChatList = function(question, answer, roundNumber)
 	{
 		var chatItem = createOneChatItem(true, 'You', question, roundNumber);
-		chatItem += createOneChatItem(false, 'S-script', answer, roundNumber);
-		var chatList = (chatListObject.innerHTML + chatItem);
-		chatListObject.innerHTML = chatList;
+		showChat(chatItem);
+
+		for(var i = 0 ; i < answer.length; i++)
+		{
+			chatItem = createOneChatItem(false, 'S-script', answer[i], roundNumber);
+			setTimeout(showChat, 2000 * (i + 1), chatItem);
+		}		
 	}
 
 	this.updateContentFromServer = function(content)
@@ -189,6 +210,7 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 {
 	var questionCheckBoxes = [];
 	var feedbackCheckBoxes = [];
+	var questionSelect, feedbackSelect;
 	var numberOfQuestions = 5;
 	var numberOfFeedback = 2;
 	var questionSubmitButton = document.getElementById(submitId);
@@ -220,23 +242,19 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 		{
 			var questions = [];
 			var checkBoxToUse = isQuestion ? questionCheckBoxes : feedbackCheckBoxes; 
-			for(var i = 0; i < checkBoxToUse.length; i++)
+			
+			var selectToUse = isQuestion ? questionSelect : feedbackSelect;
+			var valueSelected = selectToUse.value;
+			if(valueSelected == 0)
 			{
-				if(checkBoxToUse[i].checked)
-				{
-					if(!checkBoxToUse[i].disabled)
-					{
-						questions.push(i);
-						checkBoxToUse[i].disabled = true;
-					}
-				}
+				new ShowAlert('Selection Error', 'Please select an option!!');
+				// alert('Please select an option');
+				return;
 			}
 
-			for(var i = 0; i < questions.length; i++)
-			{
-				chatBox.getSolutionToQuestion(questions[i], isQuestion);
-			}
-			// console.log('was called');
+			checkBoxToUse[valueSelected-1].disabled = true;
+			chatBox.getSolutionToQuestion( valueSelected-1, isQuestion);
+			selectToUse.value = '0';
 		}
 	}
 
@@ -254,15 +272,10 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 		var feedbackCheck = document.getElementById(feedbackId + (i+1));
 		feedbackCheckBoxes.push(feedbackCheck);
 	}
-
+	questionSelect = document.getElementById('questionSelect');
+	feedbackSelect = document.getElementById('feedbackSelect');
 }
-
-// var chatBox = new ChatBox('chatItems');
-// var questionsToAsk = new QuestionsToAsk('agentQuestion', 'feedbackQuestion', 'agentQuestionSubmit', 'feedbackSubmit', chatBox);
-// chatBox.addToChatList('Why', 'It is the best option now', 2);
-
-// put the timer beside the round
-// fix the roundNumber disparity in the chat
-// Beautify the chatBox
-// fix the words generated
-//  show to Dr. Jacob
+// #E6E6FA
+// #5EFB6E
+// Make the chats responsive. Let the message be sent after 2 seconds, read after a second and the result in one second
+// Send the timer up.

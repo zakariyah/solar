@@ -287,7 +287,8 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 			{
 				if(!forceSubmission)
 				{
-					alert('please make a selection before submitting');
+					new ShowAlert('Selection Error', 'Please make a selection before submitting!!');
+					// alert('Please make a selection before submitting');
 					return;
 				}
 			}
@@ -532,7 +533,7 @@ var PrisonersDilemma = function()
 
 	var startRealGame = function(hasRecommender)
 	{
-	  var htmlString = "<div class=\"alert alert-warning\" id=\"roundNumber\"> ROUND 1 </div>";
+	  var htmlString = '<div class="alert alert-warning"><span id="roundNumber" class="pull-left"></span> ROUND 1 <span class="pull-right" id="timerBegin"></span></div>';
 	  htmlString += "";
 
 	  htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
@@ -565,8 +566,6 @@ var PrisonersDilemma = function()
         htmlString += "</div></div>";
         var actionsElement = document.getElementById('actions');
         actionsElement.innerHTML = htmlString;
-        // document.getElementById('recommender').innerHTML = '';
-        // document.getElementById('timerBegin').innerHTML = '';
         document.getElementById('chatBoxContainer').innerHTML = '';
 	  	document.getElementById('questionAndFeedback').innerHTML = '';	
 	}
@@ -577,7 +576,6 @@ var PrisonersDilemma = function()
 		{
 			console.log('console is ' + JSON.stringify(content));
 			waitingTimeElapsed. stopTimer();
-			// document.getElementById('timerStart').innerHTML = ""; // remove the timer div
 			hasRecommender = content.recommenderOptionValue;
 			startRealGame(hasRecommender);
 			// gameTimer.startTimer();

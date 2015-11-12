@@ -2,7 +2,8 @@
 <head>
 <link rel='stylesheet' href='../public/stylesheets/bootstrap.min.css' />
 <link rel="stylesheet" type="text/css" href="../public/stylesheets/testChat.css">
-
+<script src="../public/javascripts/jquery-1.11.3.js"></script>
+<script src="../public/javascripts/bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -21,8 +22,13 @@
                 <div class="panel-body">
                     <ul class="chat" id="chatItems">
                         <li>
+                            <div class="col-sm-offset-4 col-sm-4">
+                                <div style="background-color: #edd9f7; border-bottom: 5px transparent hidden;"> Round 1.</div>
+                            </div>
+                        </li>
+                        <li>
                             <div class="col-sm-offset-2 col-sm-10">
-                                <div style="background-color: #d9edf7; border-bottom: 5px #ffffff solid;" class="pull-right"> My talk is nice and I expect you to do better things.<p> <span class='pull-right' style="color:#000000; font: italic bold 12px Georgia, serif;">Round 1</span></p> </div>
+                                <div style="background-color: #d9edf7; border-bottom: 5px transparent solid;" class="pull-right"> My talk is nice and I expect you to do better things.</div>
                             </div>
                         </li>
                         <li>
@@ -33,46 +39,66 @@
                     </ul>
                 </div>
                 <div class="panel-footer">
-                    <div class="input-group">
-                        <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." />
+                    <div class="input-group" style="border-bottom: 5px #ffffff solid; ">
+                        <!-- <span>Questions</span> -->
+                        <select>
+                        <option value='0' id='agentQuestionDefault'> ...... </option>
+                        <option value='1' id='agentQuestion1'> Tell me about my opponent </option>
+                        <option value='2' id='agentQuestion2'> What should I do now? </option>
+                        <option value='3' id='agentQuestion3'> Why? </option>
+                        <option value='4' id='agentQuestion4'> Why shouldn't I do otherwise? </option>
+                        <option value='5' id='agentQuestion5'> How do I do better? </option>
+                      </select> 
                         <span class="input-group-btn">
                             <button class="btn btn-warning btn-sm" id="btn-chat">
-                                Send</button>
+                                Ask</button>
+                        </span>
+                    </div>
+                
+                    <div class="input-group">
+                    <select>
+                        <option value='0' id='feedbackQuestionDefault'> ...... </option>
+                        <option value='1' id='feedbackQuestion1'> I am right </option>
+                        <option value='2' id='feedbackQuestion2'> You were wrong. </option>
+                    </select> 
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="fdbtn">
+                                Send Feedback</button>
                         </span>
                     </div>
                 </div>
+
             </div>
         </div>
-        <div class="col-md-4">
-            <div class="panel panel-default">
-            <div class="panel-heading">Questions</div>
-            <div class="panel-body">
-            <table class='table'>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion1'> Tell me about my opponent</td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion2'> What should I do now?<br></td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion3'> Why?<br></td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion4'> Why shouldn't I do otherwise?<br></td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion5'> How do I do better?<br></td></tr>
-            <tr><td><button class='button pull-right' id='agentQuestionSubmit'>Send Questions</button></td></tr>
-            </table>
-            </div></div>
-        </div>
-    
-    <div class="col-md-4">
-            <div class="panel panel-default">
-            <div class="panel-heading">Feedback</div>
-            <div class="panel-body">
-            <table class='table'>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='feedbackQuestion1'> I am right</td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike"  id='feedbackQuestion2'> You were wrong.<br></td></tr>
-            <tr><td><button class='button pull-right' id='feedbackSubmit'>Send Feedback</button></td></tr>
-            </table>
-            </div></div>
-        </div>
-
 
     </div>
 </div>
+
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal" >
+  Launch demo modal
+</button>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body" id="myModalBody">
+        These are the boys there.
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
       <script src="../public/javascripts/ChatBox.js"></script>
+      <script type="text/javascript">
+            $(myModal).modal('show');
+            console.log('I have been shown');
+      </script>
+
 </body>
 </html>

@@ -272,37 +272,67 @@ window.onbeforeunload = function() {
 <!-- <div class='col-md-1'>
 </div> -->
 <div class='row'>
-<div class='col-md-1'>
-</div>
 <div class='col-md-6'>
     <div class='row' id='actions'>
       <p>Welcome</p>
       <div class='alert alert-success'>Please wait while we initiate the agent.</div>
       <div class='row'><table class='table'><tr><td id='myPayoff'></td><td></td><td></td><td></td><td id='otherPayoff'></td></tr></table></div>
+
+      <div class="alert alert-warning" id='timerStart'> <span id='timerBegin'></span></div>
 </div>
-<div class="alert alert-warning" id='timerStart'> <span id='timerBegin'></span></div>
+
 <!-- <div class="row alert alert-warning" id='recommender'> -->
       
   <!-- </div> -->
   </div>
-  <div class='col-md-4' id='chatBoxContainer' style='display:none'>
+  <div class='col-md-6' id='chatBoxContainer' style='display:none'>
     <div class="panel panel-primary">
                 <div class="panel-heading">
-                    <span class="glyphicon glyphicon-comment"></span> Chat
+                    <span class="glyphicon glyphicon-comment"></span> Talk to the expert
                     <div class="btn-group pull-right">
                         <button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown">
                             <span class="glyphicon glyphicon-chevron-down"></span>
                         </button>
                     </div>
                 </div>
-                <div class="panel-body">
+                <div class="panel-body" id="panelBody">
                     <ul class="chat" id="chatItems">
                     </ul>
                 </div>
+                <div class="panel-footer" id='questionAndFeedback' style='display:none'>
+                    <div class="input-group"  style="border-bottom: 5px #ffffff solid; ">
+                      <select id="questionSelect">
+                        <option value='0' id='agentQuestionDefault'> ...... </option>
+                        <option value="1" id='agentQuestion1'> Tell me about my opponent</option>
+                        <option value="2" id='agentQuestion2'> What should I do now?</option>
+                        <option value="3" id='agentQuestion3'> Why?</option>
+                        <option value="4" id='agentQuestion4'> Why shouldn't I do otherwise?</option>
+                        <option value="5" id='agentQuestion5'> How do I do better?</option>
+                      </select> 
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="agentQuestionSubmit">
+                                Send</button>
+                        </span>
+                    </div>
+                
+
+                    <div class="input-group">
+                    <select id="feedbackSelect">
+                        <option value='0' id='feedbackQuestionDefault'> ...... </option>
+                        <option value='1' id='feedbackQuestion1'> I am right </option>
+                        <option value='2' id='feedbackQuestion2'> You were wrong. </option>
+                    </select> 
+                        <span class="input-group-btn">
+                            <button class="btn btn-warning btn-sm" id="feedbackSubmit">
+                                Send Feedback</button>
+                        </span>
+                    </div>
+                </div>
+
             </div>
 
 </div>
-  <div class="col-md-1"></div>
+  <!-- <div class="col-md-1"></div> -->
 <!--     <button onclick='return startgame()'>Start</button> -->
     <!-- <div class='col-md-1'>
       <div class="row" id='voice'>
@@ -316,34 +346,6 @@ window.onbeforeunload = function() {
   </div>
   </div> -->
 </div>
-<div class='row' id='questionAndFeedback' style='display:none'>
-    <div class="col-md-offset-3 col-md-4">
-            <div class="panel panel-default">
-            <div class="panel-heading">Questions</div>
-            <div class="panel-body">
-            <table class='table'>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion1'> Tell me about my opponent</td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion2'> What should I do now?<br></td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion3'> Why?<br></td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion4'> Why shouldn't I do otherwise?<br></td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='agentQuestion5'> How do I do better?<br></td></tr>
-            <tr><td><button class='button pull-right' id='agentQuestionSubmit'>Send Questions</button></td></tr>
-            </table>
-            </div></div>
-        </div>
-    
-    <div class="col-md-4">
-            <div class="panel panel-default">
-            <div class="panel-heading">Feedback</div>
-            <div class="panel-body">
-            <table class='table'>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike" id='feedbackQuestion1'> I am right</td></tr>
-            <tr><td><input type="checkbox" name="vehicle" value="Bike"  id='feedbackQuestion2'> You were wrong.<br></td></tr>
-            <tr><td><button class='button pull-right' id='feedbackSubmit'>Send Feedback</button></td></tr>
-            </table>
-            </div></div>
-        </div>
-</div>
 
 </div>
 <!-- <div class='col-md-1'>
@@ -352,7 +354,26 @@ window.onbeforeunload = function() {
 <span style='display:none' id='hehasrecommender'>0</span>
   </div>
 
+
 <div id="sound"></div>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body" id="myModalBody">
+        These are the boys there.
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <script src="/javascripts/jquery-1.11.3.js"></script>
 <script src="/javascripts/bootstrap.min.js"></script>
 <script src="/javascripts/ChatBox.js"></script>
