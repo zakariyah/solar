@@ -133,14 +133,17 @@ var ChatBox = function(chatItemId)
 		return chatItemHtml;
 	}
 
-	var showChat = function(chatItem, buttonClicked)
+	var showChat = function(chatItem, buttonClicked, isQuestion)
 	{
 		var chatList = (chatListObject.innerHTML + chatItem);
 		chatListObject.innerHTML = chatList;
 		chatPanelBody.scrollTop = chatPanelBody.scrollHeight;
-		
-		var snd = new Audio("/audio/videoplayback"); // sound to be played
-		snd.play();
+
+		if(!isQuestion)
+		{
+			var snd = new Audio("/audio/videoplayback"); // sound to be played
+			snd.play();	
+		}
 		if(buttonClicked)
 		{
 			buttonClicked.disabled = false;
@@ -150,7 +153,7 @@ var ChatBox = function(chatItemId)
 	this.addToChatList = function(question, answer, roundNumber, buttonClicked)
 	{
 		var chatItem = createOneChatItem(true, 'You', question, roundNumber);
-		showChat(chatItem);
+		showChat(chatItem, false, true);
 
 		for(var i = 0 ; i < answer.length; i++)
 		{

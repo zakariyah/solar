@@ -24,10 +24,10 @@ var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 	{
 		// console.log('history ' + history);
 		var historyHtml = '<table class="table table-bordered">';
-		historyHtml += '<tr><td>My Choice</td><td>Other Player\'s Choice</td><td>My Score</td></tr>';
-		for(var i = 0; i < history.length; i++)
+		historyHtml += '<tr><td>Round</td><td>My Choice</td><td>Other Player\'s Choice</td><td>My Score</td></tr>';
+		for(var i = history.length - 1; i >= 0; i--)
 		{
-			historyHtml += ('<tr><td>' + history[i][0]  + '</td><td>'  + history[i][1] + '</td><td>'  + history[i][2] + '</td></tr>');
+			historyHtml += ('<tr>' + (i + 1) + '<td></td><td>' + history[i][0]  + '</td><td>'  + history[i][1] + '</td><td>'  + history[i][2] + '</td></tr>');
 		}
 		historyHtml += '</table>';
 		gameHistoryDiv.innerHTML = historyHtml;
@@ -518,9 +518,9 @@ var PrisonersDilemma = function()
 
 	var chatBox = new ChatBox('chatItems');
 	var questionsToAsk = new QuestionsToAsk('agentQuestion', 'feedbackQuestion', 'agentQuestionSubmit', 'feedbackSubmit', chatBox);
-	
 
-	
+
+
 	agentSettings = new AgentStateSettings();
 
 	var gameTimerEnd = function()
