@@ -7,6 +7,7 @@ var ShowAlert = function(header, body)
 	$(myModal).modal('show')
 }
 
+
 var AgentStateSettings = function()
 {
 	var distinctExpertWasChosen, anExpertHasBeenExecutedForCompleteCycle, profitedFromDefection;

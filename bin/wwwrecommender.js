@@ -343,7 +343,7 @@ ionew.sockets.on('connection', function (socket) {
 
 socket.on('disconnect', function()
 {
-
+	console.log("presentSocketGameCounter : disconnect1:  " + socket.id);
 	var presentSocketGameCounter = playersSocketDict[socket.id];
 		if(typeof presentSocketGameCounter === 'undefined')
 		{
@@ -419,5 +419,9 @@ socket.on('timeOfAction', function(timeOfAction) { // used to set the time actio
 		var playerWithTime =  gameControllerArray[presentSocketGameCounter].gamePlayers[socket.id]; //	roomToSocket[socket.id];
 		playerWithTime.setTimeOfAction(timeOfAction);
 		});
+
+socket.on('forceDisconnect', function() {
+		socket.diconnect();
+	});
 
 });

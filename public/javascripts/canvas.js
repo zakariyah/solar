@@ -318,6 +318,7 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 	var myOptions;
 	var opponentOptions;
 	var submitButton;
+	var gameManager;
 
 	this.nextRound = function(forceSubmission)
 	{	
@@ -339,13 +340,12 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 		  var val = that.getPlayerSelection();
 		  that.makeSelectionImpossible();
 		  that.getGameTimer().stopTimer();
+		  that.getGameManager().stopTimer();
 		  that.setSubmitButtonVisible(false);
 		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : 0});
 		  // console.log('emitted');  
 		}
 	}
-
-
 
 	this.startGame = function()
 	{
@@ -414,7 +414,7 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 }
 
 
-var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction, initialFunction)
+var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,  decreaseAfterEnd, initialFunction)
 {
 	if(initialFunction)
 	{
@@ -426,6 +426,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 	var interval = intervalIn;
 	var mainCount = countIn;
 	var counter;
+	var decreasingTimeType = decreaseAfterEnd;
 
 	var timer = function()
 	{
@@ -434,10 +435,14 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 	    elapsedTime = Math.floor(elapsedTime/interval); 
 	    // leftValue += Math.floor(elapsedTime/interval);
 	    count = mainCount - elapsedTime;
-	    if (count < 0)
+	    if (count < 1)
 	    {
 		    endFunction();
 		    clearInterval(counter);
+		    if(decreasingTimeType)
+		    {
+		    	mainCount = mainCount/2;
+		    }
 		    return;
 		}
 		periodicFunction(count, mainCount);
@@ -453,6 +458,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 	{
 		clearInterval(counter);
 	}
+
  }
 
 var WaitingTimeElapsed = function(socket)
@@ -470,10 +476,54 @@ var WaitingTimeElapsed = function(socket)
 		socket.emit('waitingTimeElapsed');
 	}
 
-	var that = new TimerFunction(totalWaitingTime, intervalWaiting, waitingTimePeriodicFunction, waitingTimeEndFunction);
+	var that = new TimerFunction(totalWaitingTime, intervalWaiting, waitingTimePeriodicFunction, waitingTimeEndFunction, false);
 
 	return that;
 }
+
+var GameManager = function(socket, gameManagerEndFunctionFromMain, endGameFunction)
+{
+	var totalGameTime = 10;
+	var intervalGame = 1000;
+	var agitationStart = 4;
+	var numberOfTimes = 0;
+	var numberOfAllowedTimes = 2;
+	var that;
+	var gameManagerPeriodicFunction = function(count, mainCount)
+	{
+		if(count <= agitationStart)
+		{
+			var htmlToPrint = "<p>Please make a choice. You have  " + count + " sec" + ((count > 1) ? "s": "") + " remaining</p>";
+			document.getElementById('agitationModalBody').innerHTML = htmlToPrint;
+		}
+		if(count == agitationStart)
+		{
+			$(agitationModal).modal('show');
+		}
+		
+	}
+	
+
+	var  gameManagerEndFunction = function()
+	{
+		numberOfTimes += 1;
+		if(numberOfTimes >= numberOfAllowedTimes)
+		{
+			var htmlToPrint = "<p>We are sorry. We had to end the game since you were not responding</p>";
+			document.getElementById('agitationModalBody').innerHTML = htmlToPrint;
+			$(agitationModal).modal('show');
+			endGameFunction();
+			return;
+		}
+		gameManagerEndFunctionFromMain();
+		$(agitationModal).modal('hide');
+	}
+
+	that = new TimerFunction(totalGameTime, intervalGame, gameManagerPeriodicFunction, gameManagerEndFunction, true);
+
+	return that;
+}
+
 
 var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
 {
@@ -485,7 +535,7 @@ var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
 		progressbarFunction('progressBarMain', count, mainCount);
 	}
 
-	var that = new TimerFunction(totalGameTime, intervalGame, gameTimePeriodicFunction, gameTimeEndFunction);
+	var that = new TimerFunction(totalGameTime, intervalGame, gameTimePeriodicFunction, gameTimeEndFunction, false);
 
 	return that;
 }
@@ -493,7 +543,7 @@ var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
 
 var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 {
-	var totalResultTime = 15;
+	var totalResultTime = 3;
 	var intervalResult = 1000;
 	
 	var resultTimePeriodicFunction = function(count, mainCount)
@@ -502,7 +552,7 @@ var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 		// progressbarFunction('progressBarMain', count, mainCount);
 	}
 
-	var that = new TimerFunction(totalResultTime, intervalResult, resultTimePeriodicFunction, resultTimeEndFunction);
+	var that = new TimerFunction(totalResultTime, intervalResult, resultTimePeriodicFunction, resultTimeEndFunction, false);
 
 	return that;
 }
@@ -519,6 +569,7 @@ var PrisonersDilemma = function()
 	var chatBox = new ChatBox('chatItems');
 	var questionsToAsk = new QuestionsToAsk('agentQuestion', 'feedbackQuestion', 'agentQuestionSubmit', 'feedbackSubmit', chatBox);
 
+	var gameManager ;
 
 
 	agentSettings = new AgentStateSettings();
@@ -561,6 +612,23 @@ var PrisonersDilemma = function()
 	var resultTimer = new ResultTimer(socket, resultTimeEndFunction, changeProgressBar);
 
 
+	// create the game manager functions
+	var gameManagerEndFunctionFromMain = function()
+	{
+		myCanvasContainer.nextRound(true)();
+	}
+
+	var endGameFunction = function()
+	{
+		socket.emit('forceDisconnect');	
+		document.getElementById('fullPage').innerHTML = "";			
+	}
+
+	// create the game manager
+	gameManager = new GameManager(socket, gameManagerEndFunctionFromMain, endGameFunction);
+
+	
+
 	// add the timers to the game containers
 	myCanvasContainer.getGameTimer = function()
 	{
@@ -572,10 +640,17 @@ var PrisonersDilemma = function()
 		return resultTimer;
 	}
 
+	myCanvasContainer.getGameManager = function()
+	{
+		return gameManager;
+	}
+
 	var startGame = function()
 	{
 		
 	}
+
+	
 
 	var startRealGame = function(hasRecommender)
 	{
@@ -623,6 +698,7 @@ var PrisonersDilemma = function()
 			waitingTimeElapsed. stopTimer();
 			hasRecommender = content.recommenderOptionValue;
 			startRealGame(hasRecommender);
+			gameManager.startTimer();
 			// gameTimer.startTimer();
 			//// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
 			//// document.getElementById('agentState').innerHTML = agentStates;
@@ -631,6 +707,7 @@ var PrisonersDilemma = function()
 		}
 		else if(content.count < content.rounds)
 		{
+			gameManager.startTimer();
 			// console.log('content ' + JSON.stringify(content));
 			var briefInfo = content.text;
 			var myTotalPayoff = briefInfo.fromItself + briefInfo.fromOpponent;

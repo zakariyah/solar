@@ -18,7 +18,7 @@ window.onbeforeunload = function() {
     }
 </script>
 
-    <div class='container'>
+    <div class='container' id='fullPage'>
 <!-- <div class='col-md-1'>
 </div> -->
 <div class='row'>
@@ -111,6 +111,24 @@ window.onbeforeunload = function() {
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="agitationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="agitationModalLabel">Please make a choice</h4>
+      </div>
+      <div class="modal-body" id="agitationModalBody">
+        
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 <script src="/javascripts/jquery-1.11.3.js"></script>
