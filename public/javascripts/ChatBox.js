@@ -9,93 +9,42 @@ var ShowAlert = function(header, body)
 
 
 var AgentStateSettings = function()
-{
-	var distinctExpertWasChosen, anExpertHasBeenExecutedForCompleteCycle, profitedFromDefection;
-	var expertType, aspiration, target, targetForOpponent;
-	this.setStates = function(states)
-	{
-		distinctExpertWasChosen = states[0];
-		anExpertHasBeenExecutedForCompleteCycle  = states[1];
-		profitedFromDefection = states[2];
-		expertType = states[3];
-		aspiration = states[4];
-		target = states[5];
-		targetForOpponent = states[6];
-	}
+{	
 
 	this.getRecommendationIndex = function(agentState)
 	{
 		return agentState.agentChoice;
 	}
 
-	this.getStatesText = function(agentState)
-	{
-		if(!agentState)
-		{
-			return '';
-		}
-		this.setStates(agentState.agentVar);
-		var stateText = ' ' ; //<p>';
-		if(distinctExpertWasChosen)
-		{
-			stateText += 'A distinct expert has been chosen. ';
-		}
-		if(anExpertHasBeenExecutedForCompleteCycle)
-		{
-			stateText += 'The expert has executed a complete cycle. ';
-		}
-		if(profitedFromDefection)
-		{
-			stateText += 'The opponent profited from the defection and is thus guilty. ';
-		}
-
-		stateText += 'Expert Type ' + expertType + '. ';
-		if(aspiration)
-		{
-			aspiration = aspiration.toFixed(3);
-		}
-		stateText += 'Aspiration ' + aspiration + '. ';
-		stateText += 'Target ' + target + '. ';
-		stateText += 'Target for opponent ' + targetForOpponent + '. ';
-		// stateText += 'Recommended action : ' + options[recommendation - 1] + ' ';
-		// stateText += '</p>';
-
-		return stateText;
-	}
-
 	this.getOpponentInfoHtml = function(agentState, round)
 	{
-		var opponentState = agentState.opponentState;
-		var reciprocity = opponentState[0];
-		var niceness = opponentState[1];
-		var bully = opponentState[2];
+		var opponentState = agentState.opponentInfo;
 
-		var info = ['Reciprocity : ' + reciprocity + '%'];
-		info.push('Niceness : ' + niceness + '');
-		info.push('Bully : ' + bully + '%');
-		return info;
+		return opponentState;
 	}
 
 	this.getRecommendation = function(agentState, round)
 	{
 		console.log(JSON.stringify(agentState));
 		var options = ['A', 'B'];
-		return ['Recommended action : ' + options[agentState.agentChoice] + ' ', '<button id="acceptRecommendation'+ round +'" >Click to accept</button>']; 
+		var recommendation = agentState.recommendation;
+		recommendation.push('<button id="acceptRecommendation'+ round +'" >Click to accept</button>');
+		return recommendation; 
 	}
 
 	this.getReason = function(agentState)
 	{
-		return ['The other player will be taking the lead in making us achieve this threshold'];
+		return agentState.reason;
 	}
 	
 	this.getReasonProhibitingOtherAction = function(agentState)
 	{
-		return ['reason for not doing otherwise'];
+		return agentState.reasonOtherwise;
 	}
 	
 	this.getHowToDoBetter = function(agentState)
 	{
-		return ['how to do better'];
+		return agentState.doBetter;
 	}
 }
 

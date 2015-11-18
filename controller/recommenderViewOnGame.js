@@ -57,9 +57,10 @@ var RecommenderViewOnGame = function(agent)
 	this.getRecommendation = function()
 	{
 		var round = recommender.getRound();
+		var options = ['A', 'B'];
 		var recommendation = recommender.latestChoice;
-		var recoHtml = ''; // try to capture various emotions. 1.Assertiveness.
-		recoHtml += 'I recommend that you play ' + recommendation;
+		var recoHtml = []; // try to capture various emotions. 1.Assertiveness.
+		recoHtml.push('I recommend that you play ' + options[recommendation]);
 		return recoHtml;
 	}
 
@@ -68,7 +69,7 @@ var RecommenderViewOnGame = function(agent)
 		var typeOfExpert = recommender.getTypeOfExpert(); // can be leader, follower, minmax or best response
 		var targets = recommender.getTarget(); // get target of both players
 		var aspiration = recommender.getAspiration(); // get the aspiration of the player
-		var convictionLevel = recommender.getConvinctionLevel();
+		var convictionLevel = recommender.getConvictionLevel();
 		var isGuilty = recommender.isOtherPlayerGuilty();
 		var htmlReason = [];
 		if(typeOfExpert == 'maximinBegin')
@@ -87,12 +88,12 @@ var RecommenderViewOnGame = function(agent)
 		}
 		else if(typeOfExpert == 'leader')
 		{
-			htmlReason.push('The plan is to make you get an average of ' + (aspiration * 5) + ' for each round on the long run.');
+			htmlReason.push('The plan is to make you get an average of ' + (aspiration * 5).toFixed(2) + ' for each round on the long run.');
 			htmlReason.push('If the other player profits by veering away from the plan, he will be punished');
 		}
 		else if(typeOfExpert == 'follower')
 		{
-			htmlReason.push('The plan is to make you get an average of ' + (aspiration * 5) + ' for each round on the long run.');
+			htmlReason.push('The plan is to make you get an average of ' + (aspiration * 5).toFixed(2) + ' for each round on the long run.');
 			htmlReason.push('The other player will be taking the lead in making us achieve this threshold');
 			htmlReason.push('If the other player decides to be overtly smart, he will be dealt with');
 		}
@@ -108,7 +109,7 @@ var RecommenderViewOnGame = function(agent)
 		var typeOfExpert = recommender.getTypeOfExpert(); // can be leader, follower, minmax or best response
 		var targets = recommender.getTarget(); // get target of both players
 		var aspiration = recommender.getAspiration(); // get the aspiration of the player
-		var getConvinctionLevel = recommender.getConvinctionLevel();
+		var convictionLevel = recommender.getConvictionLevel();
 		var isGuilty = recommender.isOtherPlayerGuilty();
 		var htmlReasonNotTo = [];
 		if(isGuilty)
@@ -129,13 +130,20 @@ var RecommenderViewOnGame = function(agent)
 		var betterHtml = [];
 		if(expertDoingBetter)
 		{
-			betterHtml.push('You can do better by doing this');
+			betterHtml.push('You and the other player can make an average of ' + (expertDoingBetter[0] * 5).toFixed(2) + ' and ' + expertDoingBetter[1] * 5 + ' per round respectively');
+			betterHtml.push('All you have to do is to ');
 		}
 		else
 		{
-			betterHtml.push('This seems to be the best you can achieve with this opponnet');
+			betterHtml.push('This seems to be the best you can achieve against this opponnet');
 		}
 		return betterHtml;
+	}
+
+
+	this.getSolutionForRound = function()
+	{
+		return {'doBetter' : this.howToDoBetter(), 'reason' : this.getReason(), 'reasonOtherwise' : this.getReasonForNotDoingOtherwise(), 'recommendation' : this.getRecommendation(), 'opponentInfo' : this.getInformationAboutOpponent(), 'agentChoice' : recommender.latestChoice};
 	}
 }
 

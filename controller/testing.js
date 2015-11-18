@@ -1,4 +1,5 @@
 var agen = require('./agent');
+var RecommenderViewOnGame = require('./recommenderViewOnGame.js');
 var TFT = require('../tester/TFT');
 var randAgent = require('../tester/randAgent');
 var playgames = require('../tester/playgames');
@@ -11,6 +12,8 @@ var agent = new agen('S++', 0, A, 0.99, false );
 var agent2 = new agen('S++', 0, A, 0.99, false );
 var TFTagent = new TFT();
 var randA = new randAgent();
+
+var recView = new RecommenderViewOnGame(agent.myJefePlus);
 // var game = new playgames(agent2, agent, 200);
 // console.log(game.playGame());
 

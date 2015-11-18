@@ -483,7 +483,7 @@ var WaitingTimeElapsed = function(socket)
 
 var GameManager = function(socket, gameManagerEndFunctionFromMain, endGameFunction)
 {
-	var totalGameTime = 120;
+	var totalGameTime = 600;
 	var intervalGame = 1000;
 	var agitationStart = 30;
 	var numberOfTimes = 0;

@@ -766,9 +766,10 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	}
 
 	// methods to get the state of opponent: to be used by chat
-	var calculateOpponentState = function()
+	this.calculateOpponentState = function()
 	{
-		var history = this.gameHistory;
+		console.log('game history is ' + this.gameHistory);
+		var history = this.gameHistory ;
 		if(history.length == 0)
 		{
 			return;
@@ -829,8 +830,9 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 
 	this.getOpponnetProperties = function()
 	{
-		// return the properties of the opponent : niceness, bully, reciprocity, reciprocateDefection
-		return calculateOpponentState();
+		// console.log('jefe_plus ' + JSON.stringify(this));
+		console.log('game history2 is ' + this.gameHistory);
+		return this.calculateOpponentState();
 	}
 
 	this.getTypeOfExpert = function()
@@ -883,12 +885,16 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	{
 		// get the state of the game : use the expert name to make decisions
 		// return an expert that is better or false if there is none
+		if(this.expertName == 'minmax')
+		{
+			return false;
+		}
 		var myTarget = this.getTarget();
 		var opponentTarget = this.getOpponnetTarget();
 		var changed = false;
 		var bestForMe = (myTarget ? myTarget : 0);
 		var bestForPartner = (opponentTarget ? opponentTarget : 0);
-		for(var i == 0; i < this.re.length; i++)
+		for(var i = 0; i < this.re.length; i++)
 		{
 			if(bestForMe < this.re[i].barR[0] && bestForPartner < this.re[i].barR[1])
 			{

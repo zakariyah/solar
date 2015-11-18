@@ -31,11 +31,13 @@ var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nom
 
 
 	var jefe_plus  = require('../hagent/jefe_plus.js');
-	var agentState  = require('../hagent/stateOfAgent.js');
-	
-	this.myJefePlus = new jefe_plus(nombre, playerIndex, payOffMatrix, this.M,  lambda); // get those variables
-	this.myAgentState = new agentState(this.myJefePlus);
+	// var agentState  = require('../hagent/stateOfAgent.js');
+	var ViewOnGame = require('./recommenderViewOnGame.js');
 
+
+	this.myJefePlus = new jefe_plus(nombre, playerIndex, payOffMatrix, this.M,  lambda); // get those variables
+	// this.myAgentState = new agentState(this.myJefePlus);
+	this.viewOfGame = new ViewOnGame(this.myJefePlus);
 
 	this.createMove = function()
 	{ 
@@ -58,7 +60,7 @@ var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nom
 	this.getAgentState = function()
 	{
 		// the method is to print out the user state.
-		return this.myAgentState.getAgentState();
+		return this.viewOfGame.getSolutionForRound();
 	}
 
 	this.getRecommender = function()
