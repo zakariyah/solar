@@ -27,7 +27,7 @@ var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 		historyHtml += '<tr><td>Round</td><td>My Choice</td><td>Other Player\'s Choice</td><td>My Score</td></tr>';
 		for(var i = history.length - 1; i >= 0; i--)
 		{
-			historyHtml += ('<tr>' + (i + 1) + '<td></td><td>' + history[i][0]  + '</td><td>'  + history[i][1] + '</td><td>'  + history[i][2] + '</td></tr>');
+			historyHtml += ('<tr><td>' + (i + 1) + '</td><td>' + history[i][0]  + '</td><td>'  + history[i][1] + '</td><td>'  + history[i][2] + '</td></tr>');
 		}
 		historyHtml += '</table>';
 		gameHistoryDiv.innerHTML = historyHtml;
@@ -483,9 +483,9 @@ var WaitingTimeElapsed = function(socket)
 
 var GameManager = function(socket, gameManagerEndFunctionFromMain, endGameFunction)
 {
-	var totalGameTime = 10;
+	var totalGameTime = 120;
 	var intervalGame = 1000;
-	var agitationStart = 4;
+	var agitationStart = 30;
 	var numberOfTimes = 0;
 	var numberOfAllowedTimes = 2;
 	var that;
@@ -566,7 +566,7 @@ var PrisonersDilemma = function()
 	var myCanvasContainer =  new CanvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff', socket);
 	var hasRecommender;
 
-	var chatBox = new ChatBox('chatItems');
+	var chatBox = new ChatBox('chatItems', myCanvasContainer);
 	var questionsToAsk = new QuestionsToAsk('agentQuestion', 'feedbackQuestion', 'agentQuestionSubmit', 'feedbackSubmit', chatBox);
 
 	var gameManager ;

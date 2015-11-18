@@ -6,6 +6,7 @@ var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nom
 {
 	this.payOffMatrix =  payOffMatrix;
 	this.isRandom = isRandom;
+	var round = 0;
 
 	this.buildPayoffMatrix = function()
 	{
@@ -38,6 +39,7 @@ var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nom
 
 	this.createMove = function()
 	{ 
+		round += 1;
 		if(this.isRandom)
 		{
 			return Math.floor((Math.random() + 0.5));
@@ -59,6 +61,10 @@ var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nom
 		return this.myAgentState.getAgentState();
 	}
 
+	this.getRecommender = function()
+	{
+		return this.myJefePlus;
+	}
 	// this.getAgentVariables = function()
 	// {
 	// 	return this.myJefePlus.getAgentVariables();

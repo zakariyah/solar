@@ -346,6 +346,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		{
 			console.log('estado is less than zero');
 			this.latestChoice = Math.floor(Math.random() * highestNumber) % this.A[this.me];
+			this.expertName = 'maximinBegin';
 			return this.latestChoice;
 		}
 		if(this.cycled)
@@ -394,13 +395,13 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		{//maximin
 			a = this.generateAction(this.me, this.mnmx[this.me].ms);
 			// console.log('minimax used');
-			this.expertName = 'maximin basis';
+			this.expertName = 'minmax';
 		}
 		else if(this.experto == 1)
 		{// best response
 			a = this.br.moveGreedy();
 			// console.log('expert is ' + this.br.expertName);
-			this.expertName = 'best response';
+			this.expertName = 'bestResponse';
 		}
 		else if((this.experto % 2) == 0)
 		{ // leader part of algorithm
@@ -762,6 +763,142 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			targetForOpponent = this.re[Math.floor((this.experto - 2) / 2)].barR[1].toFixed(2);
 		}
 		return [this.distinctExpertWasChosen, this.anExpertHasBeenExecutedForCompleteCycle, this.profitedFromDefection, this.expertName, this.learner.aspiration, target, targetForOpponent ]
+	}
+
+	// methods to get the state of opponent: to be used by chat
+	var calculateOpponentState = function()
+	{
+		var history = this.gameHistory;
+		if(history.length == 0)
+		{
+			return;
+		}
+		var rec = 0;
+		var nice = history[0][1] == 1;
+		var bul = 0;
+		var recD = [0,0];
+		for(var i = 0; i < history.length; i++)
+		{
+			if(i != 0)
+			{
+				if(history[i][1] == history[i-1][0])
+				{
+					rec += 1;
+				}	
+
+				if(history[i-1][0] == 1)
+				{
+					if(history[i][1] == 1)
+					{
+						recD[0] += 1	
+					}
+					recD[1] += 1
+				}
+			}
+
+			if(history[i][0] == 0 && history[i][1] == 1)
+			{
+				bul += 1;
+			}
+		}
+
+		if(recD[1] == 0)
+		{
+			recD = 0;
+		}
+		else
+		{
+			recD = recD[0]/recD[1] * 100;
+		}
+		var reciprocity = rec / history.length * 100;
+		var bully = bul / history.length * 100;
+		var niceness = nice;
+		var reciprocity = reciprocity.toFixed(2);
+		var bully = bully.toFixed(2);
+
+		return {reciprocity : reciprocity, bully : bully, niceness : niceness, reciprocateDefection : recD};
+	}
+
+
+	// methdds to be used by the chat
+	this.getRound = function()
+	{
+		// return the round number
+		return this.t;
+	}
+
+	this.getOpponnetProperties = function()
+	{
+		// return the properties of the opponent : niceness, bully, reciprocity, reciprocateDefection
+		return calculateOpponentState();
+	}
+
+	this.getTypeOfExpert = function()
+	{
+		// return the type of expert, leader, follower, minmax or best response
+		return this.expertName;
+	}
+
+	this.getTarget = function()
+	{
+		// return the target of the expert
+		var target = null;
+		if(this.experto > 1)
+		{
+			target = this.re[Math.floor((this.experto - 2) / 2)].barR[0].toFixed(2);
+		}
+		return target;
+	}
+
+	this.getOpponnetTarget = function()
+	{
+		var targetForOpponent = null;
+		if(this.experto > 1)
+		{
+			targetForOpponent = this.re[Math.floor((this.experto - 2) / 2)].barR[1].toFixed(2);
+		}
+		return targetForOpponent;
+	}
+
+	this.getAspiration = function()
+	{
+		// return the aspiration of the recommender.
+		return this.learner.aspiration;
+	}
+
+	this.getConvictionLevel = function()
+	{
+		// return how sure the recommender is of the advice
+		// not yet implemented
+		return 0;
+	}
+
+	this.isOtherPlayerGuilty = function()
+	{
+		// return the guilt of the other player, true or false
+		return this.profitedFromDefection;
+	}
+
+	this.getBetterExperts = function()
+	{
+		// get the state of the game : use the expert name to make decisions
+		// return an expert that is better or false if there is none
+		var myTarget = this.getTarget();
+		var opponentTarget = this.getOpponnetTarget();
+		var changed = false;
+		var bestForMe = (myTarget ? myTarget : 0);
+		var bestForPartner = (opponentTarget ? opponentTarget : 0);
+		for(var i == 0; i < this.re.length; i++)
+		{
+			if(bestForMe < this.re[i].barR[0] && bestForPartner < this.re[i].barR[1])
+			{
+				bestForMe = this.re[i].barR[0];
+				bestForPartner = this.re[i].barR[1];
+				changed = true;
+			}
+		}
+
+		return (changed ? [bestForMe, bestForPartner] : changed);
 	}
 }
 

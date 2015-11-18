@@ -23,6 +23,11 @@ var AgentStateSettings = function()
 		targetForOpponent = states[6];
 	}
 
+	this.getRecommendationIndex = function(agentState)
+	{
+		return agentState.agentChoice;
+	}
+
 	this.getStatesText = function(agentState)
 	{
 		if(!agentState)
@@ -58,7 +63,7 @@ var AgentStateSettings = function()
 		return stateText;
 	}
 
-	this.getOpponentInfoHtml = function(agentState)
+	this.getOpponentInfoHtml = function(agentState, round)
 	{
 		var opponentState = agentState.opponentState;
 		var reciprocity = opponentState[0];
@@ -71,16 +76,16 @@ var AgentStateSettings = function()
 		return info;
 	}
 
-	this.getRecommendation = function(agentState)
+	this.getRecommendation = function(agentState, round)
 	{
 		console.log(JSON.stringify(agentState));
 		var options = ['A', 'B'];
-		return ['Recommended action : ' + options[agentState.agentChoice] + ' ']; 
+		return ['Recommended action : ' + options[agentState.agentChoice] + ' ', '<button id="acceptRecommendation'+ round +'" >Click to accept</button>']; 
 	}
 
 	this.getReason = function(agentState)
 	{
-		return ['reason'];
+		return ['The other player will be taking the lead in making us achieve this threshold'];
 	}
 	
 	this.getReasonProhibitingOtherAction = function(agentState)
@@ -94,7 +99,7 @@ var AgentStateSettings = function()
 	}
 }
 
-var ChatBox = function(chatItemId)
+var ChatBox = function(chatItemId, myCanvasContainer)
 {
 	
 	var chatListObject = document.getElementById(chatItemId);
@@ -134,7 +139,17 @@ var ChatBox = function(chatItemId)
 		return chatItemHtml;
 	}
 
-	var showChat = function(chatItem, buttonClicked, isQuestion)
+	var acceptRecommendationButtonOnClick = function(thisButton)
+	{
+		return function()
+		{
+			var option = agentSettings.getRecommendationIndex(contentFromServer.agentState);
+			myCanvasContainer.setPlayerVisible(option + 1);
+			thisButton.disabled = true;
+		}
+	}
+
+	var showChat = function(chatItem, buttonClicked, isQuestion, acceptRecommendation, roundNumber)
 	{
 		var chatList = (chatListObject.innerHTML + chatItem);
 		chatListObject.innerHTML = chatList;
@@ -149,9 +164,14 @@ var ChatBox = function(chatItemId)
 		{
 			buttonClicked.disabled = false;
 		}
+		if(acceptRecommendation)
+		{
+			var acceptRecommendationButton = document.getElementById('acceptRecommendation' + roundNumber);
+			acceptRecommendationButton.onclick = acceptRecommendationButtonOnClick(acceptRecommendationButton);
+		}
 	}
 
-	this.addToChatList = function(question, answer, roundNumber, buttonClicked)
+	this.addToChatList = function(question, answer, roundNumber, buttonClicked, acceptRecommendation)
 	{
 		var chatItem = createOneChatItem(true, 'You', question, roundNumber);
 		showChat(chatItem, false, true);
@@ -165,10 +185,11 @@ var ChatBox = function(chatItemId)
 			}
 			else
 			{
-				setTimeout(showChat, 2000 * (i + 1), chatItem, buttonClicked);
+				setTimeout(showChat, 2000 * (i + 1), chatItem, buttonClicked, false, acceptRecommendation, roundNumber);
 			}
-		}		
-	}
+		}
+
+	}	
 
 	this.updateContentFromServer = function(content)
 	{
@@ -185,11 +206,11 @@ var ChatBox = function(chatItemId)
 		
 		if(questionNumber == 0)
 		{
-			return agentSettings.getOpponentInfoHtml(contentFromServer.agentState);
+			return agentSettings.getOpponentInfoHtml(contentFromServer.agentState, contentFromServer.count);
 		}
 		else if(questionNumber == 1)
 		{
-			return agentSettings.getRecommendation(contentFromServer.agentState);
+			return agentSettings.getRecommendation(contentFromServer.agentState, contentFromServer.count);
 		}
 		else if(questionNumber == 2)
 		{
@@ -221,7 +242,7 @@ var ChatBox = function(chatItemId)
 		var question = isQuestion ? questions[questionNumber] : feedbacks[questionNumber];
 		var answer = getAnswerToQuestion(questionNumber, isQuestion);	
 		var roundNumber = getRoundNumber();
-		this.addToChatList(question, answer, roundNumber, buttonClicked);
+		this.addToChatList(question, answer, roundNumber, buttonClicked, (isQuestion && questionNumber == 1));
 	}
 }	
 
