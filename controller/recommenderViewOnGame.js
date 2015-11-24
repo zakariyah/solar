@@ -29,7 +29,7 @@ var RecommenderViewOnGame = function(agent)
 			}
 			if(reciprocateDefection > 50)
 			{
-				opponentInfo.push('He also tries to recprocate simile bad behaviour');
+				opponentInfo.push('He also tries to recprocate similar bad behaviour');
 			}
 			if(round > thresholdRound)
 			{
