@@ -10,7 +10,6 @@ var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 
 	this.addToHistory = function(lastHistory)
 	{
-		// console.log('last history : ' + lastHistory);
 		history.push([options[lastHistory[0] - 1], options[lastHistory[1] - 1], lastHistory[2]]);
 		myTotalScore += lastHistory[2];
 	}
@@ -22,7 +21,6 @@ var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 
 	this.setHistoryDivHtml = function()
 	{
-		// console.log('history ' + history);
 		var historyHtml = '<table class="table table-bordered">';
 		historyHtml += '<tr><td>Round</td><td>My Choice</td><td>Other Player\'s Choice</td><td>My Score</td></tr>';
 		for(var i = history.length - 1; i >= 0; i--)
@@ -223,8 +221,6 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 			}
 		}
 	}
-
-
 }
 
 var OneCanvas = function(canvasId, position, payoff, playerType)
@@ -543,7 +539,7 @@ var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
 
 var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 {
-	var totalResultTime = 3;
+	var totalResultTime = 10;
 	var intervalResult = 1000;
 	
 	var resultTimePeriodicFunction = function(count, mainCount)
@@ -657,7 +653,7 @@ var PrisonersDilemma = function()
 	  var htmlString = '<div class="alert alert-warning"><span id="roundNumber" class="pull-left"></span> <span class="pull-right" id="timerBegin"></span></div>';
 	  htmlString += "";
 
-	  htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
+	  // htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
 	  htmlString += "<div id='myOptions' class='row'></div>";
   	  htmlString += "<div id='opOptions' class='row'></div>";
   	  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left;'></td><td></td><td></td><td id='otherPayoff'  style='text-align:right;'></td></tr></table></div>";
@@ -753,12 +749,3 @@ var PrisonersDilemma = function()
 }
 
 pd = new PrisonersDilemma();
-
-// fix the progress progress-bar
-// look at all possibilities
-// read dynamic programming
-// fix the alert dialog
-
-// test the accordion itself
-// bNcmE8oz
-// bili41990@yahoo.com

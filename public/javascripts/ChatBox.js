@@ -58,6 +58,8 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 	var agentSettings = new AgentStateSettings();
 	var roundsAlreadyAsked = {};
 	var chatPanelBody = document.getElementById('panelBody');
+	var typingText = document.getElementById('typingText');
+
 
 	var createRoundHeader = function(roundNumber)
 	{
@@ -68,6 +70,16 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 		roundHeader += '</div></div></li>';
 
 		return roundHeader;
+	}
+
+	var brightenTheTypingText = function()
+	{
+		typingText.style.display = 'block';
+	}
+
+	var hideTheTypingText = function()
+	{
+		typingText.style.display = 'none';
 	}
 
 	var createOneChatItem = function(isHuman, header, body, roundNumber)
@@ -112,6 +124,7 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 		if(buttonClicked)
 		{
 			buttonClicked.disabled = false;
+			hideTheTypingText();
 		}
 		if(acceptRecommendation)
 		{
@@ -125,6 +138,7 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 		var chatItem = createOneChatItem(true, 'You', question, roundNumber);
 		showChat(chatItem, false, true);
 
+		brightenTheTypingText();
 		for(var i = 0 ; i < answer.length; i++)
 		{
 			chatItem = createOneChatItem(false, 'S-script', answer[i], roundNumber);

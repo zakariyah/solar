@@ -421,7 +421,7 @@ socket.on('timeOfAction', function(timeOfAction) { // used to set the time actio
 		});
 
 socket.on('forceDisconnect', function() {
-		socket.diconnect();
+		socket.disconnect();
 	});
 
 });

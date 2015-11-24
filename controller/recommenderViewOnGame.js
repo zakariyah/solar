@@ -120,6 +120,10 @@ var RecommenderViewOnGame = function(agent)
 		{
 			htmlReasonNotTo.push('Considering your opponent, other options might not make you get the desired payoff');
 		}
+		else
+		{
+			htmlReasonNotTo.push("This should be better for you");
+		}
 
 		return htmlReasonNotTo;
 	}
@@ -135,7 +139,7 @@ var RecommenderViewOnGame = function(agent)
 		}
 		else
 		{
-			betterHtml.push('This seems to be the best you can achieve against this opponnet');
+			betterHtml.push('This seems to be the best you can achieve against this opponent');
 		}
 		return betterHtml;
 	}
