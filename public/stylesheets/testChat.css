@@ -29,12 +29,12 @@
     color: #777777;
 }
 
-.panel .slidedown .glyphicon, .chat .glyphicon
+.panelChat .slidedown .glyphicon, .chat .glyphicon
 {
     margin-right: 2px;
 }
 
-.panel-body
+.panel-bodyChat
 {
     overflow-y: scroll;
     height: 250px;

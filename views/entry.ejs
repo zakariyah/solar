@@ -28,14 +28,14 @@ window.onbeforeunload = function() {
       </div>
 
         <div class='col-md-6' id='chatBoxContainer' style='display:none'>
-            <div class="panel panel-primary">
+            <div class="panel panelChat panel-primary">
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-comment"></span> Talk to the expert
                     <div class="btn-group pull-right">
                         <span id="typingText" style="display:none; color:#00ff00"> typing... </span>
                     </div>
                 </div>
-                <div class="panel-body panelchat-body" id="panelBody">
+                <div class="panel-body panel-bodyChat panelchat-body" id="panelBody">
                     <ul class="chat" id="chatItems">
                     </ul>
                 </div>
@@ -76,11 +76,11 @@ window.onbeforeunload = function() {
 
 
       <div class='col-md-6' id='gameHistory' style="display:none">
-          <div class="panel panel-primary">
+          <div class="panel panelChat panel-primary">
                 <div class="panel-heading">
                   <p>Your total payoff <span id="myTotalPayoff"></span> </p>
                 </div>
-                <div class="panel-body" id="gameHistoryTable">
+                <div class="panel-body panel-bodyChat" id="gameHistoryTable">
                 </div>
           </div>
       </div>  

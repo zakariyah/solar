@@ -25,7 +25,6 @@ var AgentStateSettings = function()
 
 	this.getRecommendation = function(agentState, round)
 	{
-		console.log(JSON.stringify(agentState));
 		var options = ['A', 'B'];
 		var recommendation = agentState.recommendation;
 		recommendation.push('<button id="acceptRecommendation'+ round +'" >Click to accept</button>');
@@ -88,7 +87,6 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 		if(!(roundNumber in roundsAlreadyAsked))
 		{
 			chatItemHtml += createRoundHeader(roundNumber);
-			console.log('chatItemHtml : ' + chatItemHtml);
 		}
 		var position = isHuman ? 'right' : 'left';
 		var bdColor = isHuman ? '#D3FB9f' : '#ffffff';
@@ -265,7 +263,6 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 
 	questionSubmitButton.onclick = buttonOnClick(true);
 	feedbackSubmitButton.onclick = buttonOnClick(false);
-	console.log(questionSubmitButton);
 
 	for(var i = 0; i < numberOfQuestions; i++)
 	{
@@ -280,7 +277,3 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 	questionSelect = document.getElementById('questionSelect');
 	feedbackSelect = document.getElementById('feedbackSelect');
 }
-// #E6E6FA
-// #5EFB6E
-// Make the chats responsive. Let the message be sent after 2 seconds, read after a second and the result in one second
-// Send the timer up.

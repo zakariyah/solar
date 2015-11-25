@@ -16,7 +16,7 @@ var playerHiitNumberMap = {};
 app.set('port', process.env.PORT || 4000);
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
-  console.log('You have logged in ' + app.numberOfTimes + ' times');
+  // console.log('You have logged in ' + app.numberOfTimes + ' times');
 });
 var ionew = io.listen(server);
 
@@ -38,10 +38,10 @@ ionew.sockets.on('connection', function (socket) {
 
 	socket.on('waitingTimeElapsed', function()
 	{
-		console.log("was called waiting outside");
+		// console.log("was called waiting outside");
 			if(!(socket.id in gameMap)) // if player has not been already mapped
 			{
-				console.log("playerHiitNumberMap[gameCounter ] " + playerHiitNumberMap[gameCounter + "agent"]);
+				// console.log("playerHiitNumberMap[gameCounter ] " + playerHiitNumberMap[gameCounter + "agent"]);
 				var player = new gameplayer(gameCounter + "agent", null, true, 1, playerHiitNumberMap[gameCounter + "agent"]); //agents dont have socket
 				if(typeof gameControllerArray[gameCounter] === 'undefined')
 				{
@@ -87,13 +87,13 @@ ionew.sockets.on('connection', function (socket) {
 		// if normal
 		if(gameType == 'normal')
 		{
-			console.log("playerHiitNumberMap[socket.id] 2: " + playerHiitNumberMap[socket.id])
+			// console.log("playerHiitNumberMap[socket.id] 2: " + playerHiitNumberMap[socket.id])
 			var player = new gameplayer(gameCounter, socket, false, 1, playerHiitNumberMap[socket.id]);
 			gameControllerArray[gameCounter].addPlayer(player);
 			if(gameControllerArray[gameCounter].isFilled())
 			{
 				startGame();
-				console.log("it happened here");
+				// console.log("it happened here");
 				firstPlayerJustEntered = true;
 			}
 			else
@@ -216,7 +216,7 @@ ionew.sockets.on('connection', function (socket) {
 	{
 		for(var i in gameControllerArray[gameCounter].gamePlayers)
 			{
-				console.log(i + " is " + gameMap[i]);
+				// console.log(i + " is " + gameMap[i]);
 				var message = "Your opponent's id is " + gameMap[i];
 				if( !gameControllerArray[gameCounter].gamePlayers[i].isAgent)
 				{
@@ -343,7 +343,7 @@ ionew.sockets.on('connection', function (socket) {
 
 socket.on('disconnect', function()
 {
-	console.log("presentSocketGameCounter : disconnect1:  " + socket.id);
+	// console.log("presentSocketGameCounter : disconnect1:  " + socket.id);
 	var presentSocketGameCounter = playersSocketDict[socket.id];
 		if(typeof presentSocketGameCounter === 'undefined')
 		{
@@ -357,7 +357,7 @@ socket.on('disconnect', function()
 
 
 
-	console.log("presentSocketGameCounter : disconnect0:  " + presentSocketGameCounter);
+	// console.log("presentSocketGameCounter : disconnect0:  " + presentSocketGameCounter);
 	var roomNumber =  gameControllerArray[presentSocketGameCounter].roomToSocket[socket.id]; //	roomToSocket[socket.id];
 	// roomNumber =  gamecontroller.roomToSocket[socket.id]; //	roomToSocket[socket.id];
 	var gamePlayerPresent = gameControllerArray[presentSocketGameCounter].gamePlayers;
@@ -375,13 +375,13 @@ socket.on('disconnect', function()
 	opponentId = gameMap[socket.id];
 	if(store)
 	{
-		console.log("presentSocketGameCounter : disconnect1:  " + presentSocketGameCounter);
+		// console.log("presentSocketGameCounter : disconnect1:  " + presentSocketGameCounter);
 	var roomObject = gameControllerArray[presentSocketGameCounter].gameRooms[socket.id]; 
 		if(!roomObject.agentPresent)
 		{
 			if(roomObject.gameRounds <= store.round)
 			{
-				console.log("round up on here");
+				// console.log("round up on here");
 				return;
 			}
 		// console.log("presentSocketGameCounter : disconnect2:  " + presentSocketGameCounter);
@@ -390,7 +390,7 @@ socket.on('disconnect', function()
 		var messageText = "<div class=\"alert alert-warning\"> Round " + store.round + " results</div>";
 		if(store.isFilled()) //when does this happen !!!
 			{	
-				console.log('happening when disconnected and filled');
+				// console.log('happening when disconnected and filled');
 				opponentPlayerObject = gameControllerArray[presentSocketGameCounter].gamePlayers[opponentId];	
 				opponentPlayerObject.updateRecommender(store.answererSet[opponentId].chosenAnswer, store.answererSet[socket.id].chosenAnswer);
 				var cummScore = store.players[opponentId].getCummulativeValue();
@@ -402,7 +402,7 @@ socket.on('disconnect', function()
 			}
 			else
 			{ // store is not filled
-				console.log("presentSocketGameCounter : disconnect3:  " + presentSocketGameCounter);
+				// console.log("presentSocketGameCounter : disconnect3:  " + presentSocketGameCounter);
 				roomObject.gameRounds = store.round;  // set the present round to last round to end the game
 			}
 		}

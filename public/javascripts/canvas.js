@@ -406,7 +406,6 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 		submitButton.style.display = visibility ? 'inline' : 'none';
 		submitButton.disabled = !visibility ;
 	}
-
 }
 
 
@@ -454,8 +453,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 	{
 		clearInterval(counter);
 	}
-
- }
+}
 
 var WaitingTimeElapsed = function(socket)
 {
@@ -544,11 +542,17 @@ var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 	
 	var resultTimePeriodicFunction = function(count, mainCount)
 	{
-		document.getElementById('timerBegin').innerHTML = count + " secs remaining";
+		document.getElementById('timerBegin').innerHTML = count + " sec" + ((count > 1) ? "s" : "") + " remaining";
 		// progressbarFunction('progressBarMain', count, mainCount);
 	}
 
-	var that = new TimerFunction(totalResultTime, intervalResult, resultTimePeriodicFunction, resultTimeEndFunction, false);
+	var resultTimeEndFunctionMain = function()
+	{
+		document.getElementById('timerBegin').innerHTML = "";
+		resultTimeEndFunction();
+	}
+
+	var that = new TimerFunction(totalResultTime, intervalResult, resultTimePeriodicFunction, resultTimeEndFunctionMain, false);
 
 	return that;
 }
@@ -650,7 +654,7 @@ var PrisonersDilemma = function()
 
 	var startRealGame = function(hasRecommender)
 	{
-	  var htmlString = '<div class="alert alert-warning"><span id="roundNumber" class="pull-left"></span> <span class="pull-right" id="timerBegin"></span></div>';
+	  var htmlString = '<div class="alert"><span id="roundNumber" class="pull-left"></span> <span class="pull-right" id="timerBegin"></span></div>';
 	  htmlString += "";
 
 	  // htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";

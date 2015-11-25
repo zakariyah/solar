@@ -21,15 +21,24 @@ var RecommenderViewOnGame = function(agent)
 			var reciprocateDefection = properties.reciprocateDefection;
 			if(round < thresholdRound)
 			{
-				opponentInfo.push('The game is still quite fresh but ');
+				opponentInfo.push('The game is still quite fresh');
+				return opponentInfo;
+			}
+			else if(round < thresholdRound * 2)
+			{
+				opponentInfo.push('The game is still quite fresh but');
 			}
 			if(bully > 50)
 			{
 				opponentInfo.push('He seems to be a bully');	
 			}
+			else
+			{
+				opponentInfo.push('He seems to be a nice guy');		
+			}
 			if(reciprocateDefection > 50)
 			{
-				opponentInfo.push('He also tries to recprocate similar bad behaviour');
+				opponentInfo.push('He also tries to reciprocate similar bad behaviour');
 			}
 			if(round > thresholdRound)
 			{
@@ -153,4 +162,4 @@ var RecommenderViewOnGame = function(agent)
 
 module.exports = RecommenderViewOnGame;
 // fall of ming
-// the warlordss
+// the warlordss	
