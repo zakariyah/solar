@@ -1,3 +1,57 @@
+var AgentStateInfos = function()
+{
+	var distinctExpertWasChosen, anExpertHasBeenExecutedForCompleteCycle, profitedFromDefection;
+	var expertType, aspiration, target, targetForOpponent;
+	this.setStates = function(states)
+	{
+		distinctExpertWasChosen = states[0];
+		anExpertHasBeenExecutedForCompleteCycle  = states[1];
+		profitedFromDefection = states[2];
+		expertType = states[3];
+		aspiration = states[4];
+		target = states[5];
+		targetForOpponent = states[6];
+	}
+
+	this.getStatesText = function(states, recommendation)
+	{
+		if(!states)
+		{
+			return '';
+		}
+		this.setStates(states);
+		var stateText = ' ' ; //<p>';
+		if(distinctExpertWasChosen)
+		{
+			stateText += '<p> A distinct expert has been chosen. ';
+		}
+		if(anExpertHasBeenExecutedForCompleteCycle)
+		{
+			stateText += '<p> The expert has executed a complete cycle. ';
+		}
+		if(profitedFromDefection)
+		{
+			stateText += '<p> The opponent profited from the defection and is thus guilty. ';
+		}
+
+		var options = ['A', 'B'];
+		stateText += ' <p>Expert Type ' + expertType + '. ';
+		if(aspiration)
+		{
+			aspiration = aspiration.toFixed(3);
+		}
+		stateText += ' <p>Aspiration ' + aspiration + '. ';
+		stateText += ' <p>Target ' + target + '. ';
+		stateText += ' <p>Target for opponent ' + targetForOpponent + '. ';
+		stateText += '<p> Recommended action : ' + options[recommendation - 1] + ' ';
+		stateText += '</p>';
+
+		return stateText;
+	}
+
+}
+
+
 var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 {
 	var options = ['A', 'B'];
@@ -5,7 +59,7 @@ var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 	var containerDiv = document.getElementById(containerDivId);
 	var totalSpan = document.getElementById(totalSpanId);
 
-	var history = [];
+	var history = []; // player choice, opponent choice, player score
 	var myTotalScore = 0;
 
 	this.addToHistory = function(lastHistory)
@@ -30,7 +84,7 @@ var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 		historyHtml += '</table>';
 		gameHistoryDiv.innerHTML = historyHtml;
 		totalSpan.innerHTML = myTotalScore;
-		containerDiv.style.display = 'block';
+		// containerDiv.style.display = 'block';
 	}
 
 	this.clearPanel = function()
@@ -89,7 +143,6 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 	}
 	
 	containerHTML += '</table>';
-	// console.log('container id is ' + containerId);
 	container.innerHTML = containerHTML;
 
 
@@ -316,7 +369,7 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 	var submitButton;
 	var gameManager;
 
-	this.nextRound = function(forceSubmission)
+	this.nextRound = function(forceSubmission, chatBox)
 	{	
 		var that = this;
 		return function()
@@ -338,8 +391,11 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 		  that.getGameTimer().stopTimer();
 		  that.getGameManager().stopTimer();
 		  that.setSubmitButtonVisible(false);
+
+		  chatBox.disableAcceptRecommendationButton();
+
 		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : 0});
-		  // console.log('emitted');  
+		 
 		}
 	}
 
@@ -537,7 +593,7 @@ var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
 
 var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 {
-	var totalResultTime = 10;
+	var totalResultTime = 1;
 	var intervalResult = 1000;
 	
 	var resultTimePeriodicFunction = function(count, mainCount)
@@ -566,17 +622,19 @@ var PrisonersDilemma = function()
 	var myCanvasContainer =  new CanvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff', socket);
 	var hasRecommender;
 
-	var chatBox = new ChatBox('chatItems', myCanvasContainer);
+	var adherenceHistory = new AdherenceHistory();
+	var chatBox = new ChatBox('chatItems', myCanvasContainer, adherenceHistory);
 	var questionsToAsk = new QuestionsToAsk('agentQuestion', 'feedbackQuestion', 'agentQuestionSubmit', 'feedbackSubmit', chatBox);
 
 	var gameManager ;
 
+	var agentVariablesDiv = document.getElementById('informationAlgo');
 
 	agentSettings = new AgentStateSettings();
 
 	var gameTimerEnd = function()
 	{
-		myCanvasContainer.nextRound(true)();
+		myCanvasContainer.nextRound(true, chatBox)();
 	}
 
 	var changeProgressBar =  function(barId, rvalue, totalValue)
@@ -603,7 +661,7 @@ var PrisonersDilemma = function()
 		// gameTimer.startTimer(); // no more timing for game timer
 		if(hasRecommender)
 		{
-			document.getElementById('questionAndFeedback').style.display = 'block';	
+			document.getElementById('questionAndFeedback').style.visibility = 'visible';
 		}
 		
 	}
@@ -615,7 +673,7 @@ var PrisonersDilemma = function()
 	// create the game manager functions
 	var gameManagerEndFunctionFromMain = function()
 	{
-		myCanvasContainer.nextRound(true)();
+		myCanvasContainer.nextRound(true, chatBox)();
 	}
 
 	var endGameFunction = function()
@@ -667,13 +725,17 @@ var PrisonersDilemma = function()
 	  var actionElement = document.getElementById('actions');
 	  actionElement.innerHTML = htmlString;    
 	  myCanvasContainer.startGame();
+	  if(!hasRecommender)
+	  {
+	  	document.getElementById('chatBoxContainer').style.display = 'none';
+	  	document.getElementById('chatBoxContainerLink').style.display = 'none';
+	  	// document.getElementById('questionAndFeedback').style.display = 'block';	
+	  }
 	  if(hasRecommender)
 	  {
-	  	document.getElementById('chatBoxContainer').style.display = 'block';
-	  	document.getElementById('questionAndFeedback').style.display = 'block';	
+	  	document.getElementById('questionAndFeedback').style.visibility = 'visible';	
 	  }
-	  
-	  document.getElementById('nextButton').onclick = myCanvasContainer.nextRound();
+	  document.getElementById('nextButton').onclick = myCanvasContainer.nextRound(false, chatBox);
 
 	}
 
@@ -691,6 +753,15 @@ var PrisonersDilemma = function()
 	  	document.getElementById('questionAndFeedback').innerHTML = '';	
 	}
 
+	var setAgentVariables = function(content)
+	{
+		if(content.agentState)
+		{
+			agentVariablesDiv.innerHTML  = (new AgentStateInfos()).getStatesText(content.agentState.agentVariables, content.recommendation);
+		}
+		
+	}
+
 	var serverMessage = function(content)
 	{	
 		if(content.count == 0)
@@ -704,11 +775,11 @@ var PrisonersDilemma = function()
 			//// document.getElementById('agentState').innerHTML = agentStates;
 			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
 			questionsToAsk.moveToNextRound(content);
+			setAgentVariables(content);
 		}
 		else if(content.count < content.rounds)
 		{
 			gameManager.startTimer();
-			// console.log('content ' + JSON.stringify(content));
 			var briefInfo = content.text;
 			var myTotalPayoff = briefInfo.fromItself + briefInfo.fromOpponent;
 			gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
@@ -724,8 +795,9 @@ var PrisonersDilemma = function()
 			// document.getElementById('agentState').innerHTML = agentStates;
 			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
 			questionsToAsk.moveToNextRound(content);
-			document.getElementById('questionAndFeedback').style.display = 'none';
+			document.getElementById('questionAndFeedback').style.visibility = 'hidden';
 			gameHistory.setHistoryDivHtml();
+			setAgentVariables(content);
 		}
 		else
 		{

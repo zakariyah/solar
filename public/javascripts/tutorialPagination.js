@@ -121,6 +121,7 @@ var PaginationPage = function(PaginationPageId, imageRectId, numberOfLinks, pagi
 	{	
 		return function()
 		{		
+				return true; // testing purposes
 				var confirmation = document.getElementById('confirmation');
 	      		if(!(confirmation.checked))
 	      		{

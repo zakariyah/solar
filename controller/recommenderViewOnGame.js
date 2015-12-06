@@ -22,6 +22,7 @@ var RecommenderViewOnGame = function(agent)
 			if(round < thresholdRound)
 			{
 				opponentInfo.push('The game is still quite fresh');
+				opponentInfo.push('I can\'t really say anything about the other player');
 				return opponentInfo;
 			}
 			else if(round < thresholdRound * 2)
@@ -38,7 +39,7 @@ var RecommenderViewOnGame = function(agent)
 			}
 			if(reciprocateDefection > 50)
 			{
-				opponentInfo.push('He also tries to reciprocate similar bad behaviour');
+				opponentInfo.push('He also tries to reciprocate seemingly bad behaviour');
 			}
 			if(round > thresholdRound)
 			{
@@ -156,7 +157,7 @@ var RecommenderViewOnGame = function(agent)
 
 	this.getSolutionForRound = function()
 	{
-		return {'doBetter' : this.howToDoBetter(), 'reason' : this.getReason(), 'reasonOtherwise' : this.getReasonForNotDoingOtherwise(), 'recommendation' : this.getRecommendation(), 'opponentInfo' : this.getInformationAboutOpponent(), 'agentChoice' : recommender.latestChoice};
+		return {'doBetter' : this.howToDoBetter(), 'reason' : this.getReason(), 'reasonOtherwise' : this.getReasonForNotDoingOtherwise(), 'recommendation' : this.getRecommendation(), 'opponentInfo' : this.getInformationAboutOpponent(), 'agentChoice' : recommender.latestChoice, 'agentVariables' : recommender.getAgentVariables()};
 	}
 }
 

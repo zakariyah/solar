@@ -768,7 +768,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	// methods to get the state of opponent: to be used by chat
 	this.calculateOpponentState = function()
 	{
-		console.log('game history is ' + this.gameHistory);
+	
 		var history = this.gameHistory ;
 		if(history.length == 0)
 		{
@@ -830,8 +830,8 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 
 	this.getOpponnetProperties = function()
 	{
-		// console.log('jefe_plus ' + JSON.stringify(this));
-		console.log('game history2 is ' + this.gameHistory);
+		
+		
 		return this.calculateOpponentState();
 	}
 
@@ -906,6 +906,19 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 
 		return (changed ? [bestForMe, bestForPartner] : changed);
 	}
+
+	this.getAgentVariables = function()
+	{
+		var targetForOpponent = null;
+		var target = null;
+		if(this.experto > 1)
+		{
+			target = this.re[Math.floor((this.experto - 2) / 2)].barR[0].toFixed(2);
+			targetForOpponent = this.re[Math.floor((this.experto - 2) / 2)].barR[1].toFixed(2);
+		}
+		return [this.distinctExpertWasChosen, this.anExpertHasBeenExecutedForCompleteCycle, this.profitedFromDefection, this.expertName, this.learner.aspiration, target, targetForOpponent ]
+	}
+
 }
 
 module.exports = jefe_plus;

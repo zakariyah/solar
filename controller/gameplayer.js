@@ -8,7 +8,7 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 	{
 		this.id = socket.id;
 	}
-	// console.log("let us see this " + hiitNumber);
+	
 	if(typeof hiitNumber === 'undefined')
 	{
 		this.hiitNumber = 0;
@@ -112,7 +112,7 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 
 	this.getRecommenderVariables = function()
 	{	
-		// console.log('was called');
+		
 		if(this.hasRecommender)
 		{
 			return this.recommender.getAgentState();

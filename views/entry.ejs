@@ -6,7 +6,8 @@
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel="stylesheet" type="text/css" href="/stylesheets/testChat.css">
     <script src='/javascripts/postquiz.js'></script>
-    
+    <script src="/javascripts/jquery-1.11.3.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>    
   </head>
   <body onunload="">
      <script src="/socket.io/socket.io.js"></script>
@@ -27,8 +28,15 @@ window.onbeforeunload = function() {
       <div class="alert alert-warning" id='timerStart'> <span id='timerBegin'></span></div>
       </div>
 
-        <div class='col-md-6' id='chatBoxContainer' style='display:none'>
-            <div class="panel panelChat panel-primary">
+      <nav role="navigation" class="col-md-6">
+        <ul class="nav nav-tabs"  role="tablist">
+        <li role="presentation" class="active" id="chatBoxContainerLink"><a data-toggle="tab" aria-controls="chatBoxContainer" role="tab" href="#chatBoxContainer">Chat</a></li>
+        <li role="presentation"><a data-toggle="tab" aria-controls="gameHistory" role="tab" href="#gameHistory">Result</a></li>
+        </ul>
+
+        <div class="tab-content">
+        <div role="tabpanel" class='tab-pane active panel panelChat panel-primary' id='chatBoxContainer'>
+            <!-- <div class="panel panelChat panel-primary"> -->
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-comment"></span> Talk to the expert
                     <div class="btn-group pull-right">
@@ -39,7 +47,7 @@ window.onbeforeunload = function() {
                     <ul class="chat" id="chatItems">
                     </ul>
                 </div>
-                <div class="panel-footer" id='questionAndFeedback' style='display:none'>
+                <div class="panel-footer" id='questionAndFeedback' style='visibility:hidden'>
                     <div class="input-group"  style="border-bottom: 5px #ffffff solid; ">
                       <select id="questionSelect">
                         <option value='0' id='agentQuestionDefault'> ...... </option>
@@ -69,24 +77,33 @@ window.onbeforeunload = function() {
                     </div>
                 </div>
 
-    </div>
+          <!-- </div> -->
 
-  </div> <!-- //chat box container -->
+        </div> <!-- //chat box container -->
 
 
 
-      <div class='col-md-6' id='gameHistory' style="display:none">
-          <div class="panel panelChat panel-primary">
+      <div role="tabpanel" class='tab-pane panel panelChat panel-primary' id='gameHistory'>
+          <!-- <div class="panel panelChat panel-primary"> -->
                 <div class="panel-heading">
                   <p>Your total payoff <span id="myTotalPayoff"></span> </p>
                 </div>
                 <div class="panel-body panel-bodyChat" id="gameHistoryTable">
                 </div>
-          </div>
+          <!-- </div> -->
       </div>  
+    </div>  <!-- tab content -->
+</nav>
 
   </div> <!--main row div -->
 
+</div>
+
+<div class="row">
+
+  <div class="col-sm-6" id="informationAlgo">
+
+  </div>
 </div>
 
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -125,8 +142,7 @@ window.onbeforeunload = function() {
 
 
 
-<script src="/javascripts/jquery-1.11.3.js"></script>
-<script src="/javascripts/bootstrap.min.js"></script>
+
 <script src="/javascripts/ChatBox.js"></script>
 <script src="/javascripts/canvas.js"></script>
   </body>

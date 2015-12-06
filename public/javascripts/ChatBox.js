@@ -1,3 +1,125 @@
+var AdherenceHistory = function()
+{
+	var history = []; // contains the player choice, recommended action, opponent choice, isWarningGiven, wasRecommendationAsked
+	
+	this.updateHistory = function(contentFromServer)
+	{
+		
+		if(!contentFromServer.recommendation)
+		{
+			return;
+		}
+		var round = contentFromServer.count;
+		var recommendation = contentFromServer.agentState.agentChoice;
+		history.push([-1, recommendation, -1, false, false]);
+		
+		if(round != 0)
+		{
+			// add the remaining component of the history
+			history[round - 1][0] = contentFromServer.text.playerChoiceInNumber - 1;
+			history[round - 1][2] = contentFromServer.text.opponentChoiceInNumber - 1;			
+		}
+	}
+
+	this.setRecommendationInquiredAtGivenRound = function()
+	{
+		history[history.length - 1][4] = true; // recommendation was inquired
+		return this.warnPlayerOfAdherence();
+	}
+
+	this.shouldThePlayerBeWarned = function()
+	{
+		
+		if(history.length == 1 || history.length == 0)
+		{
+			return false;
+		}
+		var lastHistory = history[history.length - 2]
+		if(lastHistory[0] == lastHistory[1])
+		{
+			return false;
+		}
+		var oneMiss = false;
+		for(var i = history.length - 2; i >= 0; i--)
+		{
+			if(history[i][3]) // warning already given
+			{
+				return false;
+			}
+
+			if(!history[i][4]) // player did not seek advice at given round
+			{
+				continue;
+			}
+
+			if(history[i][0] != history[i][1])
+			{
+				if(oneMiss)
+				{
+					history[history.length - 1][3] = true; // warning was given at the round
+					return true;
+				}
+				else
+				{
+					oneMiss = true;
+				}
+			}
+			else
+			{
+				return false;
+			}
+
+		}
+	}
+
+	var calculateRegret = function()
+	{
+		var payoff = [[3, -2], [5, 0]];
+		var regret = 0;
+		for(var i = 0; i < history.length - 1; i++)
+		{
+			var gotten = payoff[history[i][0]][history[i][2]];
+			var couldHaveGotten = payoff[history[i][1]][history[i][2]];
+			regret += (couldHaveGotten - gotten);
+		}
+
+		return regret;
+	}
+
+	this.warnPlayerOfAdherence = function()
+	{
+		if(!this.shouldThePlayerBeWarned())
+		{
+			return false;
+		}
+		else
+		{
+			var warn = ['You keep asking for my advice', 'but you don\'t seem to trust it', 'Am I doing something wrong'];
+			var regret = calculateRegret();		
+			if(regret > 0)
+			{
+				warn.push['But that does not seem to be the case.'];
+				warn.push['Look down at the points you missed'];
+			}
+			return warn;
+		}
+	}
+
+	this.showRegretToPlayer = function()
+	{
+		var regret = calculateRegret();
+		if(regret <= 0)
+		{
+			return "";
+		}
+		else
+		{
+			return "You could have made " + regret + " more points if you had followed my advice";
+		}
+	}
+	
+}
+
 var ShowAlert = function(header, body)
 {
 	var modalHeader = document.getElementById('myModalLabel');
@@ -6,7 +128,6 @@ var ShowAlert = function(header, body)
 	modalBody.innerHTML = body;
 	$(myModal).modal('show')
 }
-
 
 var AgentStateSettings = function()
 {	
@@ -47,9 +168,8 @@ var AgentStateSettings = function()
 	}
 }
 
-var ChatBox = function(chatItemId, myCanvasContainer)
-{
-	
+var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
+{	
 	var chatListObject = document.getElementById(chatItemId);
 	var contentFromServer;
 	var questions = ['Tell me about my opponent', 'What should I do now?', 'Why?', 'Why shouldn\'t I do otherwise?','How do I do better?'];
@@ -58,7 +178,16 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 	var roundsAlreadyAsked = {};
 	var chatPanelBody = document.getElementById('panelBody');
 	var typingText = document.getElementById('typingText');
+	var acceptRecommendationButton;
 
+	this.disableAcceptRecommendationButton = function()
+	{
+		if(acceptRecommendationButton)
+		{
+			acceptRecommendationButton.disabled = true;	
+		}
+		
+	}
 
 	var createRoundHeader = function(roundNumber)
 	{
@@ -90,29 +219,37 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 		}
 		var position = isHuman ? 'right' : 'left';
 		var bdColor = isHuman ? '#D3FB9f' : '#ffffff';
-		chatItemHtml += '<li><div class="' + (isHuman ? 'col-sm-offset-2 ': '') + 'col-sm-10" style="padding: 0px">';
+		chatItemHtml += '<div class="' + (isHuman ? 'col-sm-offset-2 ': '') + 'col-sm-10" style="padding: 0px">';
 		chatItemHtml += '<div style="background-color: ' +bdColor +';" class="well-sm pull-' + position +'">';
 		chatItemHtml += body;
-		chatItemHtml += '</div></div></li>';
+		chatItemHtml += '</div></div>';
 
 		return chatItemHtml;
 	}
 
-	var acceptRecommendationButtonOnClick = function(thisButton)
+	var acceptRecommendationButtonOnClick = function()
 	{
 		return function()
 		{
+			
 			var option = agentSettings.getRecommendationIndex(contentFromServer.agentState);
 			myCanvasContainer.setPlayerVisible(option + 1);
-			thisButton.disabled = true;
+			
+			acceptRecommendationButton.disabled = true;
 		}
 	}
 
 	var showChat = function(chatItem, buttonClicked, isQuestion, acceptRecommendation, roundNumber)
 	{
-		var chatList = (chatListObject.innerHTML + chatItem);
-		chatListObject.innerHTML = chatList;
+		// var chatList = (chatListObject.innerHTML + chatItem);
+		// chatListObject.innerHTML = chatList;
+		var listElement = document.createElement('li');
+		listElement.innerHTML = chatItem;
+		chatListObject.appendChild(listElement);
 		chatPanelBody.scrollTop = chatPanelBody.scrollHeight;
+		// problem likely to be here
+		// chatlist is replacing itself.
+
 
 		if(!isQuestion)
 		{
@@ -126,8 +263,9 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 		}
 		if(acceptRecommendation)
 		{
-			var acceptRecommendationButton = document.getElementById('acceptRecommendation' + roundNumber);
-			acceptRecommendationButton.onclick = acceptRecommendationButtonOnClick(acceptRecommendationButton);
+			
+			acceptRecommendationButton = document.getElementById('acceptRecommendation' + roundNumber);
+			acceptRecommendationButton.onclick = acceptRecommendationButtonOnClick();
 		}
 	}
 
@@ -155,6 +293,8 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 	this.updateContentFromServer = function(content)
 	{
 		contentFromServer = content;
+		
+		adherenceHistory.updateHistory(contentFromServer);
 	}
 
 	var getRoundNumber = function()
@@ -171,7 +311,14 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 		}
 		else if(questionNumber == 1)
 		{
-			return agentSettings.getRecommendation(contentFromServer.agentState, contentFromServer.count);
+			var warn = adherenceHistory.setRecommendationInquiredAtGivenRound();
+			var recc = agentSettings.getRecommendation(contentFromServer.agentState, contentFromServer.count);
+			if(warn)
+			{
+				return warn.concat(recc);
+			}
+
+			return recc;
 		}
 		else if(questionNumber == 2)
 		{
@@ -203,7 +350,7 @@ var ChatBox = function(chatItemId, myCanvasContainer)
 		var question = isQuestion ? questions[questionNumber] : feedbacks[questionNumber];
 		var answer = getAnswerToQuestion(questionNumber, isQuestion);	
 		var roundNumber = getRoundNumber();
-		this.addToChatList(question, answer, roundNumber, buttonClicked, (isQuestion && questionNumber == 1));
+		this.addToChatList(question, answer, roundNumber, buttonClicked, (isQuestion && (questionNumber == 1)));
 	}
 }	
 
