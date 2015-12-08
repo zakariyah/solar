@@ -1,3 +1,8 @@
+var chatHistory = require('../model/chatHistory');
+var game = require('./game');
+var gameProperties = require('./gameProperties');
+newgame = new game(gameProperties.gameId, gameProperties.pdGameMatrix);
+
 function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take one or two
 {	
 	if(isAgent)
@@ -139,6 +144,11 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 				return "Splusplus";
 			}
 		}
+	}
+
+	this.saveHistory = function(history)
+	{
+		chatHistory.createChatHistory(newgame.gameName, this.id, history);
 	}
 
 }

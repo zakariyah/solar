@@ -105,10 +105,11 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId, 
 	var getBoxHtml = function()
 	{
 		lineHtml = '';
-		lineHtml += '<tr><td rowspan="4" colspan="1">Your Action</td><td rowspan="1" colspan="3">Opponent Action</td></tr>';
+		lineHtml += '<tr><td rowspan="4" colspan="1" style="text-align:center;"><br><br>Your  Action <br></td><td rowspan="1" colspan="3">Opponent Action</td></tr>';
     	lineHtml += '<tr><td></td><td>A</td><td>B</td></tr>';
-		lineHtml += '<tr><td ><input type="radio" id="myChoice1" name="options">A</input></th><td id"box1"><span><i>3</i></span>, <span><i>3</i></span></td><td  id="box2"><span><i>-2</i></span>, <span><i>5</i></span></td></tr>';
-		lineHtml += '<tr><td><input type="radio" id="myChoice2" name="options">B</input></td><td id="box3"><span><i>5</i></span>, <span><i>-2</i></span></td><td  id="box4"><span><i>0</i></span>, <span><i>0</i></span></td></tr>';
+		lineHtml += '<tr><td ><input type="radio" id="myChoice1" name="options">A</input></th><td id"box1"><span style="color: #009"><i>3</i></span>, <span style="color: #900"><i>3</i></span></td><td  id="box2"><span style="color: #009"><i>-2</i></span>, <span style="color: #900"><i>5</i></span></td></tr>';
+		lineHtml += '<tr><td><input type="radio" id="myChoice2" name="options">B</input></td><td id="box3"><span style="color: #009"><i>5</i></span>, <span style="color: #900"><i>-2</i></span></td><td  id="box4"><span style="color: #009"><i>0</i></span>, <span style="color: #900"><i>0</i></span></td></tr>';
+		lineHtml += '<tr><td></td><td colspan="3">Your points are in blue</td></tr>';
 
 		return lineHtml;
 	}
@@ -401,7 +402,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 50;
+	var totalWaitingTime = 5;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{
@@ -421,7 +422,7 @@ var WaitingTimeElapsed = function(socket)
 
 var GameManager = function(socket, gameManagerEndFunctionFromMain, endGameFunction)
 {
-	var totalGameTime = 600;
+	var totalGameTime = 6000;
 	var intervalGame = 1000;
 	var agitationStart = 30;
 	var numberOfTimes = 0;
@@ -503,8 +504,8 @@ var PrisonersDilemma = function()
 {	
 	var gameHistory = new GameHistory('gameHistory', 'gameHistoryTable', 'myTotalPayoff');
 	var hiitNumber = document.getElementById("hiitNumber").innerHTML;
-	var socket = io.connect('http://localhost:4000');
-	// var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
+	// var socket = io.connect('http://localhost:4000');
+	var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
 	var myCanvasContainer =  new CanvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff', socket);
 	var hasRecommender;
 
@@ -600,8 +601,8 @@ var PrisonersDilemma = function()
 	  htmlString += "";
 
 	  // htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
-	  htmlString += "<div id='myOptions' class='col-sm-6'></div>";
-  	  htmlString += "<div id='opOptions' class='col-sm-6 well'></div>";
+	  htmlString += "<div id='myOptions' class='col-sm-8' style='border: 1px solid black'></div>";
+  	  htmlString += "<div id='opOptions' class='col-sm-4 well'></div>";
   	  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left;'></td><td></td><td></td><td id='otherPayoff'  style='text-align:right;'></td></tr></table></div>";
   	  htmlString += "<div id='nextRound' style='text-align: center;'><button class='button' id='nextButton'>Submit</button></div>";
   	  htmlString += "<div style='border: 1px #bce8f1 solid; display: none; font-size: 18px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress' style='display:none'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
@@ -626,15 +627,17 @@ var PrisonersDilemma = function()
 
 	var endGame = function(cummulative, numberOfRounds, playerHadRecommender)
 	{
+		socket.emit('chatHistory', chatBox.getChattingHistory());
 		var htmlString = "<div class=\"alert alert-warning\"> Thank you very much, The game is over. You had a total of " + cummulative  +" points</div>";
-        htmlString += "<div class=\"panel panel-default  col-sm-8 col-sm-offset-2 \"><div class=\"panel-heading\"> Please fill in the survey below</div><div class=\"panel-body\">";
+        htmlString += "<div class=\"panel panel-default \"><div class=\"panel-heading\"> Please fill in the survey below</div><div class=\"panel-body\">";
         htmlString += postQuizQuestions(playerHadRecommender, cummulative, numberOfRounds);
 
         htmlString += "</div></div>";
-        var actionsElement = document.getElementById('actions');
+        var actionsElement = document.getElementById('fullPage');
         actionsElement.innerHTML = htmlString;
-        document.getElementById('chatBoxContainer').innerHTML = '';
-	  	document.getElementById('questionAndFeedback').innerHTML = '';	
+        document.getElementById('commentBox').innerHTML = '';
+	  	// document.getElementById('questionAndFeedback').innerHTML = '';	
+
 	}
 
 	var setAgentVariables = function(content)

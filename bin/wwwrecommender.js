@@ -47,10 +47,21 @@ ionew.sockets.on('connection', function (socket) {
 				{
 					return;  // what should be done
 				}
-				gameControllerArray[gameCounter].addPlayer(player);
+				gameControllerArray[gameCounter].addPlayer(player);				
 				if(gameControllerArray[gameCounter].isFilled())
 				{
 					startGame();
+
+					var playersId = Object.keys(gameControllerArray[gameCounter].gamePlayers);
+					for(playerId in playersId)
+					{
+						var playerObject = gameControllerArray[gameCounter].gamePlayers[playersId[playerId]];
+						if(!playerObject.isAgent)
+						{ // only the non agent gets the recommendation
+							playerObject.setHasRecommender(false);
+						}						
+					}
+
 					firstPlayerJustEntered = true;
 					sendMessageAndStart();
 				}
@@ -423,5 +434,19 @@ socket.on('timeOfAction', function(timeOfAction) { // used to set the time actio
 socket.on('forceDisconnect', function() {
 		socket.disconnect();
 	});
+
+socket.on('chatHistory', function(historyOfChats) {
+		var presentSocketGameCounter = playersSocketDict[socket.id];
+		if(typeof presentSocketGameCounter === 'undefined')
+		{
+			return;
+		}
+		var playerWithHistory =  gameControllerArray[presentSocketGameCounter].gamePlayers[socket.id]; //	roomToSocket[socket.id];
+		if(playerWithHistory)
+		{
+			playerWithHistory.saveHistory(historyOfChats);
+		}
+	});
+
 
 });

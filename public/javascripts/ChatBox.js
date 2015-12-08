@@ -47,8 +47,6 @@ var AdherenceHistory = function()
 				return false;
 			}
 
-
-
 			if(history[i][0] != history[i][1])
 			{
 				if(oneDisc)
@@ -221,6 +219,26 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 	var chatPanelBody = document.getElementById('panelBody');
 	var typingText = document.getElementById('typingText');
 	var acceptRecommendationButton;
+	var	chattingHistory = [];
+
+	var textAreaComment = document.getElementById('textAreaComment');
+	var submitCommentButton = document.getElementById('submitCommentButton');
+
+	this.getChattingHistory = function()
+	{
+		return chattingHistory;
+	}
+
+
+	submitCommentButton.onclick = function()
+	{
+			var text = textAreaComment.value;
+			var roundNumber = getRoundNumber();
+			chattingHistory.push([roundNumber, 'comment', false, text]);
+			textAreaComment.value = '';
+	}
+	
+
 
 	this.disableAcceptRecommendationButton = function()
 	{
@@ -278,6 +296,7 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 			var question = 'Why don\'t you ask for advice.';
 			var chatItem = createOneChatItem(false, 'S-script', question, roundNumber);
 			showChat(chatItem, false, false);
+			chattingHistory.push([roundNumber, 'intrusion', false, 'intrusion']);
 		}
 	}
 
@@ -405,6 +424,7 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		var answer = getAnswerToQuestion(questionNumber, isQuestion);	
 		var roundNumber = getRoundNumber();
 		this.addToChatList(question, answer, roundNumber, buttonClicked, (isQuestion && (questionNumber == 1)));
+		chattingHistory.push([roundNumber, questionNumber, isQuestion, answer]);
 	}
 }	
 

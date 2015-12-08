@@ -5,6 +5,7 @@ var player = require('./player');
 var answerContainer = require('./answer.js');
 var gameProperties = require('./gameProperties');
 newgame = new game(gameProperties.gameId, gameProperties.pdGameMatrix);
+
 function answerstore(numberOfAnswers) {
     this.numberOfAnswers = numberOfAnswers;
     this.gameid = newgame.gameName;
