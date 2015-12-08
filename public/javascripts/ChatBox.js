@@ -1,6 +1,6 @@
 var AdherenceHistory = function()
 {
-	var history = []; // contains the player choice, recommended action, opponent choice, isWarningGiven, wasRecommendationAsked
+	var history = []; // contains the player choice, recommended action, opponent choice, isWarningGiven, wasRecommendationAsked, intrusion
 	
 	this.updateHistory = function(contentFromServer)
 	{
@@ -11,7 +11,7 @@ var AdherenceHistory = function()
 		}
 		var round = contentFromServer.count;
 		var recommendation = contentFromServer.agentState.agentChoice;
-		history.push([-1, recommendation, -1, false, false]);
+		history.push([-1, recommendation, -1, false, false, false]);
 		
 		if(round != 0)
 		{
@@ -25,6 +25,48 @@ var AdherenceHistory = function()
 	{
 		history[history.length - 1][4] = true; // recommendation was inquired
 		return this.warnPlayerOfAdherence();
+	}
+
+	this.shouldTheExpertIntrude = function(presentChoice)
+	{
+		if(history.length == 1 || history.length == 0)
+		{
+			return false;
+		}
+
+		if(history[history.length - 1][1] == presentChoice)
+		{
+			return false;
+		}
+
+		var oneDisc = false;
+		for(var i = history.length - 1; i >= 0; i--)
+		{
+			if(history[i][5] || history[i][4])
+			{
+				return false;
+			}
+
+
+
+			if(history[i][0] != history[i][1])
+			{
+				if(oneDisc)
+				{
+					history[i][5] = true;
+					return true;
+				}
+				else
+				{
+					oneDisc = true;
+				}
+			}
+			else
+			{
+				return false;
+			}
+		}
+		return false;
 	}
 
 	this.shouldThePlayerBeWarned = function()
@@ -225,6 +267,18 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		chatItemHtml += '</div></div>';
 
 		return chatItemHtml;
+	}
+
+	this.intrudePlayersGame =  function(presentChoice)
+	{
+		var warn = adherenceHistory.shouldTheExpertIntrude(presentChoice);
+		if(warn)
+		{
+			var roundNumber = getRoundNumber();
+			var question = 'Why don\'t you ask for advice.';
+			var chatItem = createOneChatItem(false, 'S-script', question, roundNumber);
+			showChat(chatItem, false, false);
+		}
 	}
 
 	var acceptRecommendationButtonOnClick = function()

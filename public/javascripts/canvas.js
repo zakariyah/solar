@@ -48,7 +48,6 @@ var AgentStateInfos = function()
 
 		return stateText;
 	}
-
 }
 
 
@@ -93,129 +92,87 @@ var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 	}
 }
 
-var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
+var Options = function(containerId, playerType, payoffTableId, opPayoffTableId, radioButtonsOnclick)
 {
 	var optionsName = (playerType == 1) ? 'playerAction' : 'opponentAction';
 	var optionsId = (playerType == 1) ? 'playerOption' : 'opponentOption';
 	var canvasHtmlId = (playerType == 1) ? 'playerCanvas' : 'opponentCanvas';
 	var allPayoffs = [[[-2, 5], [0,0]], [[5, -2], [0,0]]];
 	var payoff = allPayoffs[playerType-1];
+	var defaultColor;
+	
 
-	var getALine = function(lineNumber)
+	var getBoxHtml = function()
+	{
+		lineHtml = '';
+		lineHtml += '<tr><td rowspan="4" colspan="1">Your Action</td><td rowspan="1" colspan="3">Opponent Action</td></tr>';
+    	lineHtml += '<tr><td></td><td>A</td><td>B</td></tr>';
+		lineHtml += '<tr><td ><input type="radio" id="myChoice1" name="options">A</input></th><td id"box1"><span><i>3</i></span>, <span><i>3</i></span></td><td  id="box2"><span><i>-2</i></span>, <span><i>5</i></span></td></tr>';
+		lineHtml += '<tr><td><input type="radio" id="myChoice2" name="options">B</input></td><td id="box3"><span><i>5</i></span>, <span><i>-2</i></span></td><td  id="box4"><span><i>0</i></span>, <span><i>0</i></span></td></tr>';
+
+		return lineHtml;
+	}
+
+	var getPreviousHtml = function()
+	{
+		lineHtml = '';
+		lineHtml += '<tr><th rowspan="1" colspan="4">Previous Round Score</th></tr>';
+    	lineHtml += '<tr><td></td><td>A</td><td>B</td></tr>';
+		lineHtml += '<tr><td >A</th><td id="box5"><span><i>3</i></span>, <span><i>3</i></span></td><td  id="box6"><span><i>-2</i></span>, <span><i>5</i></span></td></tr>';
+		lineHtml += '<tr><td>B</td><td id="box7"><span><i>5</i></span>, <span><i>-2</i></span></td><td  id="box8"><span><i>0</i></span>, <span><i>0</i></span></td></tr>';
+
+		return lineHtml;
+	}
+
+	var getAPayoffTable = function()
 	{
 		var optionsValues = ['A', 'B'];
 		var lineHtml = '<tr>';
 		var numberOfColumns = 4;
 		var canvasIds = [];
 		var optionClasses = ['rcorners1', 'rcorners2'];
-		for(var i=0; i<numberOfColumns; i++)
-		{
-			if(playerType == 1 && i == 1)
-			{
-				lineHtml += '<td class="'+ optionClasses[lineNumber - 1] +'" width="50" height="30"><input type="radio" name="playerAction" id="playerOption'+lineNumber +'" value="'+lineNumber +'"> <strong style="font-size: 15px;">'+ optionsValues[lineNumber-1] +':</strong></td>';
-				continue;
-			}
-			else if(playerType == 2 && i==numberOfColumns - 2)
-			{
-				lineHtml += '<td  class="'+ optionClasses[lineNumber - 1] +'"  width="50" height="30"><input type="radio" name="opponentAction" id="opponentOption'+lineNumber +'" value="'+lineNumber +'"> <strong style="font-size: 15px;">'+ optionsValues[lineNumber-1] +':</strong></td>';
-				continue;	
-			}
-			var ind = canvasHtmlId + lineNumber + '' + i;
-			var canvasWidth = ((i == 0 || i == numberOfColumns - 1) ? 200 : 100);
-			lineHtml += '<td><canvas id="' + ind + '" height="30" width="' + canvasWidth +'"></canvas></td>';
-			canvasIds.push(ind);
-		}
+		
+				
+
 		lineHtml += '</tr>';
 		return [lineHtml, canvasIds];
 	}
 
-	var canvasId = [];
+	
 	var container = document.getElementById(containerId);
 	// var heading = (playerType == 1) ? 'Your Actions' : 'The Other Player\'s Actions';
-	var containerHTML = '<table border="1">';
-	// containerHTML +=  '<tr><td></td><td></td><td style="text-align:left"><b>' + heading +'</b></td><td></td><td></td></tr>';
-	containerHTML += '<tr><td style="text-align:left">Your Payoff</td><td></td><td></td><td  style="text-align:right">Other Player\'s Payoff</td></tr>';
-	for(var i = 0; i < 2 ; i++)
+	var containerHTML = '<table class="table table-bordered" border="1">';
+	
+	if(playerType == 1)
 	{
-		var htmlGot = getALine(i+1);
-		canvasId.push(htmlGot[1]);
-		containerHTML += htmlGot[0];
+		containerHTML += getBoxHtml();	
+	}	
+	else if(playerType == 2)
+	{
+		containerHTML += getPreviousHtml();
 	}
+	
 	
 	containerHTML += '</table>';
 	container.innerHTML = containerHTML;
 
 
-	// var payoffTableWordings = (playerType == 1) ? 'Your Payoff: ' : 'The Other Player\'s Payoff: ';
-	var recordScores = function(buttonId, payoffTableIdLocal, opPayoffTableIdLocal)
-	{
-		document.getElementById(payoffTableIdLocal).innerHTML = 'Your Total: ' + (payoff[buttonId][0]) + ' + __';
-		document.getElementById(opPayoffTableIdLocal).innerHTML = ''; //: ' + (payoff[buttonId][1]) + ' + __';
-	}
-
-	// onclick handler for radio buttons
-	var onClickHandler = function(buttonId)
-	{	
-		return function()
-		{
-			for(var i = 0; i < canvasses.length; i++)
-			{
-				for(var j = 0; j < canvasses[i].length; j++)
-				{
-					if(i == buttonId)
-					{
-						canvasses[i][j].fillCanvasColor();
-					}	
-					else
-					{
-						canvasses[i][j].returnColorToDefault();
-					}
-				}
-			}
-			if(playerType == 1)
-			{
-				recordScores(buttonId, payoffTableId, opPayoffTableId);	
-			}
-			
-		}
-	}
-
 	// get all variables in the container
 
 	// get options
 	var options = [];
-	options[0] = document.getElementById(optionsId + '1');
-	options[0].onclick = onClickHandler(0, payoffTableId);
-	options[1] = document.getElementById(optionsId + '2');
-	options[1].onclick = onClickHandler(1, payoffTableId);
+	options[0] = document.getElementById('myChoice1');
+	options[1] = document.getElementById('myChoice2');
 
-	
-	// make the canvasses
-	var canvasses = [[], []];
-	for(var i = 0; i < canvasses.length; i++)
+	if(playerType == 1)
 	{
-		for(var j = 0; j < canvasId[i].length; j++)
-		{
-			var id = canvasId[i][j];
-			if(j == 0)
-			{
-				canvasses[i].push(new OneCanvas(id, 0, payoff[i][0], playerType));
-			}
-			else if(j == canvasId[i].length - 1)
-			{
-				canvasses[i].push(new OneCanvas(id, 1, payoff[i][1], playerType));	
-			}
-			else
-			{
-				canvasses[i].push(new StraightLineCanvas(id, playerType));
-			}
-		}
+		options[0].onclick = radioButtonsOnclick(0);
+		options[1].onclick = radioButtonsOnclick(1);
 	}
-
-	if(playerType == 2)
+	else
 	{
-		options[0].disabled = true;
-		options[1].disabled = true;
+		// opponent options for showing result of previous round
+		defaultColor = document.getElementById('box5').style.backgroundColor;
 	}
 
 	this.getSelection = function()
@@ -244,7 +201,6 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 	this.setSelection = function(selection)
 	{ // 1 for A and 2 for B
 		options[selection - 1].checked = true;
-		(onClickHandler(selection-1, payoffTableId, opPayoffTableId))();
 	}
 
 	this.clearSelection = function()
@@ -266,106 +222,21 @@ var Options = function(containerId, playerType, payoffTableId, opPayoffTableId)
 
 	this.returnColorToDefault = function()
 	{
-		for(var i = 0; i < canvasses.length; i++)
+		console.log('wan pe mi ' + playerType);
+		for(var i = 5; i <= 8; i++)
 		{
-			for(var j = 0; j < canvasId[i].length; j++)
-			{
-				canvasses[i][j].returnColorToDefault();
-			}
+			document.getElementById('box' + i).style.backgroundColor = defaultColor;
 		}
 	}
+
 }
 
-var OneCanvas = function(canvasId, position, payoff, playerType)
-{
-	// position 0 for left and 1 for right
-	var canvasElement = document.getElementById(canvasId);
-	var canvasContext = canvasElement.getContext("2d");
-	var width = canvasElement.width;
-	var height = canvasElement.height;
-	var chosenColor = playerType == 1 ? "#006400" : "#E9AB17";
-	
-	canvasContext.fillStyle = "#D3D3D3";
-	
-	var presentYStart = height / 2;
-	var startingY = presentYStart - (height/20);
-	var startingX = (position == 0) ? width/2 : 0;
-	var boxHeight = height/10;
-	var boxWidth = width/2;
-	canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
-
-	// draw triangle
-	var drawTriangle = function()
-	{
-		canvasContext.beginPath();
-		canvasContext.moveTo((position == 0) ? 3*width/8 : 5*width/8, presentYStart);
-		canvasContext.lineTo(width/2 , presentYStart + (height/5));
-		canvasContext.lineTo(width/2 , presentYStart - (height/5));
-		canvasContext.closePath();
-		canvasContext.fill();	
-	}
-	
-	drawTriangle();
-	// write text
-	var textStartingX = (position == 0) ? width/4 : 3*width/4;
-	var textStartingY = presentYStart + 10;
-	canvasContext.font = "bold 20px Arial";
-	canvasContext.fillText(payoff,textStartingX,textStartingY);
-	
-	this.fillCanvasColor = function()
-	{
-		canvasContext.fillStyle = chosenColor;
-		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
-		drawTriangle();
-		canvasContext.fillStyle = chosenColor;
-		canvasContext.fillText(payoff,textStartingX,textStartingY);
-	}	
-
-	this.returnColorToDefault = function()
-	{
-		canvasContext.fillStyle = "#D3D3D3";
-		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
-		drawTriangle();
-		canvasContext.fillText(payoff,textStartingX,textStartingY);
-	}
-}
-
-var StraightLineCanvas = function(canvasId, playerType)
-{
-	// position 0 for left and 1 for right
-	var canvasElement = document.getElementById(canvasId);
-	var canvasContext = canvasElement.getContext("2d");
-	var width = canvasElement.width;
-	var height = canvasElement.height;
-	var chosenColor = playerType == 1 ? "#006400" : "#E9AB17";
-
-	canvasContext.fillStyle = "#D3D3D3";
-	
-	var presentYStart = height / 2;
-	var startingY = presentYStart - (height/20);
-	var startingX = 0;
-	var boxHeight = height/10;
-	var boxWidth = width;
-	canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
-
-	this.fillCanvasColor = function()
-	{
-		canvasContext.fillStyle = chosenColor;
-		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
-	}	
-
-	this.returnColorToDefault = function()
-	{
-		canvasContext.fillStyle = "#D3D3D3";
-		canvasContext.fillRect(startingX,startingY,boxWidth,boxHeight);
-	}
-}
 
 var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayoffTableId, opPayoffTableId, socket)
 {
 	
 	var myOptions;
-	var opponentOptions;
+	var opponentOptions; // to now mean the previous round choices
 	var submitButton;
 	var gameManager;
 
@@ -399,11 +270,37 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 		}
 	}
 
-	this.startGame = function()
+	this.startGame = function(radioButtonsOnclick)
 	{
-		myOptions = new Options(playerOptionHtmlId, 1, myPayoffTableId, opPayoffTableId);
+		myOptions = new Options(playerOptionHtmlId, 1, myPayoffTableId, opPayoffTableId, radioButtonsOnclick);
 		opponentOptions = new Options(opponentOptionHtmlId, 2);
 		opponentOptions.showOptions(false);
+	}
+
+	this.showPlayerAndOpponentChoice = function(playerChoice, opponentChoice)
+	{
+		opponentOptions.returnColorToDefault();	
+		var product = playerChoice * opponentChoice;
+		var choice = -10; // arbitrary number
+		if(product != 2)
+		{
+			choice = product;
+		}
+		else
+		{
+			if(playerChoice == 1)
+			{
+				choice = 2;
+			}
+			else
+			{
+				choice = 3;
+			}
+		}
+		// choice range from 1 to 4
+		var id = 'box' + (4 + choice);
+		console.log("id is " + id);
+		document.getElementById(id).style.backgroundColor = '#FF0000';
 	}
 
 	this.getPlayerSelection = function()
@@ -425,13 +322,11 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 
 	this.resetAll = function()
 	{
-		opponentOptions.showOptions(false);
+		opponentOptions.showOptions(true);
 		myOptions.showOptions(true);
 		myOptions.makeSelection(false);
 		myOptions.clearSelection();
-		opponentOptions.clearSelection();
 		myOptions.returnColorToDefault();
-		opponentOptions.returnColorToDefault();
 	}
 
 	this.makeSelectionImpossible = function()
@@ -441,19 +336,12 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 
 	this.setPlayersPayoffText = function()
 	{
-		var fromMe = myOptions.getSelectionValueForSelfAndOpponent();
-		var fromOp = opponentOptions.getSelectionValueForSelfAndOpponent();
-		if(fromMe && fromOp)
-		{
-			document.getElementById(myPayoffTableId).innerHTML = 'Sum: ' + fromMe[0] + ' + ' + fromOp[0] + ' = ' + (fromMe[0] + fromOp[0]);
-			document.getElementById(opPayoffTableId).innerHTML = 'Sum: ' + fromMe[1] + ' + ' + fromOp[1] + ' = ' + (fromMe[1] + fromOp[1]);
-		}
+	
 	}
 
 	this.clearPlayersPayoffText = function()
 	{
-		document.getElementById(myPayoffTableId).innerHTML = '';
-		document.getElementById(opPayoffTableId).innerHTML = '';
+		
 	}
 
 	this.setSubmitButtonVisible  = function(visibility)
@@ -575,14 +463,13 @@ var GameManager = function(socket, gameManagerEndFunctionFromMain, endGameFuncti
 }
 
 
-var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
+var GameTimer = function(socket, gameTimeEndFunction)
 {
 	var totalGameTime = 30;
 	var intervalGame = 1000;
 	var gameTimePeriodicFunction = function(count, mainCount)
 	{
 		document.getElementById('timerBegin').innerHTML = count + " secs remaining";
-		progressbarFunction('progressBarMain', count, mainCount);
 	}
 
 	var that = new TimerFunction(totalGameTime, intervalGame, gameTimePeriodicFunction, gameTimeEndFunction, false);
@@ -591,7 +478,7 @@ var GameTimer = function(socket, gameTimeEndFunction, progressbarFunction)
 }
 
 
-var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
+var ResultTimer = function(socket, resultTimeEndFunction)
 {
 	var totalResultTime = 1;
 	var intervalResult = 1000;
@@ -599,7 +486,6 @@ var ResultTimer = function(socket, resultTimeEndFunction, progressbarFunction)
 	var resultTimePeriodicFunction = function(count, mainCount)
 	{
 		document.getElementById('timerBegin').innerHTML = count + " sec" + ((count > 1) ? "s" : "") + " remaining";
-		// progressbarFunction('progressBarMain', count, mainCount);
 	}
 
 	var resultTimeEndFunctionMain = function()
@@ -637,28 +523,18 @@ var PrisonersDilemma = function()
 		myCanvasContainer.nextRound(true, chatBox)();
 	}
 
-	var changeProgressBar =  function(barId, rvalue, totalValue)
-	{
-	  var value = totalValue - rvalue;
-	  var ariaNow = value  * 100.0 / totalValue;
-	  var progressBar = document.getElementById(barId);
-	  progressBar.style.width = Math.floor(ariaNow) + "%";
-	}
-
 	// waiting Time 
 	var waitingTimeElapsed = new WaitingTimeElapsed(socket);
 
-	var gameTimer = new GameTimer(socket, gameTimerEnd, changeProgressBar);
+	var gameTimer = new GameTimer(socket, gameTimerEnd);
 
 	
 
 	var resultTimeEndFunction = function()
 	{
-		myCanvasContainer.clearPlayersPayoffText();
+		
 		myCanvasContainer.setSubmitButtonVisible(true);
-		myCanvasContainer.clearPlayersPayoffText();
 		myCanvasContainer.resetAll();
-		// gameTimer.startTimer(); // no more timing for game timer
 		if(hasRecommender)
 		{
 			document.getElementById('questionAndFeedback').style.visibility = 'visible';
@@ -667,7 +543,7 @@ var PrisonersDilemma = function()
 	}
 
 
-	var resultTimer = new ResultTimer(socket, resultTimeEndFunction, changeProgressBar);
+	var resultTimer = new ResultTimer(socket, resultTimeEndFunction);
 
 
 	// create the game manager functions
@@ -708,6 +584,14 @@ var PrisonersDilemma = function()
 		
 	}
 
+	var radioButtonsOnclick = function(choice)
+	{
+		return function()
+		{
+			chatBox.intrudePlayersGame(choice);
+		}
+	}
+
 	
 
 	var startRealGame = function(hasRecommender)
@@ -716,15 +600,15 @@ var PrisonersDilemma = function()
 	  htmlString += "";
 
 	  // htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
-	  htmlString += "<div id='myOptions' class='row'></div>";
-  	  htmlString += "<div id='opOptions' class='row'></div>";
+	  htmlString += "<div id='myOptions' class='col-sm-6'></div>";
+  	  htmlString += "<div id='opOptions' class='col-sm-6 well'></div>";
   	  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left;'></td><td></td><td></td><td id='otherPayoff'  style='text-align:right;'></td></tr></table></div>";
   	  htmlString += "<div id='nextRound' style='text-align: center;'><button class='button' id='nextButton'>Submit</button></div>";
   	  htmlString += "<div style='border: 1px #bce8f1 solid; display: none; font-size: 18px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress' style='display:none'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
 
 	  var actionElement = document.getElementById('actions');
 	  actionElement.innerHTML = htmlString;    
-	  myCanvasContainer.startGame();
+	  myCanvasContainer.startGame(radioButtonsOnclick);
 	  if(!hasRecommender)
 	  {
 	  	document.getElementById('chatBoxContainer').style.display = 'none';
@@ -787,6 +671,7 @@ var PrisonersDilemma = function()
 		    myCanvasContainer.setOpponentVisible(briefInfo.opponentChoiceInNumber);
 		    myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
 		    myCanvasContainer.setPlayersPayoffText();
+		    myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);
 		    // setAgentState(content.agentState);
 		// showPlayerChoicesForGivenTime(reco);
 			// document.getElementById('recommender').innerHTML = '';
