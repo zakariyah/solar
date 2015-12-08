@@ -402,7 +402,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 5;
+	var totalWaitingTime = 1;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{
