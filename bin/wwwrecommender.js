@@ -288,7 +288,6 @@ ionew.sockets.on('connection', function (socket) {
 		gameControllerArray[presentSocketGameCounter].gamePlayers[socket.id].setTimeOfAction(content.timeOfAction);
 		var messageText = "<div class=\"alert alert-warning\"> Round " + store.round + " results</div>";
 
-
 		if(roomObject.agentPresent)  //if agent is present in the game
 		{
 			var opponent = gameMap[socket.id];  //get agent id.
@@ -296,7 +295,16 @@ ionew.sockets.on('connection', function (socket) {
 
 			var contentOfHumanAnswer = store.answererSet[socket.id].chosenAnswer
 			var agentMove = roomObject.player2.nextMove(contentOfHumanAnswer);
+			
 			store.addAnswer(agentMove, gameControllerArray[presentSocketGameCounter].gamePlayers[opponent]);
+			
+			// to be removed after test
+			// to update the recommender
+			var soc1 = roomObject.player1;
+			var soc2 = roomObject.player2;
+			soc1.updateRecommender(store.answererSet[soc1.id].chosenAnswer, store.answererSet[soc2.id].chosenAnswer);
+			// end of to be removed
+
 			var recc = gameControllerArray[presentSocketGameCounter].gamePlayers[socket.id].getRecommendation();
 			var cummScore = store.players[socket.id].getCummulativeValue();
 			var agentState = roomObject.player2.getAgentVariables();

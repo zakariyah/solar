@@ -750,6 +750,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 
 	this.encodeJointAction = function(_actions)
 	{
+		// console.log('acts is ' + _actions + ' at ' + this.getRound());
 		return this.A[1] * _actions[0] + _actions[1];
 	}
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+        
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+  </head>
+
+  <body>
+
+
+<div id="container" class='container-fluid'>
+  <div class='col-sm-2'>
+  </div>
+  <div class='col-sm-8'>
+
+<div id="PaginationPageId" class='row'>
+  <div id='imageRectId' class='row'>
+    <div id='page1'>
+      You are to play a game of Prisoner's Dilemma with another player for an unknown number of rounds. You will be presented with an agent to recommend actions for you. You can chat with the agent and ask some questions. Please use the comment box (on the bottom-left corner of the game page) to give your comments on the game. 
+      Below is the payoff matrix for the game.
+
+      <table class="table table-bordered"><caption> Game Payoff Matrix </caption><tr><th class="tableheader" rowspan="4" colspan="1" style="text-align:center;"><br><br>Your <br> Action</th><th rowspan="1" colspan="3">Opponent Action</th></tr><tr><td></td><td>A</td><td>B</td></tr><tr><td >A</th><td><span style="color: #009"><i>3</i></span>, <span style="color: #900"><i>3</i></span></td><td><span style="color: #009"><i>0</i></span>, <span style="color: #900"><i>5</i></span></td></tr><tr><td>B</td><td><span style="color: #009"><i>5</i></span>, <span style="color: #900"><i>0</i></span></td><td><span style="color: #009"><i>1</i></span>, <span style="color: #900"><i>1</i></span></td></tr></table>
+
+       <div class="alert alert-info"> Your points are in blue</div>
+    
+  <form class='form' method='post' action='./entry' id='submissionForm'>
+                  <div class="form-group text-center">
+                 <label>1.  How much do you get if you choose action A but the other player  chooses action B</label>
+                 
+                  <label class="radio-inline">
+        <input type="radio" name="1" value="3"> 3
+        </label>
+                <label class="radio-inline">
+            <input type="radio" name="1" value="5"> 5
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="1" value="-2"> -2
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="1" value="0"> 0
+          </label>
+          
+        </div>
+
+          <div class="form-group  text-center">
+          <label>2.  How much do you get if you choose action B but the other player chooses action B</label>
+                  <label class="radio-inline">
+        <input type="radio" name="2" value="3"> 3
+        </label>
+                <label class="radio-inline">
+            <input type="radio" name="2" value="5"> 5
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="2" value="-2"> -2
+          </label>
+          <label class="radio-inline">
+            <input type="radio" name="2" value="0"> 0
+          </label>
+        </div>
+      <div class="form-group text-center">
+        <button class='btn btn-default' type='submit'>Submit </button>
+      </div>
+    </form>
+
+    </div>  
+</div>
+
+
+  </div>
+  <div id='paginatorId' class='row text-center'></div>
+  <div id='opOptions' class='row'></div>
+</div>  
+</div>
+
+</body>
+</html>

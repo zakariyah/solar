@@ -415,16 +415,20 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		}
 		else
 		{
-			return getAnswerToFeedbackNumber(questionNumber);
+			new ShowAlert("Feedbacks", "Sorry, not yet implemented");
+			// return getAnswerToFeedbackNumber(questionNumber);
 		}
 	}
 	this.getSolutionToQuestion = function(questionNumber, isQuestion, buttonClicked)
 	{
-		var question = isQuestion ? questions[questionNumber] : feedbacks[questionNumber];
-		var answer = getAnswerToQuestion(questionNumber, isQuestion);	
-		var roundNumber = getRoundNumber();
-		this.addToChatList(question, answer, roundNumber, buttonClicked, (isQuestion && (questionNumber == 1)));
-		chattingHistory.push([roundNumber, questionNumber, isQuestion, answer]);
+		if(isQuestion)
+		{
+			var question = isQuestion ? questions[questionNumber] : feedbacks[questionNumber];
+			var answer = getAnswerToQuestion(questionNumber, isQuestion);	
+			var roundNumber = getRoundNumber();
+			this.addToChatList(question, answer, roundNumber, buttonClicked, (isQuestion && (questionNumber == 1)));
+			chattingHistory.push([roundNumber, questionNumber, isQuestion, answer]);
+		}
 	}
 }	
 
@@ -478,7 +482,11 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 			buttonClicked.disabled = true;
 			checkBoxToUse[valueSelected-1].disabled = true;
 			chatBox.getSolutionToQuestion( valueSelected-1, isQuestion, buttonClicked);
-			selectToUse.value = '0';
+			if(isQuestion)
+			{
+				selectToUse.value = '0';	
+			}
+			
 		}
 	}
 
