@@ -5,6 +5,32 @@
         
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+
+    <script type="text/javascript">
+    var validateAnswers = function()
+    { 
+            var correct = true;
+            var correctAnswers = [-2, 0]
+            for(var i = 0; i < 2; i++)
+            {
+              var value = -1;
+              var radios = document.getElementsByName((i + 1) + "");
+              for (var j = 0; j < radios.length; j++) {
+                  if (radios[j].checked) {
+                  // get value, set checked flag or do whatever you need to
+                  value = radios[j].value;       
+                  }
+              }
+              if(value != correctAnswers[i])
+              {
+                  alert("Some of the answers are incorrect. Please read the tutorial properly and answer the questions");
+                  return false;
+              }
+            }
+          return true;    
+    }
+
+    </script>
   </head>
 
   <body>
@@ -25,7 +51,7 @@
 
        <div class="alert alert-info"> Your points are in blue</div>
     
-  <form class='form' method='post' action='./entry' id='submissionForm'>
+  <form class='form' method='post' action='./entry' id='submissionForm' onSubmit="return validateAnswers();">
                   <div class="form-group text-center">
                  <label>1.  How much do you get if you choose action A but the other player  chooses action B</label>
                  
