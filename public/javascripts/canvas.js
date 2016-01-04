@@ -311,8 +311,8 @@ var CanvasContainer = function(playerOptionHtmlId, opponentOptionHtmlId, myPayof
 
 	this.setOpponentVisible = function(selection)
 	{
-		opponentOptions.showOptions(true);
-		opponentOptions.setSelection(selection);
+		// opponentOptions.showOptions(true);
+		// opponentOptions.setSelection(selection);
 	}
 
 	this.setPlayerVisible = function(selection)
@@ -402,7 +402,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 1;
+	var totalWaitingTime = 2;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{
@@ -505,8 +505,8 @@ var PrisonersDilemma = function()
 	var gameHistory = new GameHistory('gameHistory', 'gameHistoryTable', 'myTotalPayoff');
 	var hiitNumber = document.getElementById("hiitNumber").innerHTML;
 	
-	// var socket = io.connect('http://localhost:4000');
-	var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
+	var socket = io.connect('http://localhost:4000');
+	// var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
 	var myCanvasContainer =  new CanvasContainer('myOptions', 'opOptions', 'myPayoff', 'otherPayoff', socket);
 	var hasRecommender;
 
@@ -602,8 +602,8 @@ var PrisonersDilemma = function()
 	  htmlString += "";
 
 	  // htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
-	  htmlString += "<div id='myOptions' class='col-sm-8' style='border: 1px solid black'></div>";
-  	  htmlString += "<div id='opOptions' class='col-sm-4 well'></div>";
+	  htmlString += "<div id='myOptions' class='col-sm-12' style='border: 1px solid black'></div>";
+  	  htmlString += "<div id='opOptions' style='display:none'></div>";
   	  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left;'></td><td></td><td></td><td id='otherPayoff'  style='text-align:right;'></td></tr></table></div>";
   	  htmlString += "<div id='nextRound' style='text-align: center;'><button class='button' id='nextButton'>Submit</button></div>";
   	  htmlString += "<div style='border: 1px #bce8f1 solid; display: none; font-size: 18px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress' style='display:none'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";

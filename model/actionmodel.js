@@ -62,7 +62,6 @@ recommendertype2: move.recommendertype2
 }
 
 moveSchema.statics.getMovesFromHiitNumber = function(hiitInfo, callback) {
-    console.log("hiitInfo moves is " + hiitInfo);
     //needing
    this.find({ $and : [
     {gameid : hiitInfo.gameid},

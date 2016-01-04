@@ -14,3 +14,10 @@ gameProperties.gameTypes  =    [ //'normal'];
 ];
 
 module.exports = gameProperties;
+
+// Make the values bolder
+// Sync the actions with its row
+// Remove the click to accept
+// Circle the display on the main page
+
+// Increase the size of the display page

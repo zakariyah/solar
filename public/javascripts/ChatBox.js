@@ -188,7 +188,7 @@ var AgentStateSettings = function()
 	{
 		var options = ['A', 'B'];
 		var recommendation = agentState.recommendation;
-		recommendation.push('<button id="acceptRecommendation'+ round +'" >Click to accept</button>');
+		// recommendation.push('<button id="acceptRecommendation'+ round +'" >Click to accept</button>');
 		return recommendation; 
 	}
 
@@ -338,7 +338,7 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		{
 			
 			acceptRecommendationButton = document.getElementById('acceptRecommendation' + roundNumber);
-			acceptRecommendationButton.onclick = acceptRecommendationButtonOnClick();
+// 			acceptRecommendationButton.onclick = acceptRecommendationButtonOnClick();
 		}
 	}
 
