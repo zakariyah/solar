@@ -13,7 +13,7 @@ var AgentStateInfos = function()
 		targetForOpponent = states[6];
 	}
 
-	this.getStatesText = function(states, recommendation)
+	this.getStatesText = function(states, recommendation, lineNumber)
 	{
 		
 		if(!states)
@@ -21,7 +21,7 @@ var AgentStateInfos = function()
 			return '';
 		}
 		this.setStates(states);
-		var stateText = ' ' ; //<p>';
+		var stateText = 'Line ' + lineNumber + ': ' ; //<p>';
 		if(distinctExpertWasChosen)
 		{
 			stateText += 'A distinct expert has been chosen. ';
@@ -90,7 +90,7 @@ var Testing = function()
 		var agentVariables = recObject.agentVariables;
 		var agentChoice = recObject.agentChoice;
 		
-		var title = getRecommendationStateText(agentVariables, agentChoice);
+		var title = getRecommendationStateText(agentVariables, agentChoice, lineNumber);
 		
 		// title = 'here this';
 		var html = '<tr data-toggle="tooltip" title="' + title + '">';
@@ -120,9 +120,9 @@ var Testing = function()
 		return html;
 	}
 
-	var getRecommendationStateText = function(agentVariables, recommendation)
+	var getRecommendationStateText = function(agentVariables, recommendation, lineNumber)
 	{
-		return (new AgentStateInfos()).getStatesText(agentVariables, recommendation);
+		return (new AgentStateInfos()).getStatesText(agentVariables, recommendation, lineNumber);
 	}
 
 	var getHtmlFromContent = function(content)
