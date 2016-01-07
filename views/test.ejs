@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="/javascripts/jquery-1.11.3.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script> 
+  </head>
+  <body>
+    <script src="/socket.io/socket.io.js"></script>
+    <div class='container'>
+      <div class='row'>
+        <div class='col-offset-lg-1 col-lg-10'>
+              <div class="panel panel-default">
+              <div class="panel-heading">Choose an agent</div>
+              <div class="panel-body">
+                
+                <div class="form-group">
+                <label for="exampleInputEmail1">Second Agent</label>
+                <select name='secondAgent'  class='form-control' id='secondAgent'>
+                  <option value='TFT'>Tit for Tat</option>
+                  <option value='AD'> Always Defect</option>
+                  <option value='AC'>Always Cooperate</option>
+                  <option value='TF2T'>Tit for two tats</option>
+                  <option value='Random'>Random</option>
+                </select>
+                </div>
+              <div class="form-group">
+                  <label for="exampleInputEmail1">Probability of adherence to Recommendation</label>
+                  <input type="text" class="form-control" id="probability" placeholder="0 to 1">
+              </div>
+              <div class="form-group">
+                  <button class="form-control" id="playGame">Play Game</button>
+              </div>
+            
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class='row' id='showGame'></div>
+
+    </div>
+    <script src="/javascripts/testing.js"></script>
+  </body>
+</html>

@@ -24,8 +24,8 @@ player1 = new player(12, soc, false, 1, 656576);
 player1.setHasRecommender(false);
 
 
-var testRecommend = new testRecommend(player1, randA, TFTagent, 200);
-testRecommend.playGame();
+var testRecommend = new testRecommend(TFTagent, 200, 0.7);
+console.log(testRecommend.playGame());
 
 
 // var previousMove = 1;

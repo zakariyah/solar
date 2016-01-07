@@ -30,6 +30,9 @@ router.get('/information', function(req, res) {
   	res.render('information', { title: 'Entry', playerIsPresent : ''});
 });
 
+router.get('/testing', function(req, res) {
+  	res.render('test', { title: 'Test', playerIsPresent : ''});
+});
 
 router.post('/postquizsurvey', function(req, res) {
 	req.body.playerid = req.session.hiitNumber;

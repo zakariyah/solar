@@ -11,6 +11,17 @@ var SessionSockets = require('session.socket.io');
 var gameController = require('../controller/gameController');
 var gameplayer = require('../controller/gameplayer');
 var gameProperties = require('../controller/gameProperties');
+
+// for testing
+var TFT = require('../tester/TFT');
+var TF2T = require('../tester/TF2T');
+var AC = require('../tester/AlwaysCooperate');
+var AD = require('../tester/AlwaysDefect');
+var randAgent = require('../tester/randAgent');
+var playgames = require('../tester/playgames');
+var testRecommend = require('../tester/testRecommend');
+// end testing
+
 var playerHiitNumberMap = {};
 
 app.set('port', process.env.PORT || 4000);
@@ -455,6 +466,44 @@ socket.on('chatHistory', function(historyOfChats) {
 			playerWithHistory.saveHistory(historyOfChats);
 		}
 	});
+	
+
+
+	function getAgent(agentString)
+	{
+		if(agentString == 'TFT')
+		{
+			return new TFT();
+		}
+		else if(agentString === 'AD')
+		{
+			return new AD();
+		}
+		else if(agentString === 'AC')
+		{
+			return new AC();
+		}
+		else if(agentString === 'TF2T')
+		{
+			return new TF2T();
+		}
+		else if(agentString === 'Random')
+		{
+			return new randAgent();
+		}
+	}
+
+	socket.on('playGame', function(agentAndProb) {
+	
+		var secondAgent = agentAndProb[0];
+		var prob = agentAndProb[1];
+		var agent2 = getAgent(secondAgent);
+		var test = new testRecommend(agent2, 56, prob);
+		var result = test.playGame();
+		socket.emit('showGame', result);
+		
+	});
+
 
 
 });
