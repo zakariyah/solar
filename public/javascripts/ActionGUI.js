@@ -253,7 +253,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 10;
+	var totalWaitingTime = 2;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{
@@ -333,7 +333,7 @@ var GameManager = function(socket, gameManagerEndFunctionFromMain, endGameFuncti
 
 var ResultTimer = function(socket, resultTimeEndFunction)
 {
-	var totalResultTime = 3;
+	var totalResultTime = 10;
 	var intervalResult = 1000;
 	
 	var resultTimePeriodicFunction = function(count, mainCount)
