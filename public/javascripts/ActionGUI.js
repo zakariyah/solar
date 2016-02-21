@@ -333,7 +333,7 @@ var GameManager = function(socket, gameManagerEndFunctionFromMain, endGameFuncti
 
 var ResultTimer = function(socket, resultTimeEndFunction)
 {
-	var totalResultTime = 10;
+	var totalResultTime = 5;
 	var intervalResult = 1000;
 	
 	var resultTimePeriodicFunction = function(count, mainCount)
