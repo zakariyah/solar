@@ -50,7 +50,6 @@ var AgentStateInfos = function()
 	}
 }
 
-
 var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 {
 	var options = ['A', 'B'];
