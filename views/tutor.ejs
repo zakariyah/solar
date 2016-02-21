@@ -5,7 +5,7 @@
         
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
-
+    <link rel='stylesheet' href='/stylesheets/actionPhase.css' />
     <script type="text/javascript">
     var validateAnswers = function()
     { 
@@ -44,13 +44,29 @@
 <div id="PaginationPageId" class='row'>
   <div id='imageRectId' class='row'>
     <div id='page1'>
-      You are to play a game of Prisoner's Dilemma with another player for an unknown number of rounds. You will be presented with an agent to recommend actions for you. You can chat with the agent and ask some questions. Please use the comment box (on the bottom-left corner of the game page) to give your comments on the game. 
-      Below is the payoff matrix for the game.
+<div class='col-md-offset-2 col-md-8 panel panel-default'>
+  <div class="panel-heading" id='timerStart'> <b><span id='roundNumber' style='text-align:left'></span> </br><span id='timerBegin' style='text-align:right'>Time Remaining</span></b></div>
+  <div class='panel-body' id='actionAndReview'>
+  <div class='row'>
+    <table class='phasetable' style="width:100%">
+      <tr><td class='indicateactivephase' id='actionTag'>Action</td><td class='phasearrow'>&#8594;</td><td class='phasearrow' id='reviewTag'>Review</td></tr>
+    </table>
+  </div>
 
-      <table class="table table-bordered"><caption> Game Payoff Matrix </caption><tr><th class="tableheader" rowspan="4" colspan="1" style="text-align:center;"><br><br>Your <br> Action</th><th rowspan="1" colspan="3">Opponent Action</th></tr><tr><td></td><td>A</td><td>B</td></tr><tr><td >A</th><td><span style="color: #009"><i>3</i></span>, <span style="color: #900"><i>3</i></span></td><td><span style="color: #009"><i>-2</i></span>, <span style="color: #900"><i>5</i></span></td></tr><tr><td>B</td><td><span style="color: #009"><i>5</i></span>, <span style="color: #900"><i>-2</i></span></td><td><span style="color: #009"><i>0</i></span>, <span style="color: #900"><i>0</i></span></td></tr></table>
-
-       <div class="alert alert-info"> Your points are in blue</div>
-    
+  <div class='row'>
+  </div>
+  
+  <div class='row'>
+    <table class='phasetable' style="width:100%">
+      <tr><td rowspan='2' colspan='4'></td><td colspan='8' rowspan='1' class='tableinformation tdContentCenter'>Your Action</td></tr>
+      <tr><td rowspan='1' colspan='4' class='tableinformation tdContentCenter'><button  style='width:100%' id='yourAction1'>A</button></td><td colspan='4' class='tableinformation tdContentCenter'><button  style='width:100%' id='yourAction2'>B</button></td></tr>
+      <tr><td rowspan='2' colspan='3' class='tableinformation tdContentCenter'>Their Action</td><td class='tableinformation tdContentCenter' id='opponentAction1'>A</td><td colspan='4' class='tableinformation tdContentRight' id='result1'>You get 3 </br> They get 3</td><td colspan='4' class='tableinformation tdContentRight' id='result2'>You get 5</br> They get -2</td></tr>
+      <tr><td colspan='1' class='tableinformation tdContentCenter' id='opponentAction2'>B</td><td colspan='4' class='tableinformation tdContentRight' id='result3'>You get -2</br> They get 5</td><td colspan='4' class='tableinformation tdContentRight' id='result4'>You get 0</br> They get 0</td></tr>
+      <tr><td colspan='8' class='tableinformation tdContentRight'>Cummulative Score</td><td class='tableinformation tdContentCenter' id='score'>0.0</td></tr>
+    </table>
+  </div> 
+  <div class='row' style='text-align: center;'> <button  id='nextButton' style='width:40%;height:40px'><b>NEXT</b></button></div> 
+</div></div>    
   <form class='form' method='post' action='./entry' id='submissionForm' onSubmit="return validateAnswers();">
                   <div class="form-group text-center">
                  <label>1.  How much do you get if you choose action A but the other player  chooses action B</label>

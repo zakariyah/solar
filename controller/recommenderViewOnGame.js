@@ -91,12 +91,16 @@ var RecommenderViewOnGame = function(agent)
 			htmlReason.push('The other player is a great bully');
 			htmlReason.push('He is likely to continue to defect');
 		}
-		else if(isGuilty)
-		{	
-			htmlReason.push('The other player is guilty and should be dealt with.');
-			htmlReason.push('We can thus coerce him into being more cooperative');
+		else 
+		{
+			if(isGuilty)
+			{	
+				htmlReason.push('The other player is guilty and should be dealt with.');
+				htmlReason.push('We can thus coerce him into being more cooperative');
+			}
 		}
-		else if(typeOfExpert == 'leader')
+		
+		if(typeOfExpert == 'leader')
 		{
 			htmlReason.push('The plan is to make you get an average of ' + (aspiration * 5).toFixed(2) + ' for each round on the long run.');
 			htmlReason.push('If the other player profits by veering away from the plan, he will be punished');

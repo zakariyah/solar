@@ -15,7 +15,7 @@ var entryVerifier = function(req, res, playerPresent, playerAbsent, hiit)
 			throw err;
 		if(result != null)
 		{
-			if(result.length == 0)
+			if(true) // result.length == 0)
 			{
 				req.session.hiitNumber = playerId;
 				// console.log('hiitNumber1: ' + playerId);

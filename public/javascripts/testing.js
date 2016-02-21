@@ -92,12 +92,13 @@ var Testing = function()
 		
 		var title = getRecommendationStateText(agentVariables, agentChoice, lineNumber);
 		
+		var options = ['A', 'B'];
 		// title = 'here this';
 		var html = '<tr data-toggle="tooltip" title="' + title + '">';
 		html += '<td>' + lineNumber + '</td>';
-		html += '<td>' + line[4] + '</td>';
-		html += '<td>' + line[0] + '</td>';
-		html += '<td>' + line[1] + '</td>';
+		html += '<td>' + options[line[4]] + '</td>';
+		html += '<td>' + options[line[0]] + '</td>';
+		html += '<td>' + options[line[1]] + '</td>';
 		// html += '<td>' + line[2] + '</td>';
 		// html += '<td>' + line[3] + '</td>';
 		

@@ -1,0 +1,52 @@
+td.tableinformation {
+	font-family: Verdana, Arial, Helvetica;
+	font-weight: bold;
+	border: 3px solid #000000;
+	margin: 3px;
+	padding: 3px;
+	font-size: 10pt;
+}
+
+.tdContentRight
+{
+	text-align:right;
+
+}
+
+.tdContentCenter
+{
+	text-align:center;
+	vertical-align:middle;
+
+}
+
+.phasearrow {
+	font-family: Verdana, Arial, Helvetica;
+	font-weight: bold;
+	background-color: #CCCCCC;
+	border: 3px solid #CCCCCC;
+	margin: 0px;
+	padding: 0px;
+	font-size: 10pt;
+	font-weight: bold;
+	text-align: center;
+	color: #000000;
+}
+
+table.phasetable {
+	border-collapse: separate; /* Or do nothing, this is default */
+  	border-spacing: 3px; /* Only works if border-collapse is separate */	
+	width: 100%;
+}
+
+.indicateactivephase {
+	font-family: Verdana, Arial, Helvetica;
+	background-color: #009900;
+	border: 3px solid #009900;
+	margin: 0px;
+	padding: 0px;
+	font-size: 10pt;
+	font-weight: bold;
+	text-align: center;
+	color: #FFFFFF;
+}

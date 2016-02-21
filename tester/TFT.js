@@ -27,7 +27,7 @@ var TFT = function()
 	this.update = function(acts)
 	{
 		// console.log("was called");
-		this.opponentMoves.push(acts[1]);
+		thise.opponentMoves.push(acts[1]);
 	}
 
 }

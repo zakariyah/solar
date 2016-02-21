@@ -2,41 +2,43 @@
   <head>
   <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1'>
   <title><%= numbero %> Choose Your Action</title>
-
+    
     <link rel='stylesheet' href='../public/stylesheets/bootstrap.min.css' />
-    <link rel='stylesheet' href='../public/stylesheets/style.css' />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
       <script src="../public/javascripts/bootstrap.min.js"></script>
-
+      <link rel='stylesheet' href='../public/stylesheets/actionPhase.css' />
 
   </head>
   <body>
-    <nav role="navigation">
-    <ul class="nav nav-tabs" role="tablist">
-    <li role="presentation" class="active"><a href="#home" aria-controls="home" role="tab" data-toggle="tab">Home</a></li>
-    <li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">Profile</a></li>
-    <li role="presentation"><a href="#messages" aria-controls="messages" role="tab" data-toggle="tab">Messages</a></li>
-    <li role="presentation"><a href="#settings" aria-controls="settings" role="tab" data-toggle="tab">Settings</a></li>
-
-    <li role="presentation"><a href="#gameHistory" aria-controls="gameHistory" role="tab" data-toggle="tab">gameHistory</a></li>
-    <li role="presentation"><a href="#chatBoxContainer" aria-controls="chatBoxContainer" role="tab" data-toggle="tab">chatBoxContainer</a></li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="home">.home..</div>
-    <div role="tabpanel" class="tab-pane" id="profile"  style="display:none">..pro.</div>
-    <div role="tabpanel" class="tab-pane" id="messages">...</div>
-    <div role="tabpanel" class="tab-pane" id="settings">...</div>
-    <div role="tabpanel" class='tab-pane panel panelChat panel-primary' id='gameHistory'>
-      jfjf hist
-    </div>
-    <div role="tabpanel" class='tab-pane panel panelChat panel-primary' id='chatBoxContainer' style='display:none'> chat box</div>
-  </div>
 
 
-</nav>
+<div class='container'>
+  <div class='col-md-offset-2 col-md-8'>
+<div class='row'>
+<span class='pull-right'>Time Remaining</span>
+</div>
+<div class='row'>
+<table class='phasetable' style="width:100%">
+  <tr><td class='indicateactivephase'>Action</td><td class='phasearrow'>&#8594;</td><td class='phasearrow'>Review</td></tr>
+</table>
+</div>
+<div class='row'>
+</div>
+<div class='row'>
+<span> Review of this past round</span>
+<table class='phasetable' style="width:100%">
+<tr><td rowspan='2' colspan='4'></td><td colspan='8' rowspan='1' class='tableinformation tdContentCenter'>Your Action</td></tr>
+<tr><td rowspan='1' colspan='4' class='tableinformation tdContentCenter'>A</td><td colspan='4' class='tableinformation tdContentCenter'>B</td></tr>
+<tr><td rowspan='2' colspan='3' class='tableinformation tdContentCenter'>Their Action</td><td class='tableinformation tdContentCenter'>A</td><td colspan='4' class='tableinformation tdContentRight'>You get </br> I get</td><td colspan='4' class='tableinformation tdContentRight'>They get </br> I get</td></tr>
+<tr><td colspan='1' class='tableinformation tdContentCenter'>B</td><td colspan='4' class='tableinformation tdContentRight'>You get1 </br> I get1</td><td colspan='4' class='tableinformation tdContentRight'>They get1 </br> I get1</td></tr>
 
+<tr><td colspan='8' class='tableinformation tdContentRight'>Accumulated Score</td><td class='tableinformation tdContentCenter'>3.0</td></tr>
+</table>
+</div>
 
+<div class='row' style='text-align: center;'> <button  style='width:40%'>NEXT</button></div>
+
+</div>
+</div>
 </body>
 </html>

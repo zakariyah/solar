@@ -76,7 +76,7 @@ ionew.sockets.on('connection', function (socket) {
 					firstPlayerJustEntered = true;
 					sendMessageAndStart();
 				}
-					else
+				else
 				{
 					firstPlayerJustEntered = false;
 				}
@@ -313,12 +313,16 @@ ionew.sockets.on('connection', function (socket) {
 			// to update the recommender
 			var soc1 = roomObject.player1;
 			var soc2 = roomObject.player2;
-			soc1.updateRecommender(store.answererSet[soc1.id].chosenAnswer, store.answererSet[soc2.id].chosenAnswer);
+			var soc1Answer = store.answererSet[soc1.id].chosenAnswer;
+			var soc2Answer = store.answererSet[soc2.id].chosenAnswer
+			// how do I know I am first and agent is second
+			soc1.updateRecommender(soc1Answer, soc2Answer);
 			// end of to be removed
 
 			var recc = gameControllerArray[presentSocketGameCounter].gamePlayers[socket.id].getRecommendation();
 			var cummScore = store.players[socket.id].getCummulativeValue();
-			var agentState = roomObject.player2.getAgentVariables();
+			var agentState = roomObject.player1.getRecommenderVariables();
+			// console.log('agent state is ' + JSON.stringify(agentState));
 			var message = {count : store.round, text : store.players[socket.id].printResults(), recommendation : recc, rounds : roomObject.getGameRounds(), cumm: cummScore, agentState: agentState};
 			
 			

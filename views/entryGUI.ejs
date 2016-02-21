@@ -1,0 +1,86 @@
+<html>
+  <head>
+  <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+  <title> Choose Your Action</title>
+    <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
+    <link rel='stylesheet' href='/stylesheets/actionPhase.css' />
+    <script src='/javascripts/postquiz.js'></script>
+    <script src="/javascripts/jquery-1.11.3.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>    
+  </head>
+  <body onunload="">
+     <script src="/socket.io/socket.io.js"></script>
+    <p style="display:none" id="hiitNumber"><%= hiitNumber %></p>
+<script type="text/javascript">
+// alert('called1');
+window.onbeforeunload = function() {
+        return "Please do not leave this page except through the 'Go to payment' button. \n If not, you will be disqualified and will not be paid";
+    }
+</script>
+<div class='container' id='fullPage'>
+<div class='row' style='height:100px'>
+</div>
+  
+<div class='col-md-offset-2 col-md-8 panel panel-default'>
+  <div class="panel-heading" id='timerStart'> <b><span id='roundNumber' style='text-align:left'></span> </br><span id='timerBegin' style='text-align:right'>Time Remaining</span></b></div>
+  <div class='panel-body' id='actionAndReview' style='display:none'>
+  <div class='row'>
+    <table class='phasetable' style="width:100%">
+      <tr><td class='indicateactivephase' id='actionTag'>Action</td><td class='phasearrow'>&#8594;</td><td class='phasearrow' id='reviewTag'>Review</td></tr>
+    </table>
+  </div>
+
+  <div class='row'>
+  </div>
+  
+  <div class='row'>
+    <table class='phasetable' style="width:100%">
+      <tr><td rowspan='2' colspan='4'></td><td colspan='8' rowspan='1' class='tableinformation tdContentCenter'>Your Action</td></tr>
+      <tr><td rowspan='1' colspan='4' class='tableinformation tdContentCenter'><button  style='width:100%' id='yourAction1'>A</button></td><td colspan='4' class='tableinformation tdContentCenter'><button  style='width:100%' id='yourAction2'>B</button></td></tr>
+      <tr><td rowspan='2' colspan='3' class='tableinformation tdContentCenter'>Their Action</td><td class='tableinformation tdContentCenter' id='opponentAction1'>A</td><td colspan='4' class='tableinformation tdContentRight' id='result1'>You get 3 </br> They get 3</td><td colspan='4' class='tableinformation tdContentRight' id='result2'>You get 5</br> They get -2</td></tr>
+      <tr><td colspan='1' class='tableinformation tdContentCenter' id='opponentAction2'>B</td><td colspan='4' class='tableinformation tdContentRight' id='result3'>You get -2</br> They get 5</td><td colspan='4' class='tableinformation tdContentRight' id='result4'>You get 0</br> They get 0</td></tr>
+      <tr><td colspan='8' class='tableinformation tdContentRight'>Cummulative Score</td><td class='tableinformation tdContentCenter' id='score'>0.0</td></tr>
+    </table>
+  </div> 
+  <div class='row' style='text-align: center;'> <button  id='nextButton' style='width:40%;height:40px'><b>NEXT</b></button></div> 
+</div></div>
+
+</div>
+<script src="/javascripts/ActionGUI.js"></script>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body" id="myModalBody">
+        These are the boys there.
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="agitationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="agitationModalLabel">Please make a choice</h4>
+      </div>
+      <div class="modal-body" id="agitationModalBody">
+        
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  </body>
+</html>
