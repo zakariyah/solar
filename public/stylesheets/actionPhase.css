@@ -1,10 +1,14 @@
 td.tableinformation {
 	font-family: Verdana, Arial, Helvetica;
 	font-weight: bold;
-	border: 3px solid #000000;
 	margin: 3px;
 	padding: 3px;
 	font-size: 10pt;
+}
+
+td.borderedTable {
+	border: 3px solid #000000;
+
 }
 
 .tdContentRight
@@ -20,6 +24,23 @@ td.tableinformation {
 
 }
 
+.myColor
+{
+	color: #206fc5;
+}
+
+.associateColor
+{
+	color: #e48f0f;
+}
+
+/*008000*/
+.appColor
+{
+	color: #e48f0f;
+}
+
+
 .phasearrow {
 	font-family: Verdana, Arial, Helvetica;
 	font-weight: bold;
@@ -34,9 +55,12 @@ td.tableinformation {
 }
 
 table.phasetable {
-	border-collapse: separate; /* Or do nothing, this is default */
-  	border-spacing: 3px; /* Only works if border-collapse is separate */	
-	width: 100%;
+	/*border-collapse: separate;  Or do nothing, this is default 
+  	border-spacing: 3px;  Only works if border-collapse is separate */	
+  	width: 50%;
+	margin-left:auto; 
+    margin-right:auto;
+	border: 3px solid #000000;
 }
 
 .indicateactivephase {

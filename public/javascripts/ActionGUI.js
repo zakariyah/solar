@@ -1,21 +1,28 @@
-var OptionButton = function(htmlId1, htmlId2)
+var OptionButton = function(htmlId1, htmlId2, nextRound)
 {	
 	var clickedColor = '#00FF00';
 	var unClickedColor = '#FFFFFF';
 	var but = [document.getElementById(htmlId1), document.getElementById(htmlId2)];
 	var isClicked = [false, false];
-	
+	var nextRoundFunction = nextRound;
+	// alert( '1' + JSON.stringify(nextRound));
+
 	var butClick = function(butNumber)
 	{
 		return function()
 		{
-			isClicked[butNumber -1] = !isClicked[butNumber -1];
-			var col = isClicked[butNumber -1] ? clickedColor : unClickedColor;
-			but[butNumber-1].style.backgroundColor = col;
+			// alert('called');
+			isClicked[butNumber -1] = true;
+			// but[butNumber-1].style.backgroundColor = clickedColor;
+			// console.log(JSON.stringify(nextRoundFunction));
+			nextRoundFunction(false);
+			// isClicked[butNumber -1] = !isClicked[butNumber -1];
+			// var col = isClicked[butNumber -1] ? clickedColor : unClickedColor;
+			// but[butNumber-1].style.backgroundColor = col;
 
 			// change second to false
-			but[(butNumber) % 2].style.backgroundColor = unClickedColor;
-			isClicked[butNumber %2] = false
+			// but[(butNumber) % 2].style.backgroundColor = unClickedColor;
+			// isClicked[butNumber %2] = false
 		}
 	}
 
@@ -28,8 +35,8 @@ var OptionButton = function(htmlId1, htmlId2)
 	{
 		but[0].disabled = false;
 		but[1].disabled = false;
-		but[0].style.backgroundColor = '#FFFFFF';
-		but[1].style.backgroundColor = '#FFFFFF';
+		// but[0].style.backgroundColor = '#FFFFFF';
+		// but[1].style.backgroundColor = '#FFFFFF';
 		isClicked = [false, false];
 	}
 
@@ -50,9 +57,10 @@ var OptionButton = function(htmlId1, htmlId2)
 	}
 }
 
-var Options = function()
+var Options = function(nextRoundFunction)
 {
-	var actionButtons = new OptionButton('yourAction1', 'yourAction2');
+	var actionButtons = new OptionButton('yourAction1', 'yourAction2', nextRoundFunction);
+	// alert( '2' + JSON.stringify(nextRoundFunction));
 	var tags = [document.getElementById('reviewTag'), document.getElementById('actionTag')];	
 
 	var opponentAction = [document.getElementById('opponentAction1'), document.getElementById('opponentAction2')];
@@ -68,7 +76,18 @@ var Options = function()
 
 	this.changeBackground = function(opponentChoice)
 	{
-		opponentAction[opponentChoice - 1].style.backgroundColor = '#00FF00';
+		// opponentAction[opponentChoice - 1].style.backgroundColor = '#00FF00';
+	}
+
+	this.showLastChoice = function(myChoice, opponentChoice)
+	{
+		var ind = 2 * (myChoice - 1) + opponentChoice;
+		results[ind - 1].style.backgroundColor = '#FFFF00';	
+	}
+
+	this.getActionButtons = function()
+	{
+		return actionButtons;
 	}
 
 	this.getSelection = function()
@@ -103,9 +122,9 @@ var Options = function()
 		{
 			results[i].style.backgroundColor =  '#FFFFFF';
 		}
-		opponentAction[0].style.backgroundColor =  '#FFFFFF';
-		opponentAction[1].style.backgroundColor =  '#FFFFFF';
-		this.showTag(1);
+		// opponentAction[0].style.backgroundColor =  '#FFFFFF';
+		// opponentAction[1].style.backgroundColor =  '#FFFFFF';
+		// this.showTag(1);
 	}
 
 }
@@ -122,6 +141,7 @@ var ShowAlert = function(header, body)
 
 var CanvasContainer = function(socket)
 {	
+	var that2 = this;
 	var myOptions;
 	var submitButton;
 	var gameManager;
@@ -135,6 +155,7 @@ var CanvasContainer = function(socket)
 		{
 			// alert('eas ewefrgfr');
 			var optionSelected = myOptions.getSelection();
+			// alert('selected ' + optionSelected);
 			if(optionSelected == 0)
 			{
 				if(!forceSubmission)
@@ -149,17 +170,27 @@ var CanvasContainer = function(socket)
 		  that.makeSelectionImpossible();
 		  // that.getGameTimer().stopTimer();
 		  that.getGameManager().stopTimer();
-		  myOptions.showTag(0);
+		  // myOptions.showTag(0);
 		  that.setSubmitButtonVisible(false);
 		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : 0});
-		 
+		  $.blockUI({ message: '<h1><img src="/images/ajax-loader.gif" /> <p> Moving to next round. Please wait.... </h1>' });
 		}
 	}
 
 	this.startGame = function()
 	{
-		document.getElementById('nextButton').onclick = this.nextRound(false);
-		myOptions = new Options();
+		// document.getElementById('nextButton').onclick = this.nextRound(false);
+		var that = this;
+		// alert( '3' + this.nextRound());
+		myOptions = new Options(this.nextRound());
+		// alert('here');
+		// var but = myOptions.getActionButtons();
+		// alert(but);
+		// for(var i = 0; i < but.length; i++)
+		// {
+		// 	alert('here' + i);
+		// 	but[i].onclick = butClick(i+1, this.nextRound);
+		// }
 	}
 
 	this.showPlayerAndOpponentChoice = function(playerChoice, opponentChoice, roundScore)
@@ -184,10 +215,11 @@ var CanvasContainer = function(socket)
 		myOptions.setSelection(selection);
 	}
 
-	this.resetAll = function()
+	this.resetAll = function(myChoice, opponentChoice)
 	{
 		myOptions.makeSelection(false);
 		myOptions.clearSelection();
+		myOptions.showLastChoice(myChoice, opponentChoice);
 		// myOptions.returnColorToDefault();
 	}
 
@@ -257,7 +289,7 @@ var WaitingTimeElapsed = function(socket)
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{
-		document.getElementById('timerBegin').innerHTML = count + " secs remaining";
+		document.getElementById('timerBegin').innerHTML = count + " second" + ((count > 1) ? "s" : "") + " remaining";
 	}
 
 	var waitingTimeEndFunction = function()
@@ -376,16 +408,16 @@ var PrisonersDilemma = function()
 
 	
 
-	var resultTimeEndFunction = function()
-	{
+	// var resultTimeEndFunction = function()
+	// {
 		
-		myCanvasContainer.setSubmitButtonVisible(true);
-		myCanvasContainer.resetAll();		
-		document.getElementById('roundNumber').style.display = 'inline';
-	}
+	// 	myCanvasContainer.setSubmitButtonVisible(true);
+	// 	myCanvasContainer.resetAll();		
+	// 	document.getElementById('roundNumber').style.display = 'inline';
+	// }
 
 
-	var resultTimer = new ResultTimer(socket, resultTimeEndFunction);
+	// var resultTimer = new ResultTimer(socket, resultTimeEndFunction);
 
 
 	// // create the game manager functions
@@ -432,10 +464,12 @@ var PrisonersDilemma = function()
         htmlString += "<div class=\"panel panel-default \"><div class=\"panel-heading\"> Please fill in the survey below</div><div class=\"panel-body\">";
         var playerHadRecommender = false;
         htmlString += postQuizQuestions(playerHadRecommender, cummulative, numberOfRounds);
-
+        htmlString += "<div class='panel-footer'><button id='pagenext' >Next</button><button id='pagesubmit' style='display:none'>Submit</button></div>";
         htmlString += "</div></div>";
         var actionsElement = document.getElementById('fullPage');
         actionsElement.innerHTML = htmlString;
+        var toCheckForNext = [['accessSkills', 'enjoy', 'familiarity', 'risk'], ['cooperative', 'forgiving', 'vengeful', 'selfish', 'predictable', 'cooperative1', 'forgiving1', 'vengeful1', 'selfish1', 'predictable1'], []];
+        new Quiz('page', 3, false, false, toCheckForNext);
 	}
 
 	var serverMessage = function(content)
@@ -459,7 +493,7 @@ var PrisonersDilemma = function()
 		    // setAgentState(content.agentState);
 			// showPlayerChoicesForGivenTime(reco);
 			// document.getElementById('recommender').innerHTML = '';
-			resultTimer.startTimer();
+			// resultTimer.startTimer();
 			// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
 			// document.getElementById('agentState').innerHTML = agentStates;
 			document.getElementById('roundNumber').style.display = 'inline';
@@ -468,13 +502,18 @@ var PrisonersDilemma = function()
 			// document.getElementById('questionAndFeedback').style.visibility = 'hidden';
 			// gameHistory.setHistoryDivHtml();
 			// setAgentVariables(content);
+			myCanvasContainer.resetAll(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);		
+			document.getElementById('roundNumber').style.display = 'inline';
+			// setTimeout($.unblockUI, 1000); 
+			$.unblockUI(); 
 		}
 		else
 		{
 			// gameHistory.clearPanel();
       		var cummulative = content.cumm;
       		var numberOfRounds = content.rounds;
-      		endGame(cummulative, numberOfRounds)
+      		endGame(cummulative, numberOfRounds);
+      		setTimeout($.unblockUI, 1000);
 		}
 	}
 

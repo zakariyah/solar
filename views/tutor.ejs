@@ -2,35 +2,42 @@
 <html>
   <head>
     <title><%= title %></title>
-        
+            
     <link rel='stylesheet' href='/stylesheets/style.css' />
     <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
     <link rel='stylesheet' href='/stylesheets/actionPhase.css' />
     <script type="text/javascript">
-    var validateAnswers = function()
-    { 
-            var correct = true;
-            var correctAnswers = [-2, 0]
-            for(var i = 0; i < 2; i++)
-            {
-              var value = -1;
-              var radios = document.getElementsByName((i + 1) + "");
-              for (var j = 0; j < radios.length; j++) {
-                  if (radios[j].checked) {
-                  // get value, set checked flag or do whatever you need to
-                  value = radios[j].value;       
-                  }
-              }
-              if(value != correctAnswers[i])
-              {
-                  alert("Some of the answers are incorrect. Please read the tutorial properly and answer the questions");
-                  return false;
-              }
+        var validateAnswers = function()
+            { 
+                    if(!(document.getElementById('confirmation').checked))
+                    {
+                      alert('Please check the confirmation box on page 1');
+                      return false;
+                    }
+                    var correct = true;
+                    var correctAnswers = [-2, 0]
+                    for(var i = 0; i < 2; i++)
+                    {
+                      var value = -1;
+                      var radios = document.getElementsByName((i + 1) + "");
+                      for (var j = 0; j < radios.length; j++) {
+                          if (radios[j].checked) {
+                          // get value, set checked flag or do whatever you need to
+                          value = radios[j].value;       
+                          }
+                      }
+                      if(value != correctAnswers[i])
+                      {
+                          alert("Some of the answers are incorrect. Please read the tutorial properly and answer the questions");
+                          return false;
+                      }
+                    }
+                  return true;    
             }
-          return true;    
-    }
-
     </script>
+
+
+
   </head>
 
   <body>
@@ -39,82 +46,133 @@
 <div id="container" class='container-fluid'>
   <div class='col-sm-2'>
   </div>
-  <div class='col-sm-8'>
+  <div class='col-sm-8'>  
+  <div class='row'>
+    <div class="panel panel-default">
+      <div class="panel-heading">Tutorial</div>
+      <div class="panel-body" >
+        <div id='page1' style='display:block'>
+          <p>Thank you for deciding to participate in the experiment.
+          We are a research team at Masdar Institute and Massachusetts Institute of Technology (MIT), and we seek your participation in furthering our understanding of human behavior in games.
+          <p>You can make a reasonable amount of money from this game depending on the decisions you make. You are therefore advised to read the following instructions carefully in order to make informed decisions throughout the course of the game. Your participation in this game will take approximately 30 minutes.
+          <p>For your participation, you will be compensated with the task's standard reward of 0.5USD, as well as a significant bonus that depends on your performance in the experiment. These will be paid out at the end of the game, provided you follow all instructions, and play the game till the end.
+          <p>You will complete 2 stages before starting the game itself. In the first stage, you will be provided with a walkthrough of the game via screenshots of the actual game interface along with the instructions for the game. In the second stage, you will be asked 2 comprehension questions to test your understanding of the game.
+          <p>After passing the comprehension test, you will immediately be matched with a BOT who will be your associate throughout the course of the game (or you will be placed in a waiting room. The game will start as soon as another crowdFlower worker joins the game, at which point a beep will alert you. If this does not happen within 300 seconds (there will be a timer counting down), you have the option of leaving with just the task's standard reward or you may continue waiting if you wish).
+          <p>Please confirm that you are willing to participate in good faith, using the following checkbox. If you are not willing to do so, please return the assignment.
 
-<div id="PaginationPageId" class='row'>
-  <div id='imageRectId' class='row'>
-    <div id='page1'>
-<div class='col-md-offset-2 col-md-8 panel panel-default'>
-  <div class="panel-heading" id='timerStart'> <b><span id='roundNumber' style='text-align:left'></span> </br><span id='timerBegin' style='text-align:right'>Time Remaining</span></b></div>
-  <div class='panel-body' id='actionAndReview'>
-  <div class='row'>
-    <table class='phasetable' style="width:100%">
-      <tr><td class='indicateactivephase' id='actionTag'>Action</td><td class='phasearrow'>&#8594;</td><td class='phasearrow' id='reviewTag'>Review</td></tr>
-    </table>
-  </div>
+           <p style='padding-left:5em'> 
 
-  <div class='row'>
-  </div>
-  
-  <div class='row'>
-    <table class='phasetable' style="width:100%">
-      <tr><td rowspan='2' colspan='4'></td><td colspan='8' rowspan='1' class='tableinformation tdContentCenter'>Your Action</td></tr>
-      <tr><td rowspan='1' colspan='4' class='tableinformation tdContentCenter'><button  style='width:100%' id='yourAction1'>A</button></td><td colspan='4' class='tableinformation tdContentCenter'><button  style='width:100%' id='yourAction2'>B</button></td></tr>
-      <tr><td rowspan='2' colspan='3' class='tableinformation tdContentCenter'>Their Action</td><td class='tableinformation tdContentCenter' id='opponentAction1'>A</td><td colspan='4' class='tableinformation tdContentRight' id='result1'>You get 3 </br> They get 3</td><td colspan='4' class='tableinformation tdContentRight' id='result2'>You get 5</br> They get -2</td></tr>
-      <tr><td colspan='1' class='tableinformation tdContentCenter' id='opponentAction2'>B</td><td colspan='4' class='tableinformation tdContentRight' id='result3'>You get -2</br> They get 5</td><td colspan='4' class='tableinformation tdContentRight' id='result4'>You get 0</br> They get 0</td></tr>
-      <tr><td colspan='8' class='tableinformation tdContentRight'>Cummulative Score</td><td class='tableinformation tdContentCenter' id='score'>0.0</td></tr>
-    </table>
-  </div> 
-  <div class='row' style='text-align: center;'> <button  id='nextButton' style='width:40%;height:40px'><b>NEXT</b></button></div> 
-</div></div>    
-  <form class='form' method='post' action='./entry' id='submissionForm' onSubmit="return validateAnswers();">
-                  <div class="form-group text-center">
-                 <label>1.  How much do you get if you choose action A but the other player  chooses action B</label>
-                 
-                  <label class="radio-inline">
-        <input type="radio" name="1" value="3"> 3
-        </label>
-                <label class="radio-inline">
-            <input type="radio" name="1" value="5"> 5
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="1" value="-2"> -2
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="1" value="0"> 0
-          </label>
+            <input type='checkbox' id='confirmation'> I understand that this game requires my undivided attention for up to 30 minutes, and I am willing to commit said time and attention until the game comes to an end.
+
+
+                            </div>
+                            
+                            <div id='page2' style='display:none'>
+                              <p>Please read the instructions carefully, as you will be quizzed about them, and your earnings depend on your performance too.
+              <p> <h6>YOUR ASSOCIATE</h6>
+          As a participant in this experiment, you will play a simple game with an associate who is a BOT1: an intelligent algorithm (or HUMAN). The game will only be played once, each game consisting of a number of rounds. You are matched with the same BOT (or HUMAN) across all rounds of the game. 
+                          <p> <h6> YOUR CHOICES </h6>
+                          In each round of the game, you and your associate will be individually offered a choice between two actions, A or B. You submit your choice by clicking on the option that represents that choice. In any given round, you will not be able to see the choice of your associate until after you both submit your choices.
+                          <div>
+                          <table class='phasetable'>
+                              <tr><td rowspan='2' colspan='2'></td><td colspan='2' rowspan='1' class='tableinformation tdContentCenter associateColor'>Your Associate</td><td>&nbsp;</td></tr>
+                              <tr><td rowspan='1' colspan='1' class='tableinformation tdContentCenter associateColor' id='opponentAction1'>A</td><td colspan='1' class='tableinformation tdContentCenter associateColor'  id='opponentAction2'>B</td><td>&nbsp;</td></tr>
+                              <tr><td rowspan='2' colspan='1' class='tableinformation tdContentRight myColor'>You</td><td class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction1'>A</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result1'> <span class='myColor'>3</span>,<span class='associateColor'>3</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result2'><span class='myColor'>-2</span>, <span class='associateColor'>5</span></td><td>&nbsp;</td></tr>
+                              <tr><td colspan='1' class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction2'>B</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result3'> <span class='myColor'>5</span>, <span class='associateColor'>-2</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result4'><span class='myColor'>0</span>, <span class='associateColor'>0</span></td><td>&nbsp;</td></tr>
+                              <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Average Score</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='score'>0.0</td><td>&nbsp;</td></tr>
+                              <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Earnings</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='earnings'>0 USD</td><td>&nbsp;</td></tr>
+                            </table>
+                            </div>
+                        </div>
+
+                            <div id='page3' style='display:none'>
+                              <p> <h6> YOUR POINTS</h6>
+          At the end of the round, the points obtained by both of you will be highlighted for you to see. Your points in each round will depend on your choice and the choice of your opponent. This gives rise to the four possible scenarios as shown in the table below. In each cell, the first number represents your points and second number represents the points of your associate. Thus the scenario below occurs when you choose A and the other player chooses B.
           
+          <div>
+                        <table class='phasetable'>
+                  <tr><td rowspan='2' colspan='2'></td><td colspan='2' rowspan='1' class='tableinformation tdContentCenter associateColor'>Your Associate</td><td>&nbsp;</td></tr>
+                  <tr><td rowspan='1' colspan='1' class='tableinformation tdContentCenter associateColor' id='opponentAction1'>A</td><td colspan='1' class='tableinformation tdContentCenter associateColor'  id='opponentAction2'>B</td><td>&nbsp;</td></tr>
+                  <tr><td rowspan='2' colspan='1' class='tableinformation tdContentRight myColor'>You</td><td class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction1'>A</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result1'> <span class='myColor'>3</span>,<span class='associateColor'>3</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' style='background-color:#FFFF00;' id='result2'><span class='myColor'>-2</span>, <span class='associateColor'>5</span></td><td>&nbsp;</td></tr>
+                  <tr><td colspan='1' class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction2'>B</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result3'> <span class='myColor'>5</span>, <span class='associateColor'>-2</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result4'><span class='myColor'>0</span>, <span class='associateColor'>0</span></td><td>&nbsp;</td></tr>
+                  <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Average Score</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='score'>0.0</td><td>&nbsp;</td></tr>
+                  <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Earnings</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='earnings'>0 USD</td><td>&nbsp;</td></tr>
+                </table>
+      </div>
+                            </div>
+
+                            <div id='page4' style='display:none'>
+                              <p> <h6> YOUR EARNINGS</h6>
+          Your accumulated earnings is obtained by summing your points over all rounds of the game thus far. These points are then converted to money by multiplying each point by $0.01. In the unlikely event that your total earnings at the end of all rounds is negative, it will be ignored (no negative bonus earning is possible).
+          “INSERT THIRD SCREENSHOT”
+          <p> <h6> YOUR FEEDBACK</h6>
+          At the end of the game, you will be asked to fill a survey regarding your decisions in the game.
+                            </div>
+
+                      
+                            <div id='page5' style='display:none'>
+                              <p>Note the circumstances in which participants will not be paid:
+          <ol><li>Once in the waiting room, they leave the waiting room before the waiting room timer runs out. </li>
+          <li>Once in a game, they try to return an assignment or stop/close a game at any time before the final payment screen.</li></ol>
+
+                  <h3>SHORT QUIZ</h3>
+                  <form class='form' method='post' action='./entry' id='submissionForm' onSubmit="return validateAnswers();">
+                            <div class="form-group text-center">
+                           <label>1.  How much do you get if you choose action A but the other player  chooses action B</label>
+                           
+                            <label class="radio-inline">
+                  <input type="radio" name="1" value="3"> 3
+                  </label>
+                          <label class="radio-inline">
+                      <input type="radio" name="1" value="5"> 5
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="1" value="-2"> -2
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="1" value="0"> 0
+                    </label>
+                    
+                  </div>
+
+                    <div class="form-group  text-center">
+                    <label>2.  How much do you get if you choose action B but the other player chooses action B</label>
+                            <label class="radio-inline">
+                  <input type="radio" name="2" value="3"> 3
+                  </label>
+                          <label class="radio-inline">
+                      <input type="radio" name="2" value="5"> 5
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="2" value="-2"> -2
+                    </label>
+                    <label class="radio-inline">
+                      <input type="radio" name="2" value="0"> 0
+                    </label>
+                  </div>
+                <div class="form-group text-center">
+                  <button class='btn btn-default' type='submit'>Submit </button>
+                </div>
+              </form>
+
+                  </div>
+                  <div class="panel-footer" >
+                    <button id='pageprevious' style='display:none'>Previous</button>
+                    <button id='pagenext' >Next</button>
+                    <button id='pagesubmit' style='display:none'>Submit</button>
+                  </div>
+                </div>
         </div>
 
-          <div class="form-group  text-center">
-          <label>2.  How much do you get if you choose action B but the other player chooses action B</label>
-                  <label class="radio-inline">
-        <input type="radio" name="2" value="3"> 3
-        </label>
-                <label class="radio-inline">
-            <input type="radio" name="2" value="5"> 5
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="2" value="-2"> -2
-          </label>
-          <label class="radio-inline">
-            <input type="radio" name="2" value="0"> 0
-          </label>
-        </div>
-      <div class="form-group text-center">
-        <button class='btn btn-default' type='submit'>Submit </button>
-      </div>
-    </form>
+
 
     </div>  
 </div>
 
 
-  </div>
-  <div id='paginatorId' class='row text-center'></div>
-  <div id='opOptions' class='row'></div>
-</div>  
-</div>
-
+<script src="/javascripts/PostExperiment.js"></script>
+<script type="text/javascript">
+new Quiz('page', 5, true, false);
+</script>
 </body>
 </html>

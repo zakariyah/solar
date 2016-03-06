@@ -1,0 +1,26 @@
+1. chat and tutorial and exams 4 hrs
+2. Aamena's work 1 hr
+3. Google vision api - 1hr
+4. Revise machine learning algorithms
+5. Hacker rank javascript
+
+key: AIzaSyBWKIHrS-h5AxXIS23dbz9EjvcAB0dB0O8
+
+
+curl -v -k -s -H "Content-Type: application/json"   https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBWKIHrS-h5AxXIS23dbz9EjvcAB0dB0O8   --data-binary @request.txt
+
+
+tighten the navigation
+Add the tutorial
+Add the questionaire part 1 hr
+
+
+Fix the chat box to use the options label 1hr
+
+
+Aamena's work 1hr
+
+
+Machine learning algorithms: numpy, scipy, and ski-learn.
+Read statistics
+Hacker rank javascript

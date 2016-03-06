@@ -1,0 +1,172 @@
+
+
+
+
+
+  <html>
+  <head>
+  <meta http-equiv='Content-Type' content='text/html; charset=ISO-8859-1'>
+  <title><%= numbero %> Choose Your Action</title>
+    
+    <link rel='stylesheet' href='../public/stylesheets/bootstrap.min.css' />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="../public/javascripts/jquery.blockUI.js"></script>
+      <script src="../public/javascripts/bootstrap.min.js"></script>
+      <link rel='stylesheet' href='../public/stylesheets/actionPhase.css' />
+<script type="text/javascript">
+        var validateAnswers = function()
+            { 
+              alert('was called');
+                    if(document.getElementById('confirmation').checked)
+                    {
+                      alert('Please check the confirmation box on page 1');
+                      return false;
+                    }
+                    var correct = true;
+                    var correctAnswers = [-2, 0]
+                    for(var i = 0; i < 2; i++)
+                    {
+                      var value = -1;
+                      var radios = document.getElementsByName((i + 1) + "");
+                      alert(radios);
+                      for (var j = 0; j < radios.length; j++) {
+                          if (radios[j].checked) {
+                          // get value, set checked flag or do whatever you need to
+                          value = radios[j].value;       
+                          }
+                      }
+                      if(value != correctAnswers[i])
+                      {
+                          alert("Some of the answers are incorrect. Please read the tutorial properly and answer the questions");
+                          return false;
+                      }
+                    }
+                  return true;    
+            }
+    </script>
+
+  </head>
+  <body>
+
+<div>
+  <p> How would you assess the skills of the associate compared to your own? </p>
+
+<table class='table col-md-offset-2 col-md-4'>
+<tr><td><input type='radio' name='accessSkills'/> 1</td>
+<td> <input type='radio' name='accessSkills'/> 2</td>
+<td><input type='radio' name='accessSkills'/> 3</td>
+<td><input type='radio' name='accessSkills'/> 4</td>
+<td><input type='radio' name='accessSkills'/> 5</td></tr>
+
+<tr><td>Much less skilled</td><td>A little worse</td><td>Same as mine</td><td>A bit better</td><td>Much better skilled</td></tr>
+</table>
+
+
+  <p> How much did you enjoy playing the game with your associate? </p>
+    <table class='table'>
+    <tr><td><input type='radio' name='enjoy'/> 1</td>
+    <td> <input type='radio' name='enjoy'/> 2</td>
+    <td><input type='radio' name='enjoy'/> 3</td>
+    <td><input type='radio' name='enjoy'/> 4</td>
+    <td><input type='radio' name='enjoy'/> 5</td></tr>
+
+    <tr><td>Not at all</td><td>A little</td><td>Average</td><td>A lot</td><td>Very much</td></tr>
+    </table>
+
+
+  <p>To what extent have you previously participated in other studies like this one? </p>
+      <table class='table'>
+      <tr><td><input type='radio' name='familiarity'/> 1</td>
+      <td> <input type='radio' name='familiarity'/> 2</td>
+      <td><input type='radio' name='familiarity'/> 3</td></tr>
+
+      <tr><td>Nothing like this scenario</td><td>Something like this scenario</td><td>Exactly this scenario</td></tr>
+      </table>
+
+
+  <p> Are you generally a person who is fully prepared to take risks or do you try to avoid taking risks? </p>
+<table class='table'>
+<tr><td><input type='radio' name='risk'/> 1</td>
+<td> <input type='radio' name='risk'/> 2</td>
+<td><input type='radio' name='risk'/> 3</td>
+</tr>
+
+<tr><td>Unwilling to take risks</td><td>Sometimes takes risks</td><td>Fully prepared to take risks</td></tr>
+</table>
+
+<p> To what extent do the following terms describe your associate's behavior in the game? </p>
+<table class='table'>
+<tr><td></td><td colspan='2'>Low</td><td>Medium</td><td colspan='2'>High</td></tr>
+<tr><td>Cooperative</td><td><input type='radio' name='cooperative'/> 1</td>
+<td> <input type='radio' name='cooperative'/> 2</td>
+<td><input type='radio' name='cooperative'/> 3</td>
+<td><input type='radio' name='cooperative'/> 4</td>
+<td><input type='radio' name='cooperative'/> 5</td></tr>
+
+<tr><td>Forgiving</td><td><input type='radio' name='forgiving'/> 1</td>
+<td> <input type='radio' name='forgiving'/> 2</td>
+<td><input type='radio' name='forgiving'/> 3</td>
+<td><input type='radio' name='forgiving'/> 4</td>
+<td><input type='radio' name='forgiving'/> 5</td></tr>
+
+<tr><td>Predictable</td><td><input type='radio' name='predictable'/> 1</td>
+<td> <input type='radio' name='predictable'/> 2</td>
+<td><input type='radio' name='predictable'/> 3</td>
+<td><input type='radio' name='predictable'/> 4</td>
+<td><input type='radio' name='predictable'/> 5</td></tr>
+
+<tr><td>Vengeful</td><td><input type='radio' name='vengeful'/> 1</td>
+<td> <input type='radio' name='vengeful'/> 2</td>
+<td><input type='radio' name='vengeful'/> 3</td>
+<td><input type='radio' name='vengeful'/> 4</td>
+<td><input type='radio' name='vengeful'/> 5</td></tr>
+
+<tr><td>Selfish</td><td><input type='radio' name='selfish'/> 1</td>
+<td> <input type='radio' name='selfish'/> 2</td>
+<td><input type='radio' name='selfish'/> 3</td>
+<td><input type='radio' name='selfish'/> 4</td>
+<td><input type='radio' name='selfish'/> 5</td></tr>
+
+</table>
+
+
+
+<p> To what extent do the following terms describe your behavior in the game? </p>
+<table class='table'>
+<tr><th></th><th colspan='2'>Low</th><th>Medium</th><th colspan='2'>High</th></tr>
+<tr><td>Cooperative</td><td><input type='radio' name='cooperative1'/> 1</td>
+<td> <input type='radio' name='cooperative1'/> 2</td>
+<td><input type='radio' name='cooperative1'/> 3</td>
+<td><input type='radio' name='cooperative1'/> 4</td>
+<td><input type='radio' name='cooperative1'/> 5</td></tr>
+
+<tr><td>Forgiving</td><td><input type='radio' name='forgiving1'/> 1</td>
+<td> <input type='radio' name='forgiving1'/> 2</td>
+<td><input type='radio' name='forgiving1'/> 3</td>
+<td><input type='radio' name='forgiving1'/> 4</td>
+<td><input type='radio' name='forgiving1'/> 5</td></tr>
+
+<tr><td>Predictable</td>
+<td><input type='radio' name='predictable1'/> 1</td>
+<td> <input type='radio' name='predictable1'/> 2</td>
+<td><input type='radio' name='predictable1'/> 3</td>
+<td><input type='radio' name='predictable1'/> 4</td>
+<td><input type='radio' name='predictable1'/> 5</td></tr>
+
+<tr><td>Vengeful</td>
+<td><input type='radio' name='vengeful1'/> 1</td>
+<td> <input type='radio' name='vengeful1'/> 2</td>
+<td><input type='radio' name='vengeful1'/> 3</td>
+<td><input type='radio' name='vengeful1'/> 4</td>
+<td><input type='radio' name='vengeful1'/> 5</td></tr>
+
+<tr><td>Selfish</td>
+<td><input type='radio' name='selfish1'/> 1</td>
+<td> <input type='radio' name='selfish1'/> 2</td>
+<td><input type='radio' name='selfish1'/> 3</td>
+<td><input type='radio' name='selfish1'/> 4</td>
+<td><input type='radio' name='selfish1'/> 5</td></tr>
+</table>
+</div>
+</body>
+</html>
