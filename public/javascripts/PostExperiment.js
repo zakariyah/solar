@@ -1,4 +1,4 @@
-var Quiz = function(pageId, numberOfPages, previousButtonPresent, defaultSubmitButton, arrayOfNamesToCheckOnNext)
+var Quiz = function(pageId, numberOfPages, previousButtonPresent, defaultSubmitButton, arrayOfNamesToCheckOnNext, pageTitles)
 {
 	var tracker = 0;
 	var pages = [];
@@ -37,6 +37,10 @@ var Quiz = function(pageId, numberOfPages, previousButtonPresent, defaultSubmitB
 	var showPage = function()
 	{
 		pages[tracker].style.display = 'block';
+		if(pageTitles)
+		{
+			document.getElementById(pageId + 'header').innerHTML = pageTitles[tracker];
+		}
 	}
 
 	var canMoveOn = function(trackerVal)

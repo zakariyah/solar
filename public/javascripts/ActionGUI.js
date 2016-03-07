@@ -59,6 +59,8 @@ var OptionButton = function(htmlId1, htmlId2, nextRound)
 
 var Options = function(nextRoundFunction)
 {
+	var cumScore = 0;
+	var roundNumber = 0;
 	var actionButtons = new OptionButton('yourAction1', 'yourAction2', nextRoundFunction);
 	// alert( '2' + JSON.stringify(nextRoundFunction));
 	var tags = [document.getElementById('reviewTag'), document.getElementById('actionTag')];	
@@ -72,6 +74,7 @@ var Options = function(nextRoundFunction)
 	} 
 
 	var score = document.getElementById('score');
+	var earnings = document.getElementById('earnings');
 	var submitButton = document.getElementById('nextButton');
 
 	this.changeBackground = function(opponentChoice)
@@ -97,7 +100,11 @@ var Options = function(nextRoundFunction)
 
 	this.setScore = function(scoreVal)
 	{
-		score.innerHTML = scoreVal;
+// 		cumScore += scoreVal;
+		roundNumber += 1;
+		earnings.innerHTML = (scoreVal * 0.01) + ' USD';
+// 		alert(cumScore + ' ' + scoreVal);
+		score.innerHTML = Number(scoreVal / roundNumber).toFixed(2);;
 	}
 
 	this.makeSelection = function(disable)
@@ -285,7 +292,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 2;
+	var totalWaitingTime = 0;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{

@@ -1,10 +1,37 @@
+function isOneChecked(elementsName)
+	{
+		var elems = document.getElementsByName(elementsName);
+		for(var i in elems)
+		{
+			if(elems[i].checked)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+function checkFormInput()
+{
+	var names = ['preference', 'thought'];
+	for(var i in  names)
+	{
+		if(!isOneChecked(names[i]))
+		{	
+			alert('Please answer all the questions before submitting');
+			return false;
+		}
+	}
+	return true;
+}
+
 function postQuizQuestions(hasRecommenders, cummulativeScore, numberOfRounds)
 {
-  var htmlString = "<form name='postquizsurvey' method='post' action='./postquizsurvey' class='form-horizontal' role='form'>";
+  var htmlString = "<form name='postquizsurvey' method='post' action='./postquizsurvey' class='form-horizontal' role='form' onsubmit='return checkFormInput();'>";
   htmlString += "<div id='page1' style='display:block'>";
   // htmlString += "Page 1";
-  htmlString += "<div class='form-group'>";
-  htmlString += "<label for='inputEmail3' class='control-label'>How would you assess the skills of the associate compared to your own?</label></div>";
+htmlString += "<div class='form-group'>";
+htmlString += "<label for='inputEmail3' class='control-label'>1. How would you assess the skills of the associate compared to your own?</label></div>";
 
 htmlString += "<div class='form-group'><div class='col-sm-10'> <div class='checkbox'>";
 htmlString += "<label><input type='radio' name='accessSkills'>  Much less skilled";
@@ -15,7 +42,7 @@ htmlString += "</label><label><input type='radio' name='accessSkills'>  Much bet
 htmlString += "</label></div></div></div>";
 
 
-	htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>How much did you enjoy playing the game with your associate?</label>";
+	htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>2. How much did you enjoy playing the game with your associate?</label>";
 	htmlString += "</div><div class='form-group'>";
 	htmlString += "<div class='col-sm-10'><div class='checkbox'>";
     htmlString += "<label><input type='radio' name='enjoy'>  Not at all";
@@ -26,7 +53,7 @@ htmlString += "</label></div></div></div>";
     htmlString += "</label></div></div></div>";
 
 
-htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>To what extent have you previously participated in other studies like this one?</label>";
+htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>3. To what extent have you previously participated in other studies like this one?</label>";
 htmlString += "</div><div class='form-group'><div class='col-sm-10'>";
       htmlString += "<div class='checkbox'><label><input type='radio' name='familiarity'>  Nothing like this scenario";
         htmlString += "</label><label><input type='radio' name='familiarity'>  Something like this scenario";
@@ -35,7 +62,7 @@ htmlString += "</div><div class='form-group'><div class='col-sm-10'>";
 htmlString += "</div>";
 
 
-htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>Are you generally a person who is fully prepared to take risks or do you try to avoid taking risks?</label></div>";
+htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>4. Are you generally a person who is fully prepared to take risks or do you try to avoid taking risks?</label></div>";
 
 htmlString += "<div class='form-group'><div class='col-sm-10'><div class='checkbox'>";
         htmlString += "<label> <input type='radio' name='risk'>  Unwilling to take risks";
@@ -46,7 +73,7 @@ htmlString += "<div class='form-group'><div class='col-sm-10'><div class='checkb
       htmlString += "<div id='page2' style='display:none'>";
       
 
-htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>To what extent do the following terms describe your associate's behavior in the game?</label></div>";
+htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>1. To what extent do the following terms describe your associate's behavior in the game?</label></div>";
 
 htmlString += "<div class='form-group'><div class='col-sm-offset-3 col-sm-6'><table class='table'>";
 htmlString += "<tr><td></td><td colspan='2'>Low</td><td>Medium</td><td colspan='2'>High</td></tr>";
@@ -82,7 +109,7 @@ htmlString += "<td><input type='radio' name='selfish'/> 5</td></tr>";
 
 htmlString += "</table></div></div>";
 
-htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>To what extent do the following terms describe your behavior in the game? </label></div>";
+htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'>2. To what extent do the following terms describe your behavior in the game? </label></div>";
 
 htmlString += "<div class='form-group'><div class='col-sm-offset-3 col-sm-6'>";
 
@@ -123,7 +150,7 @@ htmlString += "</table></div></div>";
 htmlString += "</div>";
 
 htmlString += "<div id='page3'  style='display:none'>";
-htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'><p><h6>Associate Identity:</h6></p> At the beginning of the game, you were told that you would be playing the game with a BOT (or HUMAN). Giving your actual experience playing the game, who do you think you played with?</label></div>";
+htmlString += "<div class='form-group'><b>Associate Identity:</b><p>1. At the beginning of the game, you were told that you would be playing the game with a BOT. Given your actual experience playing the game, who do you think you played with?</p></div>";
 
 htmlString += "<div class='form-group'><div class='col-sm-10'><div class='checkbox'><label><input type='radio' name='thought'>  Yes, a BOT as said</label><label><input type='radio' name='thought'>  No, a HUMAN associate</label></div></div></div>";
 
@@ -131,7 +158,7 @@ htmlString += "<div class='form-group'><div class='col-sm-10'><label for='inputE
 htmlString += "<div class=' col-sm-6'><textarea class='form-control' rows='3'></textarea></div></div></div>";
 
 
-htmlString += "<div class='form-group'><label for='inputEmail3' class='control-label'><p><h6>Associate Preference:</h6></p> Considering your experience in the just concluded game, who would you rather play the same game with?” </label></div>";
+htmlString += "<div class='form-group'><b>Associate Preference:</b><p>2. Considering your experience in the just concluded game, who would you rather play the same game with?” </p></div>";
 
 htmlString += "<div class='form-group'> <div class='col-sm-10'><div class='checkbox'><label><input type='radio' name='preference'>  BOT</label><label> <input type='radio' name='preference'>  HUMAN</label></div></div></div>";
 
