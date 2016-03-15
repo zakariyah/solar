@@ -63,6 +63,16 @@ table.phasetable {
 	border: 3px solid #000000;
 }
 
+table.phasetableMain {
+	/*border-collapse: separate;  Or do nothing, this is default 
+  	border-spacing: 3px;  Only works if border-collapse is separate */	
+  	width: 100%;
+	margin-left:auto; 
+    margin-right:auto;
+	border: 3px solid #000000;
+}
+
+
 .indicateactivephase {
 	font-family: Verdana, Arial, Helvetica;
 	background-color: #009900;
@@ -73,4 +83,11 @@ table.phasetable {
 	font-weight: bold;
 	text-align: center;
 	color: #FFFFFF;
+}
+
+.questionSpan
+{
+         cursor:pointer;
+         color:blue;
+         text-decoration:underline;
 }

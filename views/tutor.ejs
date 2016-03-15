@@ -71,21 +71,15 @@
                               <p><b>Please read the instructions carefully, as you will be quizzed about them, and your earnings depend on your performance too.</b>
               <p> <b>YOUR ASSOCIATE</b>
           As a participant in this experiment, you will play a simple game with an associate who is a BOT: an intelligent algorithm. The game will only be played once, each game consisting of a number of rounds. You are matched with the same BOT across all rounds of the game. 
-            <img src="/images/image.png" style="display: block; margin: 0 auto;" />
+            <img src="/images/image.png" style="display: block; margin: 0 auto;" class='col-md-12' />
           </div>
                             
                             <div id='page3' style='display:none'>
                           <p> <b> YOUR CHOICES </b>
                           In each round of the game, you and your associate will be individually offered a choice between two actions, A or B. You submit your choice by clicking on the option that represents that choice. In any given round, you will not be able to see the choice of your associate until after you both submit your choices.
                           <div>
-                          <table class='phasetable'>
-                              <tr><td rowspan='2' colspan='2'></td><td colspan='2' rowspan='1' class='tableinformation tdContentCenter associateColor'>Your Associate</td><td>&nbsp;</td></tr>
-                              <tr><td rowspan='1' colspan='1' class='tableinformation tdContentCenter associateColor' id='opponentAction1'>A</td><td colspan='1' class='tableinformation tdContentCenter associateColor'  id='opponentAction2'>B</td><td>&nbsp;</td></tr>
-                              <tr><td rowspan='2' colspan='1' class='tableinformation tdContentRight myColor'>You</td><td class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction1'>A</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result1'> <span class='myColor'>3</span>,<span class='associateColor'>3</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result2'><span class='myColor'>-2</span>, <span class='associateColor'>5</span></td><td>&nbsp;</td></tr>
-                              <tr><td colspan='1' class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction2'>B</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result3'> <span class='myColor'>5</span>, <span class='associateColor'>-2</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result4'><span class='myColor'>0</span>, <span class='associateColor'>0</span></td><td>&nbsp;</td></tr>
-                              <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Average Score</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='score'>0.0</td><td>&nbsp;</td></tr>
-                              <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Earnings</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='earnings'>0 USD</td><td>&nbsp;</td></tr>
-                            </table>
+                            <img src="/images/tutorial/actionPhase.png" class='col-md-12' style="display: block; margin: 0 auto;" />
+
                             </div>
                         </div>
 
@@ -94,14 +88,7 @@
           At the end of the round, the points obtained by both of you will be highlighted for you to see. Your points in each round will depend on your choice and the choice of your opponent. This gives rise to the four possible scenarios as shown in the table below. In each cell, the first number represents your points and second number represents the points of your associate. Thus the scenario below occurs when you choose A and the other player chooses B.
           
           <div>
-                        <table class='phasetable'>
-                  <tr><td rowspan='2' colspan='2'></td><td colspan='2' rowspan='1' class='tableinformation tdContentCenter associateColor'>Your Associate</td><td>&nbsp;</td></tr>
-                  <tr><td rowspan='1' colspan='1' class='tableinformation tdContentCenter associateColor' id='opponentAction1'>A</td><td colspan='1' class='tableinformation tdContentCenter associateColor'  id='opponentAction2'>B</td><td>&nbsp;</td></tr>
-                  <tr><td rowspan='2' colspan='1' class='tableinformation tdContentRight myColor'>You</td><td class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction1'>A</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result1'> <span class='myColor'>3</span>,<span class='associateColor'>3</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' style='background-color:#FFFF00;' id='result2'><span class='myColor'>-2</span>, <span class='associateColor'>5</span></td><td>&nbsp;</td></tr>
-                  <tr><td colspan='1' class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction2'>B</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result3'> <span class='myColor'>5</span>, <span class='associateColor'>-2</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result4'><span class='myColor'>0</span>, <span class='associateColor'>0</span></td><td>&nbsp;</td></tr>
-                  <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Average Score</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='score'>-2.0</td><td>&nbsp;</td></tr>
-                  <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Earnings</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='earnings'>-0.02 USD</td><td>&nbsp;</td></tr>
-                </table>
+                  <img src="/images/tutorial/area2.png" style="display: block;"  class='col-md-12'/>
       </div>
                             </div>
 
@@ -110,14 +97,7 @@
           Your accumulated earnings is obtained by summing your points over all rounds of the game thus far. These points are then converted to money by multiplying each point by $0.01. In the unlikely event that your total earnings at the end of all rounds is negative, it will be ignored (no negative bonus earning is possible).
           
           <div>
-                  <table class='phasetable'>
-                  <tr><td rowspan='2' colspan='2'></td><td colspan='2' rowspan='1' class='tableinformation tdContentCenter associateColor'>Your Associate</td><td>&nbsp;</td></tr>
-                  <tr><td rowspan='1' colspan='1' class='tableinformation tdContentCenter associateColor' id='opponentAction1'>A</td><td colspan='1' class='tableinformation tdContentCenter associateColor'  id='opponentAction2'>B</td><td>&nbsp;</td></tr>
-                  <tr><td rowspan='2' colspan='1' class='tableinformation tdContentRight myColor'>You</td><td class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction1'>A</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result1'> <span class='myColor'>3</span>,<span class='associateColor'>3</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' style='background-color:#FFFF00;' id='result2'><span class='myColor'>-2</span>, <span class='associateColor'>5</span></td><td>&nbsp;</td></tr>
-                  <tr><td colspan='1' class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction2'>B</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result3'> <span class='myColor'>5</span>, <span class='associateColor'>-2</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result4'><span class='myColor'>0</span>, <span class='associateColor'>0</span></td><td>&nbsp;</td></tr>
-                  <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Average Score</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='score'>-2.0</td><td>&nbsp;</td></tr>
-                  <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Earnings</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='earnings'>-0.02 USD</td><td>&nbsp;</td></tr>
-                </table>
+              <img src="/images/tutorial/area2.png" style="display: block; margin: 0 auto;" />
       </div>
 
 

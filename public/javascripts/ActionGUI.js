@@ -323,7 +323,7 @@ var GameManager = function(socket, gameManagerEndFunctionFromMain, endGameFuncti
 	{
 		if(count <= agitationStart)
 		{
-			var htmlToPrint = "<p>Please make a choice.</p>";
+			var htmlToPrint = "<p>Please make a choice. You have  " + count + " sec" + ((count > 1) ? "s": "") + " remaining</p>";
 			document.getElementById('agitationModalBody').innerHTML = htmlToPrint;
 		}
 		if(count == agitationStart)

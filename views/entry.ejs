@@ -3,10 +3,13 @@
   <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
   <title> Choose Your Action</title>
     <link rel='stylesheet' href='/stylesheets/bootstrap.min.css' />
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <!-- <link rel='stylesheet' href='/stylesheets/style.css' /> -->
     <link rel="stylesheet" type="text/css" href="/stylesheets/testChat.css">
+    <link rel='stylesheet' href='/stylesheets/actionPhase.css' />
+    <link rel='stylesheet' href='/stylesheets/speech.css' />
     <script src='/javascripts/postquiz.js'></script>
     <script src="/javascripts/jquery-1.11.3.js"></script>
+    <script src="/javascripts/jquery.blockUI.js"></script>
     <script src="/javascripts/bootstrap.min.js"></script>    
   </head>
   <body onunload="" style="background-color: #dddddd;">
@@ -20,15 +23,40 @@ window.onbeforeunload = function() {
 </script>
 <div class='container' id='fullPage'>
   <div class='row'>
-      <div class='col-md-6' id='actions'>
+      <!-- <div class='col-md-6' id='actions'>
         <p>Welcome</p>
         <div class='alert alert-success'>Please wait while we initiate the agent.</div>
         <div class='row'><table class='table'><tr><td id='myPayoff'></td><td></td><td></td><td></td><td id='otherPayoff'></td></tr></table></div>
 
       <div class="alert alert-warning" id='timerStart'> <span id='timerBegin'></span></div>
       </div>
+ -->
+ <div class='col-md-offset-3 col-md-6 panel panel-default'>
+  <div class="panel-heading" id='timerStart'> <b><span id='roundNumber' style='text-align:left' class='appColor'></span> </br><span id='timerBegin' style='text-align:right'>Time Remaining</span></b></div>
+  <div class='panel-body' id='actionAndReview' style='display:none'>
+  <div class='row'>
+    <table class='phasetable' style="width:100%; display:none">
+      <tr><td class='indicateactivephase' id='actionTag'>Action</td><td class='phasearrow'>&#8594;</td><td class='phasearrow' id='reviewTag'>Review</td></tr>
+    </table>
+  </div>
 
-      <nav role="navigation" class="col-md-6">
+  <div class='row'>
+  </div>
+  
+  <div class='row'>
+    <table class='phasetableMain'>
+      <tr><td rowspan='2' colspan='2'></td><td colspan='2' rowspan='1' class='tableinformation tdContentCenter associateColor'>Your Associate</td><td>&nbsp;</td></tr>
+      <tr><td rowspan='1' colspan='1' class='tableinformation tdContentCenter associateColor' id='opponentAction1'>A</td><td colspan='1' class='tableinformation tdContentCenter associateColor'  id='opponentAction2'>B</td><td>&nbsp;</td></tr>
+      <tr><td rowspan='2' colspan='1' class='tableinformation tdContentRight myColor'>You</td><td class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction1'>A</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result1'> <span class='myColor'>3</span>,<span class='associateColor'>3</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result2'><span class='myColor'>-2</span>, <span class='associateColor'>5</span></td><td>&nbsp;</td></tr>
+      <tr><td colspan='1' class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction2'>B</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result3'> <span class='myColor'>5</span>, <span class='associateColor'>-2</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result4'><span class='myColor'>0</span>, <span class='associateColor'>0</span></td><td>&nbsp;</td></tr>
+      <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Average Score</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='score'>0.0</td><td>&nbsp;</td></tr>
+      <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Earnings</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='earnings'>0 USD</td><td>&nbsp;</td></tr>
+    </table>
+  </div> 
+  <div class='row' style='text-align: center;display:none' > <button  id='nextButton' style='width:40%;height:40px'><b>NEXT</b></button></div> 
+</div></div>
+      <div class='row'>
+      <nav role="navigation" class="col-md-offset-1 col-md-6">
         <ul class="nav nav-tabs"  role="tablist">
         <li role="presentation" class="active" id="chatBoxContainerLink"><a data-toggle="tab" aria-controls="chatBoxContainer" role="tab" href="#chatBoxContainer">Chat</a></li>
         <li role="presentation"><a data-toggle="tab" aria-controls="gameHistory" role="tab" href="#gameHistory">Result</a></li>
@@ -47,15 +75,15 @@ window.onbeforeunload = function() {
                     <ul class="chat" id="chatItems">
                     </ul>
                 </div>
-                <div class="panel-footer" id='questionAndFeedback' style='visibility:hidden'>
+                <div class="panel-footer" id='questionAndFeedback' style='visibility:hidden; display:none'>
                     <div class="input-group"  style="border-bottom: 5px #ffffff solid; ">
                       <select id="questionSelect">
                         <option value='0' id='agentQuestionDefault'> ...... </option>
-                        <option value="1" id='agentQuestion1'> Tell me about my opponent</option>
-                        <option value="2" id='agentQuestion2'> What should I do now?</option>
-                        <option value="3" id='agentQuestion3'> Why?</option>
-                        <option value="4" id='agentQuestion4'> Why shouldn't I do otherwise?</option>
-                        <option value="5" id='agentQuestion5'> How do I do better?</option>
+                        <option value="1" id='agentQuestio1'> Tell me about my opponent</option>
+                        <option value="2" id='agentQuestio2'> What should I do now?</option>
+                        <option value="3" id='agentQuestio3'> Why?</option>
+                        <option value="4" id='agentQuestio4'> Why shouldn't I do otherwise?</option>
+                        <option value="5" id='agentQuestio5'> How do I do better?</option>
                       </select> 
                         <span class="input-group-btn">
                             <button class="btn btn-warning btn-sm" id="agentQuestionSubmit">
@@ -92,7 +120,19 @@ window.onbeforeunload = function() {
       </div>  
     </div>  <!-- tab content -->
 </nav>
-
+  
+  <div class='col-md-offset-1 col-md-3'>
+          <div class='triangle-isosceles top'>
+            <p> <span class='pull-right'>You</span></p>
+          <p class='questionSpan' id='agentQuestion1'><b>Tell me about my opponent</b></p>
+          <p class='questionSpan' id='agentQuestion2'><b>What should I do now?</b></p>
+          <p class='questionSpan' id='agentQuestion3'><b>Why?</b></p>
+          <p class='questionSpan' id='agentQuestion4'><b>Why shouldn't I do otherwise?</b></p>
+          <p class='questionSpan' id='agentQuestion5'><b>How do I do better?</b></p>
+        </div>
+        
+  </div>
+</div>
   </div> <!--main row div -->
 
 </div>

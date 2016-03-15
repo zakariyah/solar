@@ -279,7 +279,7 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		}
 		var position = isHuman ? 'right' : 'left';
 		var bdColor = isHuman ? '#D3FB9f' : '#ffffff';
-		chatItemHtml += '<div class="' + (isHuman ? 'col-sm-offset-2 ': '') + 'col-sm-10" style="padding: 0px">';
+		chatItemHtml += '<div class="' + (isHuman ? 'col-sm-offset-2 triangle-isosceles left ': '') + 'col-sm-10" style="padding: 0px">';
 		chatItemHtml += '<div style="background-color: ' +bdColor +';" class="well-sm pull-' + position +'">';
 		chatItemHtml += body;
 		chatItemHtml += '</div></div>';
@@ -287,7 +287,7 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		return chatItemHtml;
 	}
 
-	this.intrudePlayersGame =  function(presentChoice)
+	this.intrudePlayersGame =	  function(presentChoice)
 	{
 		var warn = adherenceHistory.shouldTheExpertIntrude(presentChoice);
 		if(warn)
@@ -442,6 +442,7 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 	var questionSubmitButton = document.getElementById(submitId);
 	var feedbackSubmitButton = document.getElementById(feedbackButtonId);
 	
+	var questionsAskedForEachRound = [];
 	var enableAllButtons = function()
 	{
 		for(var i = 0; i < numberOfQuestions; i++)
@@ -459,19 +460,36 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 	this.moveToNextRound = function(contentFromServer)
 	{
 		chatBox.updateContentFromServer(contentFromServer);
-		enableAllButtons();
+		// enableAllButtons();
+		refreshQuestions();
 	}
 
-	var buttonOnClick = function(isQuestion)
+	var refreshQuestions = function()
+	{
+		for(var i = 0; i < questionsAskedForEachRound.length; i++)
+		{
+			questionsAskedForEachRound[i] = false;
+		}
+	}
+
+	var buttonOnClick = function(questionVal)
 	{		
 		return function()
 		{
+			var alreadyClicked = questionsAskedForEachRound[questionVal - 1];
+			if(alreadyClicked)
+			{
+				alert('Question already asked for this round. Please check the chat history');
+				return;
+			}
+			questionsAskedForEachRound[questionVal - 1] = true;
 			var questions = [];
-			var checkBoxToUse = isQuestion ? questionCheckBoxes : feedbackCheckBoxes; 
-			var buttonClicked = isQuestion ? questionSubmitButton : feedbackSubmitButton;
+			// var checkBoxToUse = isQuestion ? questionCheckBoxes : feedbackCheckBoxes; 
+			// var buttonClicked = isQuestion ? questionSubmitButton : feedbackSubmitButton;
 			
-			var selectToUse = isQuestion ? questionSelect : feedbackSelect;
-			var valueSelected = selectToUse.value;
+			// var selectToUse = isQuestion ? questionSelect : feedbackSelect;
+			// var valueSelected = selectToUse.value;
+			var valueSelected =  questionVal;
 			if(valueSelected == 0)
 			{
 				new ShowAlert('Selection Error', 'Please select an option!');
@@ -479,24 +497,27 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 				return;
 			}
 
-			buttonClicked.disabled = true;
-			checkBoxToUse[valueSelected-1].disabled = true;
-			chatBox.getSolutionToQuestion( valueSelected-1, isQuestion, buttonClicked);
-			if(isQuestion)
-			{
-				selectToUse.value = '0';	
-			}
-			
+			// buttonClicked.disabled = true;
+			// checkBoxToUse[valueSelected-1].disabled = true;
+			// chatBox.getSolutionToQuestion( valueSelected-1, isQuestion, buttonClicked);
+			chatBox.getSolutionToQuestion( valueSelected-1, true, questionSubmitButton);
+			// if(isQuestion)
+			// {
+			// 	selectToUse.value = '0';	
+			// }
 		}
 	}
 
 	questionSubmitButton.onclick = buttonOnClick(true);
 	feedbackSubmitButton.onclick = buttonOnClick(false);
 
+
 	for(var i = 0; i < numberOfQuestions; i++)
 	{
+		questionsAskedForEachRound.push(false);
 		var checkBox = document.getElementById(questionId+(i+1));
 		questionCheckBoxes.push(checkBox);
+		checkBox.onclick = buttonOnClick(i + 1);
 	}
 	for(var i = 0; i < numberOfFeedback; i++)
 	{
