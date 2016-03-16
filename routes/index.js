@@ -23,7 +23,7 @@ router.post('/entry', function(req, res) {
 		return;
 	}
 	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-	entryVerifier(req, res, 'information', 'entryGUI', hiit);
+	entryVerifier(req, res, 'information', 'entry', hiit);
 });
 
 router.get('/information', function(req, res) {
@@ -60,7 +60,7 @@ router.post('/tutorial', function(req, res) {
 		return;
 	}
 	// res.render('tutorial', { title: 'Entry', minTimeMins : 5, maxTimeMins : 20, currency:'AED', reward : 50,maxbonus :20, playingtimes : 10, numPlayers : 6, waitingRoomTime : 30000});		
-	saveHiitNumber(req, res, 'information', 'tutor');
+	saveHiitNumber(req, res, 'information', 'tutorMain');
 });
 
 module.exports = router;

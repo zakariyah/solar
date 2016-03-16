@@ -16,3 +16,17 @@ Today insha Allah
 1. Get recommendation
 2. Write reports
 3. Start reading code
+
+
+1. Fix the questions link when clicked done
+2. Fix the various versions
+3. Send to Umm Khuwala
+4. Send mail to the Professors
+
+
+Here:
+Fix the tutorial -- done
+Fix the tit-for-tat delay -- done
+Fix the clicking -- do
+Fix the versions
+Fix the quiz for the S++

@@ -258,11 +258,13 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 	var counter;
 	var decreasingTimeType = decreaseAfterEnd;
 
+	var elapsedTime = 0;
+
 	var timer = function()
 	{
 		var now = new Date();
-	    var elapsedTime = (now.getTime() - before.getTime());
-	    elapsedTime = Math.floor(elapsedTime/interval); 
+	    // elapsedTime = (now.getTime() - before.getTime());
+	    elapsedTime = Math.floor((now.getTime() - before.getTime())/interval); 
 	    // leftValue += Math.floor(elapsedTime/interval);
 	    count = mainCount - elapsedTime;
 	    if (count < 1)
@@ -287,6 +289,11 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 	this.stopTimer = function()
 	{
 		clearInterval(counter);
+	}
+
+	this.getElapsedTime = function()
+	{
+		return elapsedTime;
 	}
 }
 
@@ -413,7 +420,7 @@ var PrisonersDilemma = function()
 
 	// var gameTimer = new GameTimer(socket, gameTimerEnd);
 
-	
+	var elapsedTimes = [];	
 
 	// var resultTimeEndFunction = function()
 	// {
@@ -479,6 +486,32 @@ var PrisonersDilemma = function()
         new Quiz('page', 3, false, false, toCheckForNext);
 	}
 
+
+	var secondToLast = function(content)
+	{
+		gameManager.startTimer();
+		var briefInfo = content.text;
+		var myTotalPayoff = briefInfo.fromItself + briefInfo.fromOpponent;
+		
+		myCanvasContainer.makeSelectionImpossible();
+	    myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff);
+	    // setAgentState(content.agentState);
+		// showPlayerChoicesForGivenTime(reco);
+		// document.getElementById('recommender').innerHTML = '';
+		// resultTimer.startTimer();
+		// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
+		// document.getElementById('agentState').innerHTML = agentStates;
+		document.getElementById('roundNumber').style.display = 'inline';
+		document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
+		// questionsToAsk.moveToNextRound(content);
+		// document.getElementById('questionAndFeedback').style.visibility = 'hidden';
+		// gameHistory.setHistoryDivHtml();
+		// setAgentVariables(content);
+		myCanvasContainer.resetAll(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);		
+		document.getElementById('roundNumber').style.display = 'inline';
+		
+	}
+
 	var serverMessage = function(content)
 	{	
 		if(content.count == 0)
@@ -491,28 +524,21 @@ var PrisonersDilemma = function()
 		}
 		else if(content.count < content.rounds)
 		{
-			gameManager.startTimer();
-			var briefInfo = content.text;
-			var myTotalPayoff = briefInfo.fromItself + briefInfo.fromOpponent;
+			var elapsedTime = gameManager.getElapsedTime();
+			elapsedTimes.push(elapsedTime);
 			
-			myCanvasContainer.makeSelectionImpossible();
-		    myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff);
-		    // setAgentState(content.agentState);
-			// showPlayerChoicesForGivenTime(reco);
-			// document.getElementById('recommender').innerHTML = '';
-			// resultTimer.startTimer();
-			// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
-			// document.getElementById('agentState').innerHTML = agentStates;
-			document.getElementById('roundNumber').style.display = 'inline';
-			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
-			// questionsToAsk.moveToNextRound(content);
-			// document.getElementById('questionAndFeedback').style.visibility = 'hidden';
-			// gameHistory.setHistoryDivHtml();
-			// setAgentVariables(content);
-			myCanvasContainer.resetAll(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);		
-			document.getElementById('roundNumber').style.display = 'inline';
-			// setTimeout($.unblockUI, 1000); 
-			$.unblockUI(); 
+			var delay = 0.1;
+			if(elapsedTimes.length > 1)
+			{
+				delay = elapsedTimes[elapsedTimes.length-2] - elapsedTimes[elapsedTimes.length - 1];	
+				if(delay < 0)
+				{
+					delay = 0;
+				}
+			}
+			setTimeout($.unblockUI, delay * 500);
+			setTimeout(secondToLast, delay * 500, content);
+			// $.unblockUI(); 
 		}
 		else
 		{

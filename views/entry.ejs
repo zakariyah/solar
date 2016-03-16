@@ -56,10 +56,10 @@ window.onbeforeunload = function() {
   <div class='row' style='text-align: center;display:none' > <button  id='nextButton' style='width:40%;height:40px'><b>NEXT</b></button></div> 
 </div></div>
       <div class='row'>
-      <nav role="navigation" class="col-md-offset-1 col-md-6">
+      <nav role="navigation" class="col-md-8">
         <ul class="nav nav-tabs"  role="tablist">
         <li role="presentation" class="active" id="chatBoxContainerLink"><a data-toggle="tab" aria-controls="chatBoxContainer" role="tab" href="#chatBoxContainer">Chat</a></li>
-        <li role="presentation"><a data-toggle="tab" aria-controls="gameHistory" role="tab" href="#gameHistory">Result</a></li>
+        <!-- <li role="presentation"><a data-toggle="tab" aria-controls="gameHistory" role="tab" href="#gameHistory">Result</a></li> -->
         </ul>
 
         <div class="tab-content">
@@ -68,6 +68,7 @@ window.onbeforeunload = function() {
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-comment"></span> Talk to the expert
                     <div class="btn-group pull-right">
+                        <!-- <span><button class='button' id='showResults'>Show Results</button></span>   -->
                         <span id="typingText" style="display:none; color:#00ff00"> typing... </span>
                     </div>
                 </div>
@@ -121,9 +122,9 @@ window.onbeforeunload = function() {
     </div>  <!-- tab content -->
 </nav>
   
-  <div class='col-md-offset-1 col-md-3'>
-          <div class='triangle-isosceles top'>
-            <p> <span class='pull-right'>You</span></p>
+  <div class='col-md-offset-1 col-md-4 talk-bubble tri-right round border right-top'>
+          <div class=''>
+            <h3 style='text-align:right'>YOU</h3>
           <p class='questionSpan' id='agentQuestion1'><b>Tell me about my opponent</b></p>
           <p class='questionSpan' id='agentQuestion2'><b>What should I do now?</b></p>
           <p class='questionSpan' id='agentQuestion3'><b>Why?</b></p>
@@ -139,11 +140,11 @@ window.onbeforeunload = function() {
 
 <div class="row">
 
-  <div class="col-sm-6" id="informationAlgo" style="display:block">
+  <div class="col-sm-6" id="informationAlgo" style="display:none">
 
   </div>
 
-  <div class="col-sm-6" id="commentBox">
+  <div class="col-sm-6" id="commentBox" style="display:none">
 
     <textarea  rows='3' cols='60' id='textAreaComment'> </textarea>
     <p><button id='submitCommentButton'>Submit comment on this round </button>

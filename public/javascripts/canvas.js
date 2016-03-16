@@ -73,16 +73,16 @@ var GameHistory = function(containerDivId, gameHistoryTableId, totalSpanId)
 
 	this.setHistoryDivHtml = function()
 	{
-		var historyHtml = '<table class="table table-bordered">';
-		historyHtml += '<tr><td>Round</td><td>My Choice</td><td>Other Player\'s Choice</td><td>My Score</td></tr>';
-		for(var i = history.length - 1; i >= 0; i--)
-		{
-			historyHtml += ('<tr><td>' + (i + 1) + '</td><td>' + history[i][0]  + '</td><td>'  + history[i][1] + '</td><td>'  + history[i][2] + '</td></tr>');
-		}
-		historyHtml += '</table>';
-		gameHistoryDiv.innerHTML = historyHtml;
-		totalSpan.innerHTML = myTotalScore;
-		// containerDiv.style.display = 'block';
+		// var historyHtml = '<table class="table table-bordered">';
+		// historyHtml += '<tr><td>Round</td><td>My Choice</td><td>Other Player\'s Choice</td><td>My Score</td></tr>';
+		// for(var i = history.length - 1; i >= 0; i--)
+		// {
+		// 	historyHtml += ('<tr><td>' + (i + 1) + '</td><td>' + history[i][0]  + '</td><td>'  + history[i][1] + '</td><td>'  + history[i][2] + '</td></tr>');
+		// }
+		// historyHtml += '</table>';
+		// gameHistoryDiv.innerHTML = historyHtml;
+		// totalSpan.innerHTML = myTotalScore;
+		// // containerDiv.style.display = 'block';
 	}
 
 	this.clearPanel = function()
@@ -518,12 +518,13 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 	var mainCount = countIn;
 	var counter;
 	var decreasingTimeType = decreaseAfterEnd;
+	var elapsedTime;
 
 	var timer = function()
 	{
 		var now = new Date();
-	    var elapsedTime = (now.getTime() - before.getTime());
-	    elapsedTime = Math.floor(elapsedTime/interval); 
+	    // elapsedTime = (now.getTime() - before.getTime());
+	    elapsedTime = Math.floor((now.getTime() - before.getTime())/interval); 
 	    // leftValue += Math.floor(elapsedTime/interval);
 	    count = mainCount - elapsedTime;
 	    if (count < 1)
@@ -548,6 +549,11 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 	this.stopTimer = function()
 	{
 		clearInterval(counter);
+	}
+
+	this.getElapsedTime = function()
+	{
+		return elapsedTime;
 	}
 }
 
@@ -683,7 +689,7 @@ var PrisonersDilemma = function()
 
 	// var gameTimer = new GameTimer(socket, gameTimerEnd);
 
-	
+	var elapsedTimes = [];	
 
 	// var resultTimeEndFunction = function()
 	// {
@@ -802,6 +808,36 @@ var PrisonersDilemma = function()
 		
 	}
 
+	var secondToLast = function(content)
+	{
+		gameManager.startTimer();
+		var briefInfo = content.text;
+		var myTotalPayoff = briefInfo.fromItself + briefInfo.fromOpponent;
+		gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
+		myCanvasContainer.makeSelectionImpossible();
+		myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff);
+	    // myCanvasContainer.setOpponentVisible(briefInfo.opponentChoiceInNumber);
+	    // myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
+	    // myCanvasContainer.setPlayersPayoffText();
+	    // myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);
+	    // // setAgentState(content.agentState);
+	// showPlayerChoicesForGivenTime(reco);
+		// document.getElementById('recommender').innerHTML = '';
+		// resultTimer.startTimer();
+		// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
+		// document.getElementById('agentState').innerHTML = agentStates;
+		document.getElementById('roundNumber').style.display = 'inline';
+		document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
+
+		// document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
+		questionsToAsk.moveToNextRound(content, gameHistory.getHistory());
+		// document.getElementById('questionAndFeedback').style.visibility = 'hidden';
+		// gameHistory.setHistoryDivHtml();
+		setAgentVariables(content);
+		myCanvasContainer.resetAll(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);		
+		document.getElementById('roundNumber').style.display = 'inline';		
+	}
+
 	var serverMessage = function(content)
 	{	
 		if(content.count == 0)
@@ -815,8 +851,9 @@ var PrisonersDilemma = function()
 			//// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
 			//// document.getElementById('agentState').innerHTML = agentStates;
 			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
-			questionsToAsk.moveToNextRound(content);
+			
 			setAgentVariables(content);
+			questionsToAsk.moveToNextRound(content, false);
 			if(!hasRecommender)
 	  		{
 				  	document.getElementById('chatBoxContainer').style.display = 'none';
@@ -830,33 +867,21 @@ var PrisonersDilemma = function()
 		}
 		else if(content.count < content.rounds)
 		{
-			gameManager.startTimer();
-			var briefInfo = content.text;
-			var myTotalPayoff = briefInfo.fromItself + briefInfo.fromOpponent;
-			gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
-			myCanvasContainer.makeSelectionImpossible();
-			myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff);
-		    // myCanvasContainer.setOpponentVisible(briefInfo.opponentChoiceInNumber);
-		    // myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
-		    // myCanvasContainer.setPlayersPayoffText();
-		    // myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);
-		    // // setAgentState(content.agentState);
-		// showPlayerChoicesForGivenTime(reco);
-			// document.getElementById('recommender').innerHTML = '';
-			// resultTimer.startTimer();
-			// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
-			// document.getElementById('agentState').innerHTML = agentStates;
-			document.getElementById('roundNumber').style.display = 'inline';
-			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
-
-			// document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
-			questionsToAsk.moveToNextRound(content);
-			// document.getElementById('questionAndFeedback').style.visibility = 'hidden';
-			gameHistory.setHistoryDivHtml();
-			setAgentVariables(content);
-			myCanvasContainer.resetAll(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);		
-			document.getElementById('roundNumber').style.display = 'inline';
-			setTimeout($.unblockUI, 500); 
+			var elapsedTime = gameManager.getElapsedTime();
+			elapsedTimes.push(elapsedTime);
+			
+			var delay = 0.1;
+			if(elapsedTimes.length > 1)
+			{
+				delay = elapsedTimes[elapsedTimes.length-2] - elapsedTimes[elapsedTimes.length - 1];	
+				if(delay < 0)
+				{
+					delay = 0;
+				}
+			}
+			console.log('delay is ' + delay);
+			setTimeout($.unblockUI, delay * 500);
+			setTimeout(secondToLast, delay * 500, content);
 			// $.unblockUI(); 
 		}
 		else

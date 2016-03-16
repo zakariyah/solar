@@ -239,6 +239,22 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 	}
 	
 
+	this.addHistory = function(history)
+	{
+		var position = 'right';
+		var bdColor = '#e48f0f';
+		var historyHtml = '<div class="col-sm-12" style="padding: 0px">';
+		historyHtml += '<div style="background-color: #E6E6FA; border-radius: 25px;">';
+		historyHtml += '<span class="col-md-1" style="text-align:left">' + (history.length) + '. </span><span class="col-md-4" style="text-align:left">Your Choice: ' + history[0][0]  + '</span> <span class="col-md-4" style="text-align:center">    Associate\'s Choice: '  + history[0][1] + '</span><span class="col-md-3" style="text-align:right">Your Score: '  + history[0][2] + '</span>';
+		// historyHtml += 'Adewale';
+		historyHtml += '</div></div>';
+
+
+		var listElement = document.createElement('li');
+		listElement.innerHTML = historyHtml;
+		chatListObject.appendChild(listElement);
+		chatPanelBody.scrollTop = chatPanelBody.scrollHeight;
+	}
 
 	this.disableAcceptRecommendationButton = function()
 	{
@@ -279,8 +295,10 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		}
 		var position = isHuman ? 'right' : 'left';
 		var bdColor = isHuman ? '#D3FB9f' : '#ffffff';
-		chatItemHtml += '<div class="' + (isHuman ? 'col-sm-offset-2 triangle-isosceles left ': '') + 'col-sm-10" style="padding: 0px">';
-		chatItemHtml += '<div style="background-color: ' +bdColor +';" class="well-sm pull-' + position +'">';
+		var classMeOrYou = isHuman ? 'you' : 'me';
+		chatItemHtml += '<div class="' + (isHuman ? '': '') + 'col-sm-12" style="padding: 0px">';
+		chatItemHtml += '<div class="bubble ' + classMeOrYou + ' pull-' + position +'">';
+		// style="background-color: ' +bdColor +';"
 		chatItemHtml += body;
 		chatItemHtml += '</div></div>';
 
@@ -457,11 +475,15 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 		}
 	}
 
-	this.moveToNextRound = function(contentFromServer)
+	this.moveToNextRound = function(contentFromServer, history)
 	{
 		chatBox.updateContentFromServer(contentFromServer);
 		// enableAllButtons();
 		refreshQuestions();
+		if(history)
+		{
+			chatBox.addHistory(history);
+		}
 	}
 
 	var refreshQuestions = function()
@@ -469,7 +491,15 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 		for(var i = 0; i < questionsAskedForEachRound.length; i++)
 		{
 			questionsAskedForEachRound[i] = false;
+			questionCheckBoxes[i].className = 'questionSpan';
+			questionCheckBoxes[i].onclick = buttonOnClick(i + 1);
 		}
+	}
+
+	var removeStyleFromQuestion = function(val)
+	{
+		questionCheckBoxes[val - 1].className = '';
+		questionCheckBoxes[val - 1].onclick = function(){};
 	}
 
 	var buttonOnClick = function(questionVal)
@@ -501,6 +531,7 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 			// checkBoxToUse[valueSelected-1].disabled = true;
 			// chatBox.getSolutionToQuestion( valueSelected-1, isQuestion, buttonClicked);
 			chatBox.getSolutionToQuestion( valueSelected-1, true, questionSubmitButton);
+			removeStyleFromQuestion(questionVal);
 			// if(isQuestion)
 			// {
 			// 	selectToUse.value = '0';	
