@@ -6,11 +6,11 @@ function player(id)
 	this.history = [];
 	this.addToHistory =  function(arrayOfValues){
 		this.history.push(arrayOfValues) //[choice, value, opponentchoice, opponentvalue]);
-		// console.log("after pushing: " + this.history.length);
+		console.log("after pushing: " + JSON.stringify(this.history));
 	};
 
 	var gameProperties = require('../controller/gameProperties');
-	this.gameMatrix = gameProperties.gameMatrix;
+	var gameMatrix = gameProperties.pdGameMatrix;
 	this.getCummulativeValue = function()
 	{
 		cummulative = 0;
@@ -54,18 +54,23 @@ function player(id)
 		}
 		html += toBeAddedAll;
 		html += "</table>";
-
+		// gameProperties.gameMatrix = [[-2, 5], [0, 0]];
+		// [['A', 'B', 0, 5], ['B', 'A', 5, 0], ['A', 'A', 3, 3], ['B', 'B', 1, 1]];
 		var briefAnswer = "";
 		var lastIndex = this.history.length - 1;
-		var playerChoice = this.gameChoices[this.history[lastIndex][0] - 1];
-		var opponentChoice = this.gameChoices[this.history[lastIndex][2] - 1];
-		var playerGotFromItself = this.gameMatrix[this.history[lastIndex][0] - 1][0];
-		var playerGotFromOpponent = this.gameMatrix[this.history[lastIndex][2] - 1][1];
-		var total = playerGotFromItself + playerGotFromOpponent;
+		var playerChoiceNum = this.history[lastIndex][0] - 1;
+		var opponentChoiceNum = this.history[lastIndex][2] - 1;
+		var playerChoice = this.gameChoices[playerChoiceNum];
+		var opponentChoice = this.gameChoices[opponentChoiceNum];
+		var playerGotFromItself = gameMatrix[this.history[lastIndex][0] - 1][0];
+		var playerGotFromOpponent = gameMatrix[this.history[lastIndex][2] - 1][1];
+		var val = 2 * playerChoiceNum + opponentChoiceNum;
+		var total = gameMatrix[val][2] ;  //playerGotFromItself + playerGotFromOpponent;
+		var totalOpponent = gameMatrix[val][3];
 		var playerChoiceWasRandom = (this.history[lastIndex][4] == 0);
 
 		// new value to be sent
-		var briefInfo = {playerChoiceInNumber : this.history[lastIndex][0], opponentChoiceInNumber : this.history[lastIndex][2], fromItself: playerGotFromItself, fromOpponent: playerGotFromOpponent, isRandom : playerChoiceWasRandom};
+		var briefInfo = {playerChoiceInNumber : this.history[lastIndex][0], opponentChoiceInNumber : this.history[lastIndex][2], fromItself: playerGotFromItself, fromOpponent: playerGotFromOpponent, isRandom : playerChoiceWasRandom, total : total, totalOpponent: totalOpponent};
 		return  briefInfo;
 	};
 }

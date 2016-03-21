@@ -239,16 +239,21 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 	}
 	
 
-	this.addHistory = function(history)
+	this.addHistory = function(history, totalOpponent, total)
 	{
+		console.log('history is ' + history);
 		var position = 'right';
-		var bdColor = '#e48f0f';
+		var assColor = '#e48f0f';
+		var plColor = '#206fc5'
 		var historyHtml = '<div class="col-sm-12" style="padding: 0px">';
 		historyHtml += '<div style="background-color: #E6E6FA; border-radius: 25px;">';
-		historyHtml += '<span class="col-md-1" style="text-align:left">' + (history.length) + '. </span><span class="col-md-4" style="text-align:left">Your Choice: ' + history[0][0]  + '</span> <span class="col-md-4" style="text-align:center">    Associate\'s Choice: '  + history[0][1] + '</span><span class="col-md-3" style="text-align:right">Your Score: '  + history[0][2] + '</span>';
+		historyHtml += '<span class="col-md-6" style="text-align:left; color:#206fc5">';
+		historyHtml +=  'Your Choice: ' + history[0][0]  + '<br/>Your Score: ' + total + ' </span>';
+		historyHtml +=  '<span class="col-md-6" style="text-align:right; color:#e48f0f">';
+		historyHtml +=  'Associate\'s Choice: '  + history[0][1] + '<br/>Associate\'s Score: ' + totalOpponent + '</span>';
+		// historyHtml +=  'Your Score: '  + history[0][2] + '</span>';
 		// historyHtml += 'Adewale';
 		historyHtml += '</div></div>';
-
 
 		var listElement = document.createElement('li');
 		listElement.innerHTML = historyHtml;
@@ -286,6 +291,30 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		typingText.style.display = 'none';
 	}
 
+	var createOnlyHeader = function(roundNumber)
+	{
+		var chatItemHtml = '';
+		if((roundNumber in roundsAlreadyAsked))
+		{
+			return;
+		}
+		chatItemHtml += createRoundHeader(roundNumber);
+		// var position = isHuman ? 'right' : 'left';
+		// var bdColor = isHuman ? '#D3FB9f' : '#ffffff';
+		// var classMeOrYou = isHuman ? 'you' : 'me';
+		// chatItemHtml += '<div class="' + (isHuman ? '': '') + 'col-sm-12" style="padding: 0px">';
+		// chatItemHtml += '<div class="bubble ' + classMeOrYou + ' pull-' + position +'">';
+		// style="background-color: ' +bdColor +';"
+		// chatItemHtml += body;
+		chatItemHtml += '</div></div>';
+
+		var listElement = document.createElement('li');
+		listElement.innerHTML = chatItemHtml;
+		chatListObject.appendChild(listElement);
+		chatPanelBody.scrollTop = chatPanelBody.scrollHeight;
+	}
+
+
 	var createOneChatItem = function(isHuman, header, body, roundNumber)
 	{	
 		var chatItemHtml = '';
@@ -295,9 +324,10 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		}
 		var position = isHuman ? 'right' : 'left';
 		var bdColor = isHuman ? '#D3FB9f' : '#ffffff';
+		var textColor = isHuman ? '#206fc5' : '#008000';
 		var classMeOrYou = isHuman ? 'you' : 'me';
 		chatItemHtml += '<div class="' + (isHuman ? '': '') + 'col-sm-12" style="padding: 0px">';
-		chatItemHtml += '<div class="bubble ' + classMeOrYou + ' pull-' + position +'">';
+		chatItemHtml += '<div class="bubble ' + classMeOrYou + ' pull-' + position +'" style="color:' + textColor  +'">';
 		// style="background-color: ' +bdColor +';"
 		chatItemHtml += body;
 		chatItemHtml += '</div></div>';
@@ -384,8 +414,13 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 	this.updateContentFromServer = function(content)
 	{
 		contentFromServer = content;
-		
 		adherenceHistory.updateHistory(contentFromServer);
+		
+	}
+
+	this.createHeaderOnly = function()
+	{
+		createOnlyHeader(getRoundNumber());	
 	}
 
 	var getRoundNumber = function()
@@ -482,8 +517,9 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 		refreshQuestions();
 		if(history)
 		{
-			chatBox.addHistory(history);
+			chatBox.addHistory(history, contentFromServer.text.totalOpponent, contentFromServer.text.total);
 		}
+		chatBox.createHeaderOnly();
 	}
 
 	var refreshQuestions = function()

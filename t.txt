@@ -30,3 +30,8 @@ Fix the tit-for-tat delay -- done
 Fix the clicking -- do
 Fix the versions
 Fix the quiz for the S++
+
+Fix the cover
+Fix the chat colour
+Make the algorithm tell you about yourself
+Stop the chats for 5 rounds

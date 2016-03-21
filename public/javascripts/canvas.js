@@ -673,6 +673,9 @@ var PrisonersDilemma = function()
 	var chatBox = new ChatBox('chatItems', myCanvasContainer, adherenceHistory);
 	var questionsToAsk = new QuestionsToAsk('agentQuestion', 'feedbackQuestion', 'agentQuestionSubmit', 'feedbackSubmit', chatBox);
 
+	//for chat button
+	var rowChat = document.getElementById('rowChat');
+
 	var gameManager;
 
 	var agentVariablesDiv = document.getElementById('informationAlgo');
@@ -809,10 +812,17 @@ var PrisonersDilemma = function()
 	}
 
 	var secondToLast = function(content)
-	{
+	{	
+		var roundBeforeShowingChat = 1;
+		if(content.count == roundBeforeShowingChat)
+		{
+			rowChat.style.display = 'block';
+		}
 		gameManager.startTimer();
 		var briefInfo = content.text;
-		var myTotalPayoff = briefInfo.fromItself + briefInfo.fromOpponent;
+		console.log('brief ' + JSON.stringify(content));
+		var myTotalPayoff = briefInfo.total;
+		var opponentTotal = briefInfo.totalOpponent;
 		gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
 		myCanvasContainer.makeSelectionImpossible();
 		myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff);
@@ -821,7 +831,7 @@ var PrisonersDilemma = function()
 	    // myCanvasContainer.setPlayersPayoffText();
 	    // myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);
 	    // // setAgentState(content.agentState);
-	// showPlayerChoicesForGivenTime(reco);
+		// showPlayerChoicesForGivenTime(reco);
 		// document.getElementById('recommender').innerHTML = '';
 		// resultTimer.startTimer();
 		// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
@@ -878,6 +888,10 @@ var PrisonersDilemma = function()
 				{
 					delay = 0;
 				}
+			}
+			if(!delay)
+			{
+				delay = 0;
 			}
 			console.log('delay is ' + delay);
 			setTimeout($.unblockUI, delay * 500);

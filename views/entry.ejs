@@ -47,15 +47,15 @@ window.onbeforeunload = function() {
     <table class='phasetableMain'>
       <tr><td rowspan='2' colspan='2'></td><td colspan='2' rowspan='1' class='tableinformation tdContentCenter associateColor'>Your Associate</td><td>&nbsp;</td></tr>
       <tr><td rowspan='1' colspan='1' class='tableinformation tdContentCenter associateColor' id='opponentAction1'>A</td><td colspan='1' class='tableinformation tdContentCenter associateColor'  id='opponentAction2'>B</td><td>&nbsp;</td></tr>
-      <tr><td rowspan='2' colspan='1' class='tableinformation tdContentRight myColor'>You</td><td class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction1'>A</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result1'> <span class='myColor'>3</span>,<span class='associateColor'>3</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result2'><span class='myColor'>-2</span>, <span class='associateColor'>5</span></td><td>&nbsp;</td></tr>
-      <tr><td colspan='1' class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction2'>B</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result3'> <span class='myColor'>5</span>, <span class='associateColor'>-2</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result4'><span class='myColor'>0</span>, <span class='associateColor'>0</span></td><td>&nbsp;</td></tr>
+      <tr><td rowspan='2' colspan='1' class='tableinformation tdContentRight myColor'>You</td><td class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction1'>A</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result1'> <span class='myColor'>3</span>,<span class='associateColor'>3</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result2'><span class='myColor'>0</span>, <span class='associateColor'>5</span></td><td>&nbsp;</td></tr>
+      <tr><td colspan='1' class='tableinformation tdContentCenter'><button  style='width:100%' class='myColor' id='yourAction2'>B</button></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result3'> <span class='myColor'>5</span>, <span class='associateColor'>0</span></td><td colspan='1' class='tableinformation tdContentCenter borderedTable' id='result4'><span class='myColor'>1</span>, <span class='associateColor'>1</span></td><td>&nbsp;</td></tr>
       <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Average Score</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='score'>0.0</td><td>&nbsp;</td></tr>
       <tr><td colspan='3' class='tableinformation tdContentRight myColor'>Earnings</td><td colspan='1' class='tableinformation tdContentCenter myColor' id='earnings'>0 USD</td><td>&nbsp;</td></tr>
     </table>
   </div> 
   <div class='row' style='text-align: center;display:none' > <button  id='nextButton' style='width:40%;height:40px'><b>NEXT</b></button></div> 
 </div></div>
-      <div class='row'>
+      <div class='row' id='rowChat' style='display:none'>
       <nav role="navigation" class="col-md-8">
         <ul class="nav nav-tabs"  role="tablist">
         <li role="presentation" class="active" id="chatBoxContainerLink"><a data-toggle="tab" aria-controls="chatBoxContainer" role="tab" href="#chatBoxContainer">Chat</a></li>

@@ -1,3 +1,23 @@
+var Blocker = function()
+{
+	this.block = function(options)
+	{
+		for(i in options)
+		{
+			options[i].style.display = 'none';
+		}
+	}
+
+	this.unblock = function(options)
+	{
+		for(i in options)
+			{
+				options[i].style.display = 'inline';
+			}
+	}
+
+}
+
 var OptionButton = function(htmlId1, htmlId2, nextRound)
 {	
 	var clickedColor = '#00FF00';
@@ -6,6 +26,11 @@ var OptionButton = function(htmlId1, htmlId2, nextRound)
 	var isClicked = [false, false];
 	var nextRoundFunction = nextRound;
 	// alert( '1' + JSON.stringify(nextRound));
+
+	this.getButtons = function()
+	{
+		return but;
+	}
 
 	var butClick = function(butNumber)
 	{
@@ -180,7 +205,8 @@ var CanvasContainer = function(socket)
 		  // myOptions.showTag(0);
 		  that.setSubmitButtonVisible(false);
 		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : 0});
-		  $.blockUI({ message: '<h1><img src="/images/ajax-loader.gif" /> <p> Moving to next round. Please wait.... </h1>' });
+		  // $.blockUI({ message: '<h1><img src="/images/ajax-loader.gif" /> <p> Moving to next round. Please wait.... </h1>' });
+		  (new Blocker()).block(myOptions.getActionButtons().getButtons());
 		}
 	}
 
@@ -240,6 +266,11 @@ var CanvasContainer = function(socket)
 		var submitButton = document.getElementById('nextButton');
 		submitButton.style.display = visibility ? 'inline' : 'none';
 		submitButton.disabled = !visibility ;
+	}
+
+	this.getOptions = function()
+	{
+		return myOptions;
 	}
 }
 
@@ -407,7 +438,7 @@ var PrisonersDilemma = function()
 	var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
 	var myCanvasContainer =  new CanvasContainer(socket);
 
-
+	var blocker = new Blocker();
 	var gameManager ;
 
 	// var gameTimerEnd = function()
@@ -491,7 +522,7 @@ var PrisonersDilemma = function()
 	{
 		gameManager.startTimer();
 		var briefInfo = content.text;
-		var myTotalPayoff = briefInfo.fromItself + briefInfo.fromOpponent;
+		var myTotalPayoff = briefInfo.total;
 		
 		myCanvasContainer.makeSelectionImpossible();
 	    myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff);
@@ -536,8 +567,8 @@ var PrisonersDilemma = function()
 					delay = 0;
 				}
 			}
-			setTimeout($.unblockUI, delay * 500);
-			setTimeout(secondToLast, delay * 500, content);
+			setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, delay * 100);
+			setTimeout(secondToLast, delay * 100, content);
 			// $.unblockUI(); 
 		}
 		else
@@ -546,7 +577,7 @@ var PrisonersDilemma = function()
       		var cummulative = content.cumm;
       		var numberOfRounds = content.rounds;
       		endGame(cummulative, numberOfRounds);
-      		setTimeout($.unblockUI, 1000);
+      		setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, 500);
 		}
 	}
 
