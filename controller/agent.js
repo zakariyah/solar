@@ -4,6 +4,8 @@
 
 var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nombre, _me, _A[2], _M, _lambda, _game[1024]
 {
+	
+
 	this.payOffMatrix =  payOffMatrix;
 	this.isRandom = isRandom;
 	var round = 0;

@@ -127,9 +127,9 @@ var Options = function(nextRoundFunction)
 	{
 // 		cumScore += scoreVal;
 		roundNumber += 1;
-		earnings.innerHTML = (scoreVal * 0.01) + ' USD';
+		earnings.innerHTML = Number(scoreVal * 0.02).toFixed(2) + ' USD';
 // 		alert(cumScore + ' ' + scoreVal);
-		score.innerHTML = Number(scoreVal / roundNumber).toFixed(2);;
+		score.innerHTML = Number(scoreVal / roundNumber).toFixed(2);
 	}
 
 	this.makeSelection = function(disable)
@@ -330,11 +330,11 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 0;
+	var totalWaitingTime = 30;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{
-		document.getElementById('timerBegin').innerHTML = count + " second" + ((count > 1) ? "s" : "") + " remaining";
+		document.getElementById('timerBegin').innerHTML = count + " second" + ((count > 1) ? "s" : "") + " remaining. Please wait while we instantiate the bot";
 	}
 
 	var waitingTimeEndFunction = function()
@@ -547,11 +547,13 @@ var PrisonersDilemma = function()
 	{	
 		if(content.count == 0)
 		{
-			waitingTimeElapsed. stopTimer();
+			waitingTimeElapsed.stopTimer();
 			myCanvasContainer.startGame();
 			gameManager.startTimer();
 			// gameTimer.startTimer();
 			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
+			document.getElementById('actionAndReview').style.display = 'block';
+			document.getElementById('timerBegin').innerHTML = '';
 		}
 		else if(content.count < content.rounds)
 		{

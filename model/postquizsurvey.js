@@ -2,26 +2,24 @@ var mongoose = require('mongoose');
   var postQuizSurveySchema = new mongoose.Schema({
   gameid: { type: String }
   , playerid: { type: String }
-, smartOpponent: String
-, coopOpponent: String
-, predOpponent: String,
-humanAssociate: String,
-smart: String
-, coop: String,
+, cummulativeScore: String
+, numberOfRounds: String
+, accessSkills: String,
+enjoy: String,
+familiarity: String
+, risk: String,
+cooperative: String,
+forgiving: String,
 predictable: String,
-strategy: String,
-strategyOpponent: String,
-usefulRecommendation: String,
-followRecommendation: String,
-age: String,
-gender: String,
-nationality: String,
-qualification: String,
-field: String,
-familiarity: String,
-experience: String,
-cummulativeScore:String,
-numberOfRounds : String
+vengeful: String,
+selfish: String,
+cooperative1: String,
+forgiving1: String,
+predictable1: String,
+vengeful1: String,
+selfish1: String,
+thought: String,
+preference: String
 });
 
 postQuizSurveySchema.statics.createPostQuiz = function(information) {
@@ -29,26 +27,24 @@ postQuizSurveySchema.statics.createPostQuiz = function(information) {
     var newPostQuizSurvey = new this({
        playerid: information.playerid,
        gameid: information.gameid,
-       smartOpponent: information.smartOpponent
-, coopOpponent: information.coopOpponent
-, predOpponent: information.predOpponent,
-humanAssociate: information.humanAssociate,
-smart: information.smart
-, coop: information.coop,
+       cummulativeScore: information.cummulativeScore
+, numberOfRounds: information.numberOfRounds
+, accessSkills: information.accessSkills,
+enjoy: information.enjoy,
+familiarity: information.familiarity
+, risk: information.risk,
+cooperative: information.cooperative,
+forgiving: information.forgiving,
 predictable: information.predictable,
-strategy: information.strategy,
-strategyOpponent: information.strategyOpponent,
-usefulRecommendation: information.usefulRecommendation,
-followRecommendation: information.followRecommendation,
-   		 age: information.age
-, gender: information.gender
-, nationality: information.nationality,
-qualification: information.qualification,
-majorfield: information.field
-, familiar: information.familiarity,
-playedbefore: information.experience,
-cummulativeScore: information.cummulativeScore,
-numberOfRounds : information.numberOfRounds
+vengeful: information.vengeful,
+selfish: information.selfish,
+   		 cooperative1: information.cooperative1
+, forgiving1: information.forgiving1
+, predictable1: information.predictable1,
+vengeful1: information.vengeful1,
+selfish1: information.selfish1
+, thought: information.thought,
+preference: information.preference
     });
 
     newPostQuizSurvey.save(function(err) {

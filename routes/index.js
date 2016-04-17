@@ -40,7 +40,7 @@ router.post('/postquizsurvey', function(req, res) {
 	console.log("session is: " + req.body.playerid);
 	savePostQuiz(req);	
 	savePayment(req);
-	calculatePayment(req, res)	;
+	calculatePayment(req, res);
 });
 
 router.get('/quiz', function(req, res) {

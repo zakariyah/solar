@@ -55,7 +55,7 @@
           <p>Thank you for deciding to participate in the experiment.
           We are a research team at Masdar Institute and Massachusetts Institute of Technology (MIT), and we seek your participation in furthering our understanding of human behavior in games.
           <p>You can make a reasonable amount of money from this game depending on the decisions you make. You are therefore advised to read the following instructions carefully in order to make informed decisions throughout the course of the game. Your participation in this game will take approximately 30 minutes.
-          <p>For your participation, you will be compensated with the task's standard reward of 0.5USD, as well as a significant bonus that depends on your performance in the experiment. These will be paid out at the end of the game, provided you follow all instructions, and play the game till the end.
+          <p>For your participation, you will be compensated with the task's standard reward of 1USD, as well as a significant bonus that depends on your performance in the experiment. These will be paid out at the end of the game, provided you follow all instructions, and play the game till the end.
           <p>You will complete 2 stages before starting the game itself. In the first stage, you will be provided with a walkthrough of the game via screenshots of the actual game interface along with the instructions for the game. In the second stage, you will be asked 2 comprehension questions to test your understanding of the game.
           <p><b>After passing the comprehension test, you will immediately be matched with a BOT who will be your associate throughout the course of the game. </b>
           <p>Please confirm that you are willing to participate in good faith, using the following checkbox. If you are not willing to do so, please return the assignment.
@@ -75,7 +75,7 @@
           </div>
                             
                             <div id='page3' style='display:none'>
-                          <p> <b> YOUR CHOICES </b>
+                          <p>
                           In each round of the game, you and your associate will be individually offered a choice between two actions, A or B. You submit your choice by clicking on the option that represents that choice. In any given round, you will not be able to see the choice of your associate until after you both submit your choices.
                           <div>
                             <img src="/images/tutorial/actionPhase.png" class='col-md-12' style="display: block; margin: 0 auto;" />
@@ -84,8 +84,8 @@
                         </div>
 
                             <div id='page4' style='display:none'>
-                              <p> <b> YOUR POINTS</b>
-          At the end of the round, the points obtained by both of you will be highlighted for you to see. Your points in each round will depend on your choice and the choice of your opponent. This gives rise to the four possible scenarios as shown in the table below. In each cell, the first number represents your points and second number represents the points of your associate. Thus the scenario below occurs when you choose A and the other player chooses B.
+                              <p>
+          At the end of the round, the points obtained by both of you will be highlighted for you to see. Your points in each round will depend on your choice and the choice of your opponent. This gives rise to the four possible scenarios as shown in the table below. In each cell, the first number(in blue) represents your points and second number represents the points of your associate. Thus the scenario below occurs when you choose A and the other player chooses B.
           
           <div>
                   <img src="/images/tutorial/area2.png" style="display: block;"  class='col-md-12'/>
@@ -94,7 +94,7 @@
 
                             <div id='page5' style='display:none'>
                               <p> <b> YOUR EARNINGS</b>
-          Your accumulated earnings is obtained by summing your points over all rounds of the game thus far. These points are then converted to money by multiplying each point by $0.01. In the unlikely event that your total earnings at the end of all rounds is negative, it will be ignored (no negative bonus earning is possible).
+          Your accumulated earnings is obtained by summing your points over all rounds of the game thus far. These points are then converted to money by multiplying each point by $0.02.
           
           <div>
               <img src="/images/tutorial/area2.png" style="display: block; margin: 0 auto;" />
@@ -120,7 +120,7 @@
                   <img src="/images/tutorial/actionPhase.png" class='col-md-12' style="display: block; margin: 0 auto;" />
                   <form class='form' method='post' action='./entry' id='submissionForm' onSubmit="return validateAnswers();">
                             <div class="form-group text-center">
-                           <label>1.  How much do you get if you choose action A but the other player  chooses action B</label>
+                           <label>1.  How much do you get if you choose action A while your associate chooses action B</label>
                            
                             <label class="radio-inline">
                   <input type="radio" name="1" value="3"> 3
@@ -138,7 +138,7 @@
                   </div>
 
                     <div class="form-group  text-center">
-                    <label>2.  How much do you get if you choose action B but the other player chooses action B</label>
+                    <label>2.  How much do you get if you choose action B and your associate chooses action B</label>
                             <label class="radio-inline">
                   <input type="radio" name="2" value="3"> 3
                   </label>

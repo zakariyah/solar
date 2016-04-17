@@ -894,8 +894,8 @@ var PrisonersDilemma = function()
 				delay = 0;
 			}
 			console.log('delay is ' + delay);
-			setTimeout($.unblockUI, delay * 500);
-			setTimeout(secondToLast, delay * 500, content);
+			setTimeout($.unblockUI, 0.5 * 500);
+			setTimeout(secondToLast, 0.5 * 500, content);
 			// $.unblockUI(); 
 		}
 		else

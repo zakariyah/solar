@@ -1,37 +1,6 @@
-Make next better
-Tackle end and final questions
-Upload to server
-Send to Professors
+What should happen if he is a leader and opponent is not guilty.
 
 
-Today insha Allah
-0. Write your CV and send to Najla  -- done
-0.5 Ask for recommendations         -- do this
-1. Write the report for arabic speech to text
-2. Write report on big data mobility
-3. Read the code for the algorithm
-4. Solve some algorithm questions
 
-
-1. Get recommendation
-2. Write reports
-3. Start reading code
-
-
-1. Fix the questions link when clicked done
-2. Fix the various versions
-3. Send to Umm Khuwala
-4. Send mail to the Professors
-
-
-Here:
-Fix the tutorial -- done
-Fix the tit-for-tat delay -- done
-Fix the clicking -- do
-Fix the versions
-Fix the quiz for the S++
-
-Fix the cover
-Fix the chat colour
-Make the algorithm tell you about yourself
-Stop the chats for 5 rounds
+Make the results better
+Make the user

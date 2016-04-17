@@ -48,7 +48,8 @@ var calculatePayment = function(req, res)
 		var totalExpectedPerRound = 5; // * numberOfRounds;
 		if(totalExpectedPerRound != 0)
 		{
-			var basePayment = (accruedSum/ totalExpectedPerRound) *0.05;
+			// var basePayment = (accruedSum/ totalExpectedPerRound) *0.05;
+			var basePayment = (accruedSum) *0.02;
 		}
 		else
 		{

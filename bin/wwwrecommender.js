@@ -6,7 +6,7 @@ var app = require('../app');
 var io = require('socket.io');
 // var cookieParser = require('cookie-parser');
 var connecter = require('../database');
-connecter('mongodb://127.0.0.1/mayadaTest');
+connecter('mongodb://127.0.0.1/gameTest');
 var SessionSockets = require('session.socket.io');
 var gameController = require('../controller/gameController');
 var gameplayer = require('../controller/gameplayer');
@@ -90,7 +90,6 @@ ionew.sockets.on('connection', function (socket) {
 		if(firstPlayerJustEntered)
 		{
 			gameControllerArray[gameCounter] = new gameController(2);
-			
 		}
 		else
 		{
@@ -98,10 +97,10 @@ ionew.sockets.on('connection', function (socket) {
 		}
 		playerHiitNumberMap[socket.id] = hiitNumber; // mapping socketid to hiitNumber.
 
-			// get Game type
-			var gameTypeIndex = gameCounter % gameTypes.length;
-			var presentGameType = gameTypes[gameTypeIndex];
-			startGameTypeForTheNextTwoPlayers(presentGameType);		
+		// get Game type
+		var gameTypeIndex = gameCounter % gameTypes.length;
+		var presentGameType = gameTypes[gameTypeIndex];
+		startGameTypeForTheNextTwoPlayers(presentGameType);		
 	});
 
 	function startGameTypeForTheNextTwoPlayers(gameType)
@@ -109,7 +108,7 @@ ionew.sockets.on('connection', function (socket) {
 		// if normal
 		if(gameType == 'normal')
 		{
-			
+			console.log('here normal');
 			var player = new gameplayer(gameCounter, socket, false, 1, playerHiitNumberMap[socket.id]);
 			gameControllerArray[gameCounter].addPlayer(player);
 			if(gameControllerArray[gameCounter].isFilled())
@@ -236,6 +235,7 @@ ionew.sockets.on('connection', function (socket) {
 
 	function sendMessageAndStart()
 	{
+		console.log('game started ');
 		for(var i in gameControllerArray[gameCounter].gamePlayers)
 			{
 				
@@ -255,6 +255,7 @@ ionew.sockets.on('connection', function (socket) {
 						var agentState = playerToSendMessage.getRecommenderVariables();
 						playerToSendMessage.sessionSocket.emit('serverMessage', {count : 0, text : message, rounds : numberOfRounds, recommenderOptionValue : recommenderOption, recommendation : recc, agentState : agentState});
 						playerToSendMessage.sessionSocket.emit('start');
+						console.log('server message and start emmited');
 				}
 			}
 	}
