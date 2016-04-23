@@ -5,7 +5,7 @@ var savePostQuiz = function(req)
 {
 	var informationStore = req.body;	
 	informationStore['gameid'] = gameProperties.gameId;
-	console.log(JSON.stringify(informationStore));
+	// console.log(JSON.stringify(informationStore));
 	postquizsurvey.createPostQuiz(informationStore);
 	
 };

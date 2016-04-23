@@ -6,7 +6,7 @@ function player(id)
 	this.history = [];
 	this.addToHistory =  function(arrayOfValues){
 		this.history.push(arrayOfValues) //[choice, value, opponentchoice, opponentvalue]);
-		console.log("after pushing: " + JSON.stringify(this.history));
+		// console.log("after pushing: " + JSON.stringify(this.history));
 	};
 
 	var gameProperties = require('../controller/gameProperties');

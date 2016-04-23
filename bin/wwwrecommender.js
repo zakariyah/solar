@@ -69,7 +69,8 @@ ionew.sockets.on('connection', function (socket) {
 						var playerObject = gameControllerArray[gameCounter].gamePlayers[playersId[playerId]];
 						if(!playerObject.isAgent)
 						{ // only the non agent gets the recommendation
-							playerObject.setHasRecommender(false);
+							// not needed for first game
+							// playerObject.setHasRecommender(false);
 						}						
 					}
 
