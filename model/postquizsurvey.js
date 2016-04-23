@@ -19,7 +19,9 @@ predictable1: String,
 vengeful1: String,
 selfish1: String,
 thought: String,
-preference: String
+preference: String,
+reason1:String,
+reason2:String
 });
 
 postQuizSurveySchema.statics.createPostQuiz = function(information) {
@@ -44,7 +46,9 @@ selfish: information.selfish,
 vengeful1: information.vengeful1,
 selfish1: information.selfish1
 , thought: information.thought,
-preference: information.preference
+preference: information.preference,
+reason1:information.reason1,
+reason2:information.reason2
     });
 
     newPostQuizSurvey.save(function(err) {

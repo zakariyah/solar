@@ -165,7 +165,7 @@ htmlString += "<div class='form-group'><b>Associate Identity:</b><p>1. At the be
 htmlString += "<div class='form-group'><div class='col-sm-10'><div class='checkbox'><label><input type='radio' name='thought' value='1'>  Yes, a BOT as said</label><label><input type='radio' name='thought' value='2'>  No, a HUMAN associate</label></div></div></div>";
 
 htmlString += "<div class='form-group'><div class='col-sm-10'><label for='inputEmail3' class='control-label col-sm-6'>Please explain briefly the reason for your choice above.</label>";
-htmlString += "<div class=' col-sm-6'><textarea class='form-control' rows='3'></textarea></div></div></div>";
+htmlString += "<div class=' col-sm-6'><textarea name='reason1' class='form-control' rows='3'></textarea></div></div></div>";
 
 
 htmlString += "<div class='form-group'><b>Associate Preference:</b><p>2. Considering your experience in the just concluded game, who would you rather play the same game with?” </p></div>";
@@ -173,7 +173,7 @@ htmlString += "<div class='form-group'><b>Associate Preference:</b><p>2. Conside
 htmlString += "<div class='form-group'> <div class='col-sm-10'><div class='checkbox'><label><input type='radio' name='preference' value='1'>  BOT</label><label> <input type='radio' name='preference' value='2'>  HUMAN</label></div></div></div>";
 
 htmlString += "<div class='form-group'><div class='col-sm-10'><label for='inputEmail3' class='control-label col-sm-6'>Please explain briefly the reason for your choice above.</label>";
-htmlString += "<div class=' col-sm-6'><textarea class='form-control' rows='3'></textarea></div></div></div>";
+htmlString += "<div class=' col-sm-6'><textarea name='reason2' class='form-control' rows='3'></textarea></div></div></div>";
 htmlString += " <div class='form-group'><div class='col-sm-offset-6 col-sm-6'>";
 htmlString += "<input name='proceed' type='submit' class='btn btn-primary' value='Go To Payment'/></div></div>";
 htmlString += "</div>";
