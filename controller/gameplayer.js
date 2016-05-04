@@ -57,11 +57,13 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 
 	this.getTimeOfAction = function()
 	{
+		// console.log('time gotten ' + this.timeOfAction);		
 		return this.timeOfAction;
 	}
 
 	this.setTimeOfAction = function(timeT)
 	{
+		// console.log('time set ' + timeT);
 		this.timeOfAction = timeT;
 	}
 
@@ -122,6 +124,7 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 		{
 			return this.recommender.getAgentState();
 		}
+		console.log('okay here, no recommender for ' + this.id);
 		return null;
 	}
 

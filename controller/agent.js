@@ -16,16 +16,16 @@ var agent = function(nombre, playerIndex, payOffMatrix, lambda, isRandom) // nom
 		var myM = [];
 		myM[0] = [];
 		myM[1] = [];
-		// myM[0][0] = [0.6, 0];
-		// myM[0][1] = [1, 0.2];
-		// myM[1][0] = [0.6, 1];
-		// myM[1][1] = [0, 0.2];
+		myM[0][0] = [0.6, 0];
+		myM[0][1] = [1, 0.2];
+		myM[1][0] = [0.6, 1];
+		myM[1][1] = [0, 0.2];
 
 		//  for new matrix
-		myM[0][0] = [0.6, -0.4];
-		myM[0][1] = [1, 0.0];
-		myM[1][0] = [0.6, 1];
-		myM[1][1] = [-0.4, 0.0];
+		// myM[0][0] = [0.6, -0.4];
+		// myM[0][1] = [1, 0.0];
+		// myM[1][0] = [0.6, 1];
+		// myM[1][1] = [-0.4, 0.0];
 		return myM;
 	}
 	

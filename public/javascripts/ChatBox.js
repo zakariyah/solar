@@ -206,13 +206,19 @@ var AgentStateSettings = function()
 	{
 		return agentState.doBetter;
 	}
-}
+
+	this.getWhatAreMyOptions = function(agentState)
+	{
+		return agentState.whatAreMyOptions;
+	}
+}	
+
 
 var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 {	
 	var chatListObject = document.getElementById(chatItemId);
 	var contentFromServer;
-	var questions = ['Tell me about my opponent', 'What should I do now?', 'Why?', 'Why shouldn\'t I do otherwise?','How do I do better?'];
+	var questions = ['Tell me about my opponent', 'What should I do now?', 'Why?', 'What are my options?','How do I do better?'];
 	var feedbacks = ['You were wrong!', 'You were right'];
 	var agentSettings = new AgentStateSettings();
 	var roundsAlreadyAsked = {};
@@ -451,8 +457,9 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 			return agentSettings.getReason(contentFromServer.agentState);
 		}
 		else if(questionNumber == 3)
-		{
-			return agentSettings.getReasonProhibitingOtherAction(contentFromServer.agentState);
+		{// change this
+			return agentSettings.getWhatAreMyOptions(contentFromServer.agentState)[0];
+			// return agentSettings.getReasonProhibitingOtherAction(contentFromServer.agentState);
 		}
 		else if(questionNumber == 4)
 		{

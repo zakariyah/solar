@@ -9,7 +9,10 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
 	this.omega = 1;
 	this.s1 = _s1;
 	this.s2 = _s2;
-	
+	console.log("s1 and s2 " + this.s1 + " " + this.s2);
+	this.payoffDifference = ''; //  bully, generous, fair
+	this.sameActions = false;
+
 	var strategyPair  = require('./strategyPair');
 
 	this.MAXLENGTH = 2;
@@ -24,11 +27,61 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
 
 	this.acts[1] = [this.s1 % this.A[1], this.s2 % this.A[1]];
 
+	this.typeOfExpert = -10; // default for problems
+	var sumOfValsInArray = function(arrayVals)
+	{
+		return arrayVals.reduce(function(a, b) { return a + b; }, 0);
+	}
+
+	// this is hardcoded for two player prisoners dilema
+	if(sumOfValsInArray(this.acts[0]) == 0 && sumOfValsInArray(this.acts[1]) == 0)
+	{
+		this.sameActions = true;
+		this.typeOfExpert = 1; // cc, cc
+	}
+	else if(sumOfValsInArray(this.acts[0]) == 2 && sumOfValsInArray(this.acts[1]) == 2)
+	{
+		this.sameActions = true;
+		this.typeOfExpert = 2; // dd, dd
+	}
+
+	else if(sumOfValsInArray(this.acts[0]) == 1 && sumOfValsInArray(this.acts[1]) == 1)
+	{
+			this.typeOfExpert = 3; // dc, cd	 or cd, dc
+			this.sameActions = false;
+	}
+	
+	else if(sumOfValsInArray(this.acts[0]) == 0 && sumOfValsInArray(this.acts[1]) == 2)
+	{
+		this.sameActions = false;
+		this.typeOfExpert = 4; // cc, dd
+	}
+	
+	else if(sumOfValsInArray(this.acts[0]) == 0 && sumOfValsInArray(this.acts[1]) == 1)
+	{
+		this.sameActions = false;
+		this.typeOfExpert = 5; // cc, dc
+	}
+
+
 	this.barR = [];
 	// expected payoff target
 	// console.log(this.acts);
 	this.barR[0] = ( this.M[0][this.acts[0][0]][this.acts[1][0]] + this.M[0][this.acts[0][1]][this.acts[1][1]])/ 2.0;
 	this.barR[1] = ( this.M[1][this.acts[0][0]][this.acts[1][0]] + this.M[1][this.acts[0][1]][this.acts[1][1]])/ 2.0;
+
+	if(this.barR[0] > this.barR[1])
+	{
+		this.payoffDifference = 'bully';
+	}
+	else if(this.barR[0] > this.barR[1])
+	{
+		this.payoffDifference = 'generous';
+	}
+	else
+	{
+		this.payoffDifference = 'fair';	
+	}
 
 	this.penalty = 0.1;
 

@@ -403,8 +403,9 @@ var CanvasContainer = function(socket)
 		  that.setSubmitButtonVisible(false);
 
 		  chatBox.disableAcceptRecommendationButton();
-
-		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : 0});
+		  
+		  var timeOfAction = that.getGameManager().getElapsedTime();
+		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : timeOfAction});
 		  $.blockUI({ message: '<h1><img src="/images/ajax-loader.gif" /> <p> Moving to next round. Please wait.... </h1>' });
 		}
 	}
@@ -559,7 +560,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 300;
+	var totalWaitingTime = 3;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{

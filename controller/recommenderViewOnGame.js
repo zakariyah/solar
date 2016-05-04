@@ -91,24 +91,46 @@ var RecommenderViewOnGame = function(agent)
 		var choice = options[recommendation];
 		var choices = '';
 		var introHasBeenSaid = false;
+		var stateOfExperts = recommender.getStateOfAgent();
+		if(stateOfExperts[0] == 1)
+		{
+			rec.push("Let us try something different! You might get a better payoff");
+			if(stateOfExperts[3] == 1)
+			{
+				rec.push("You can both do better than this.");
+			}
+		}
+		else if(stateOfExperts[1] == 1)
+		{
+			rec.push("Let us quit punishing your associate and try something different.");
+			if(stateOfExperts[2] == 1)
+			{
+				rec.push("You can both do better than this.");
+			}
+		}
+		
+
 		if(round < thresholdRound && !introHasBeenSaid)
 		{
 			introHasBeenSaid = true;
-			rec.push("Your success in this game depends on how well you get along (your relationship) with your associate");
-			rec.push("As such, you can choose to either guide/lead him by playing A OR you can follow his lead and play along with him OR you can play as you wish for a while and see his response! ");
-			rec.push("Lastly, you can also choose to minimize your loss by playing B");
+			rec.push("In this game, you and your associate can influence one another through your chosen actions. Based on this, I suggest you focus on either:
+ guiding your associate");
+			rec.push("guiding your associate");
+			rec.push("following your associate's guidance");
+			rec.push("play as you wish for a while, and see how your associate reacts");
+			rec.push("focus on minimizing your own loss, regardless of the consequences on your associate, by playing B");
 			return rec;			
 		}
 		else if(round < thresholdRound)
 		{
-			rec.push('Stick to the recommendation I gave earlier on and let us how it would play out');
+			rec.push('Stick to the recommendation I gave earlier on and let us see how it would play out');
 			return rec;
 		}
 
 
 		if(typeOfExpert === 'leader')
 		{
-			choices = ['Why not take the lead? Chooose ' + choice, 'Try bossing him around by choosing ' + choice];
+			choices = ['Why not try to influence your associate? Chooose ' + choice, 'Try bossing him around by choosing ' + choice];
 		}
 		else if(typeOfExpert === 'follower')
 		{
@@ -130,7 +152,7 @@ var RecommenderViewOnGame = function(agent)
 		}
 		else if(typeOfExpert === 'minmax')
 		{
-			choices = ["Things aren't looking good, protect yourself by choosing " + choice, "Your associate is exploiting you, minimize your loss by choosing " + choice];
+			choices = ["Things aren't looking good, Focus on minimizing your own loss by choosing " + choice, "Your associate is exploiting you, Focus on minimizing your own loss by choosing " + choice];
 			// rec.push('You might need to protect yourself from loss, play safe!');
 		}
 		rec.push(chooseOneRandomly(choices));
@@ -178,8 +200,8 @@ var RecommenderViewOnGame = function(agent)
 		{
 			// htmlReason.push('The plan is to make you get an average of ' + (aspiration * 5).toFixed(2) + ' for each round on the long run.');
 			// htmlReason.push('If the other player profits by veering away from the plan, he will be punished');
-			choices.push('By taking the lead, you get a higher payoff');
-			choices.push('Your associate is a slacker, take advantage by playing ' + choice);
+			choices.push('You may improve your payoff if you focus on influencing (or "guiding") your associate. ');
+			choices.push('You may be able to influence your associate by choosing ' + choice);
 		}
 		else if(typeOfExpert == 'follower')
 		{
@@ -187,7 +209,7 @@ var RecommenderViewOnGame = function(agent)
 			// htmlReason.push('The other player will be taking the lead in making us achieve this threshold');
 			// htmlReason.push('If the other player decides to be overtly smart, he will be dealt with');
 			choices.push('You need to accept a compromise, therefore choose ' + choice);
-			choices.push('You associate expects him to comply with him by choosing ' + choice);
+			choices.push('It seems your associate is expecting you to comply with him by choosing ' + choice);
 			// choices = ['You need to accept a compromise, therefore choose ' + choice, 'You associate expects him to comply with him by choosing ' + choice];
 		}
 		else if(typeOfExpert == 'bestResponse')
@@ -195,11 +217,11 @@ var RecommenderViewOnGame = function(agent)
 			// htmlReason.push('This might be the best response to this guy');
 			if(recommendation == 0)
 			{
-				choices.push('He has been cooperative, so you should reciprocate by choosing ' + choice);	
+				choices.push('Your associate has been cooperative, so you should reciprocate by choosing ' + choice);	
 			}
 			else
 			{
-				choices.push('He has been uncooperative, so you should retaliate by choosing ' + choice);
+				choices.push('Your associate has been uncooperative, so you should retaliate by choosing ' + choice);
 			}
 			
 		}
@@ -208,11 +230,11 @@ var RecommenderViewOnGame = function(agent)
 		{	
 				// htmlReason.push('The other player is guilty and should be dealt with.');
 				// htmlReason.push('We can thus coerce him into being more cooperative');
-				choices.push('You are done punishing him, now proceed by playing ' + choice);
+				choices.push('You are done punishing your associate, now proceed by playing ' + choice);
 		}
 		else
 		{
-			choices.push('"Your associate refused to follow your lead, punish him by playing ' + choice);
+			choices.push('"Your associate refused to follow your guidance, punish him by playing ' + choice);
 		}
 		
 		htmlReason.push(chooseOneRandomly(choices));
@@ -274,10 +296,89 @@ var RecommenderViewOnGame = function(agent)
 		return betterHtml;
 	}
 
+	this.whatAreMyOptions = function()
+	{
+		var myOptions = [];
+		var vals = recommender.presentExpertInformation;
+		var expertName = recommender.expertName;
+
+		console.log('Expert name is  ' + expertName + " " + vals);
+		var whyForOptions = [];
+		if(expertName == 'leader')
+		{
+			if(vals[1] == 1)
+			{
+				myOptions.push("Enforce cooperation by always playing 'A'. If your associate does not cooperate, punish him.");
+				// myOptions.push("");
+				myOptions.push("It is a fair solution as cooperation will give both of you high and equal payoffs.");
+			}
+			else if(vals[1] == 2)
+			{
+				myOptions.push("Protect yourself, always play 'B'");
+				myOptions.push("You are at risk of being exploited so you need to protect yourself.");
+			}
+			else if(vals[1] == 3)
+			{
+				myOptions.push("Both of you take turns receiving the highest payoff. You do so by playing (B, A) while your associate plays (A,B). If your associate does not cooperate, punish him.");
+				myOptions.push("It's a fair solution as both of you will receive high and equal payoffs.");
+			}
+			else if(vals[1] == 4)
+			{
+				myOptions.push("Alternate between the two actions. You do so by playing (A,B) while your associate plays (A,B). If your associate does not cooperate, punish him.");	
+				myOptions.push("It's a fair solution as both of you will receive equal payoffs.");
+			}
+			else if(vals[1] == 5)
+			{
+				myOptions.push("If he is being cooperative, then alternate between (A,B)");
+				myOptions.push("You deserve a higher payoff if he lets you!");
+			}
+		}
+		else if(expertName == 'follower')
+		{
+			if(vals[1] == 1)
+			{
+				myOptions.push("Always cooperate by playing 'A'.");
+				// myOptions.push("");
+				myOptions.push("It's a fair solution as cooperation will give both of you high and equal payoffs.");
+			}
+			else if(vals[1] == 2)
+			{
+				myOptions.push("Protect yourself, always play 'B'");
+				myOptions.push("You are at risk of being exploited so you need to protect yourself.");
+			}
+			else if(vals[1] == 3)
+			{
+				myOptions.push("Take turns receiving the highest payoff. You do so by playing (B, A) while your associate plays (A,B).");
+				myOptions.push("It's a fair solution as both of you will receive high and equal payoffs.");
+			}
+			else if(vals[1] == 4)
+			{
+				myOptions.push("Alternate between the two actions. You do so by playing (A,B) while your associate plays (A,B). If your associate does not cooperate, punish him.");	
+				myOptions.push("It's a fair solution as both of you will receive equal payoffs.");
+			}
+			else if(vals[1] == 5)
+			{
+				myOptions.push("Let your associate have his way. Always play 'A' regardless of whatever he plays.");
+				myOptions.push("It seems your associate is expecting you to comply with him. He is likely to punish you in future rounds if you don't.");
+			}
+		}
+		else if(expertName == 'minmax')
+		{
+			myOptions.push("Protect yourself, always play 'B'");
+			myOptions.push("You are at risk of being exploited so you need to protect yourself.");
+		}
+		else if(expertName == 'bestResponse')
+		{
+			myOptions.push("Expert is BR, text not yet stated");
+			myOptions.push("Expert is BR, text not yet stated");
+		}
+		
+		return [myOptions, whyForOptions];
+	}
 
 	this.getSolutionForRound = function()
 	{
-		return {'doBetter' : this.howToDoBetter(), 'reason' : this.getReason(), 'reasonOtherwise' : this.getReasonForNotDoingOtherwise(), 'recommendation' : this.getRecommendation(), 'opponentInfo' : this.getInformationAboutOpponent(), 'agentChoice' : recommender.latestChoice, 'agentVariables' : recommender.getAgentVariables()};
+		return {'doBetter' : this.howToDoBetter(), 'reason' : this.getReason(), 'reasonOtherwise' : this.getReasonForNotDoingOtherwise(), 'whatAreMyOptions' : this.whatAreMyOptions(), 'recommendation' : this.getRecommendation(), 'opponentInfo' : this.getInformationAboutOpponent(), 'agentChoice' : recommender.latestChoice, 'agentVariables' : recommender.getAgentVariables()};
 	}
 }
 

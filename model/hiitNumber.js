@@ -26,4 +26,3 @@ hiitNumberSchema.statics.findHiitNumberPresentInGame = function(hiitInfo, callba
 
 var hiitNumber = mongoose.model('hiitNumber',hiitNumberSchema);
 module.exports = hiitNumber;
-// akyuusuf

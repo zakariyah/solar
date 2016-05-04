@@ -6,7 +6,7 @@ var app = require('../app');
 var io = require('socket.io');
 // var cookieParser = require('cookie-parser');
 var connecter = require('../database');
-connecter('mongodb://127.0.0.1/gameTest');
+connecter('mongodb://127.0.0.1/gameTest2V');
 var SessionSockets = require('session.socket.io');
 var gameController = require('../controller/gameController');
 var gameplayer = require('../controller/gameplayer');
@@ -125,7 +125,7 @@ ionew.sockets.on('connection', function (socket) {
 		}
 		else if(gameType == "randomRecommenders")
 		{
-			
+			console.log('here randomRecommenders');			
 			var player = new gameplayer(gameCounter, socket, false, 1, playerHiitNumberMap[socket.id]);
 			gameControllerArray[gameCounter].addPlayer(player);
 			if(gameControllerArray[gameCounter].isFilled())
@@ -149,7 +149,7 @@ ionew.sockets.on('connection', function (socket) {
 		} 
 		else if(gameType == "realRecommenders")
 		{
-			
+			console.log('here realRecommenders');
 			var player = new gameplayer(gameCounter, socket, false, 1,playerHiitNumberMap[socket.id]);
 			gameControllerArray[gameCounter].addPlayer(player);
 			if(gameControllerArray[gameCounter].isFilled())
@@ -170,7 +170,7 @@ ionew.sockets.on('connection', function (socket) {
 		}
 		else if(gameType == "oneRealRecommender")
 		{
-			
+			console.log('here oneRealRecommender');
 			var player = new gameplayer(gameCounter, socket, false, 1, playerHiitNumberMap[socket.id]);
 			gameControllerArray[gameCounter].addPlayer(player);
 			if(gameControllerArray[gameCounter].isFilled())
@@ -193,7 +193,7 @@ ionew.sockets.on('connection', function (socket) {
 
 		else if(gameType == "oneRandomRecommender")
 		{
-			
+			console.log('here oneRandomRecommender');
 			var player = new gameplayer(gameCounter, socket, false, 1, playerHiitNumberMap[socket.id]);
 			gameControllerArray[gameCounter].addPlayer(player);
 			if(gameControllerArray[gameCounter].isFilled())
@@ -297,8 +297,9 @@ ionew.sockets.on('connection', function (socket) {
 	if(store)
 	{
 		var roomObject = gameControllerArray[presentSocketGameCounter].gameRooms[socket.id]; 
-		store.addAnswer(content.gamePlay, gameControllerArray[presentSocketGameCounter].gamePlayers[socket.id]);
 		gameControllerArray[presentSocketGameCounter].gamePlayers[socket.id].setTimeOfAction(content.timeOfAction);
+		store.addAnswer(content.gamePlay, gameControllerArray[presentSocketGameCounter].gamePlayers[socket.id]);
+		
 		var messageText = "<div class=\"alert alert-warning\"> Round " + store.round + " results</div>";
 
 		if(roomObject.agentPresent)  //if agent is present in the game
@@ -410,9 +411,8 @@ socket.on('disconnect', function()
 	
 	opponentId = gameMap[socket.id];
 	if(store)
-	{
-	
-	var roomObject = gameControllerArray[presentSocketGameCounter].gameRooms[socket.id]; 
+	{	
+		var roomObject = gameControllerArray[presentSocketGameCounter].gameRooms[socket.id]; 
 		if(!roomObject.agentPresent)
 		{
 			if(roomObject.gameRounds <= store.round)

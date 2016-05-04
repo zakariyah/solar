@@ -21,8 +21,8 @@ function  gameController(numberOfPlayers) //, numberOfAgents)
 			this.gamePlayers[player.id] = player;	
 		}
 		// gamePlayers.push(player);
-		console.log(player.id);
-		console.log("the length is " + Object.keys(this.gamePlayers).length);
+		// console.log(player.id);
+		// console.log("the length is " + Object.keys(this.gamePlayers).length);
 	}
 
 	this.numberOfRegisteredPlayers = function()

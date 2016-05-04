@@ -34,5 +34,3 @@ playedbefore: information.experience
 
 var information = mongoose.model('information',informationSchema);
 module.exports = information;
-
-// games database, 

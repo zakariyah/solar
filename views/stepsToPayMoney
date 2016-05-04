@@ -1,0 +1,67 @@
+1. Run this query in mongo
+
+db.moves2.aggregate([{ $group: { _id: "$hiitNumber1", total: { $sum: "$actionValue" } } }])
+
+db.moves2.aggregate([{ $group: { _id: "$hiitNumber2", total: { $sum: "$actionValue2" } } }])
+
+
+
+{ "_id" : "20043657", "total" : 88 }
+{ "_id" : "33900426", "total" : 114 }
+{ "_id" : "0", "total" : 469 }
+{ "_id" : "31738779", "total" : 30 }
+{ "_id" : "30513549", "total" : 113 }
+{ "_id" : "10813077", "total" : 46 }
+{ "_id" : "35868781", "total" : 59 }
+{ "_id" : "36620182", "total" : 97 }
+{ "_id" : "30586572", "total" : 128 }
+{ "_id" : "32077912", "total" : 1 }
+{ "_id" : "20512953", "total" : 153 }
+
+{ "_id" : "37102649", "total" : 94 }
+{ "_id" : "14353703", "total" : 170 }
+{ "_id" : "36850816", "total" : 92 }
+{ "_id" : "37094049", "total" : 73 }
+{ "_id" : "32292681", "total" : 73 }
+{ "_id" : "12219174", "total" : 153 }
+{ "_id" : "33580014", "total" : 89 }
+{ "_id" : "37012964", "total" : 83 }
+{ "_id" : "36624282", "total" : 58 }
+{ "_id" : "33727625", "total" : 153 }
+{ "_id" : "20170210", "total" : 118 }
+{ "_id" : "36842765", "total" : 101 }
+{ "_id" : "35473724", "total" : 1 }
+
+
+
+3 agents, 9 full game and 1 unfinished game
+
+{ "_id" : "K_MFdqmtHEH_Zhj-AAAY", "total" : 88 }
+{ "_id" : "OxlRwpvhJ0_CNojmAAAB", "total" : 1 }
+{ "_id" : "R8nNcwlb3Xah36itAAAO", "total" : 97 }
+{ "_id" : "9agent", "total" : 153 }
+{ "_id" : "FSp3ntTI5rWh4IAQAAAS", "total" : 30 }
+{ "_id" : "0YxMuw9U0z7OT14TAAAW", "total" : 114 }
+{ "_id" : "ZTNBawFV1mOONy9LAAAP", "total" : 46 }
+{ "_id" : "DRwJcbhJki0MtByeAAAI", "total" : 59 }
+{ "_id" : "-d7sDUVDALfddB6WAAAG", "total" : 128 }
+{ "_id" : "cBo53CpFnGsXWyW2AAAE", "total" : 153 }
+{ "_id" : "5agent", "total" : 178 }
+{ "_id" : "10agent", "total" : 138 }
+{ "_id" : "CI1IetZHp8lRpGe8AAAD", "total" : 113 }
+
+
+
+{ "_id" : "r7Nn2fSAFPG7liHvAAAX", "total" : 83 }
+{ "_id" : "OnOoyxYkDEMq-KnRAAAR", "total" : 170 }
+{ "_id" : "cJyEnOr1QH93GmZTAAAV", "total" : 94 }
+{ "_id" : "cdjCjO6w1kuO1hWOAAAQ", "total" : 101 }
+{ "_id" : "vMJnK44BkbkiGcDYAAAC", "total" : 58 }
+{ "_id" : "fQa1GWyI2bsJW2MdAAAN", "total" : 92 }
+{ "_id" : "hNJeN5Atl3t7ZJ3OAAAF", "total" : 153 }
+{ "_id" : "RlLOyFSOfJd2bUbuAAAU", "total" : 73 }
+{ "_id" : "sMNkLEEHQ52_5p_JAAAM", "total" : 118 }
+{ "_id" : "FUBiJbkwStdjS_SkAAAT", "total" : 73 }
+{ "_id" : "lF2F2irEkXM9VsGeAAAH", "total" : 153 }
+{ "_id" : "MJx26kbgx7n_024FAAAJ", "total" : 89 }
+{ "_id" : "_fZTk-vylmm8AEWtAAAA", "total" : 1 }

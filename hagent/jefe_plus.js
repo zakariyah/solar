@@ -12,6 +12,8 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	this.latestChoice = -1;
 	this.gameHistory = [];
 
+	this.presentExpertInformation = [];
+
 	this.expertName;
 	// learner is a for S++
 	// br is RMAx
@@ -42,6 +44,27 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	var REExpert  = require('./REExpert');
 	var minimaxLog  = require('./minmax');
 
+	this.getStateOfAgent = function()
+	{
+		toReturn = [0,0,0,0];
+		if(this.distinctExpertWasChosen && (!this.isOtherPlayerGuilty))
+		{
+			toReturn[0] = 1;
+		}
+		else if(this.distinctExpertWasChosen && (this.isOtherPlayerGuilty))
+		{
+			toReturn[1] = 1;
+		}
+		else if(this.anExpertHasBeenExecutedForCompleteCycle)
+		{
+			toReturn[2] = 1;
+ 		}
+		else if(this.CanReceiveHigherPayoff && this.expertName != 'bestResponse')
+		{
+			toReturn[3] = 1;
+		}
+		return toReturn;
+	}
 
 	this.REcount = 0; // number of set of experts
 	this.br ; // placeholder for best response
@@ -347,6 +370,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			console.log('estado is less than zero');
 			this.latestChoice = Math.floor(Math.random() * highestNumber) % this.A[this.me];
 			this.expertName = 'maximinBegin';
+			this.presentExpertInformation = [0,0];
 			return this.latestChoice;
 		}
 		if(this.cycled)
@@ -396,24 +420,28 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			a = this.generateAction(this.me, this.mnmx[this.me].ms);
 			// console.log('minimax used');
 			this.expertName = 'minmax';
+			this.presentExpertInformation = [0,0];
 		}
 		else if(this.experto == 1)
 		{// best response
 			a = this.br.moveGreedy();
 			// console.log('expert is ' + this.br.expertName);
 			this.expertName = 'bestResponse';
+			this.presentExpertInformation = [-1,-1];
 		}
 		else if((this.experto % 2) == 0)
 		{ // leader part of algorithm
 			a = this.re[(this.experto - 2) / 2].act(this.me);
 			// console.log('expert is ' + this.re[(this.experto - 2) / 2].expertName);
 			this.expertName = 'leader';
+			this.presentExpertInformation = [this.re[(this.experto - 2) / 2].payoffDifference, this.re[(this.experto - 2) / 2].typeOfExpert];
 		}
 		else
 		{ // follower part of algorithm
 			a = this.generateAction(this.me, this.re[Math.floor((this.experto - 2)/ 2)].asTheFollower.follower[this.estado]);
 			// console.log('expert is ' + this.re[Math.floor((this.experto - 2)/ 2)].expertName + ' :follower');
 			this.expertName = 'follower';			
+			this.presentExpertInformation = [this.re[Math.floor((this.experto - 2)/ 2)].payoffDifference, this.re[Math.floor((this.experto - 2)/ 2)].typeOfExpert];
 		}
 		this.latestChoice = a;
 		return a;

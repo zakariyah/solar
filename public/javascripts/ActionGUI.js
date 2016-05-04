@@ -204,7 +204,9 @@ var CanvasContainer = function(socket)
 		  that.getGameManager().stopTimer();
 		  // myOptions.showTag(0);
 		  that.setSubmitButtonVisible(false);
-		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : 0});
+		  var timeOfAction = that.getGameManager().getElapsedTime();
+		  // console.log('time is ' + timeOfAction);
+		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : timeOfAction});
 		  // $.blockUI({ message: '<h1><img src="/images/ajax-loader.gif" /> <p> Moving to next round. Please wait.... </h1>' });
 		  (new Blocker()).block(myOptions.getActionButtons().getButtons());
 		}
@@ -561,6 +563,7 @@ var PrisonersDilemma = function()
 			elapsedTimes.push(elapsedTime);
 			
 			var delay = 0.1;
+			var delayCap = 10;
 			if(elapsedTimes.length > 1)
 			{
 				delay = elapsedTimes[elapsedTimes.length-2] - elapsedTimes[elapsedTimes.length - 1];	
@@ -568,9 +571,13 @@ var PrisonersDilemma = function()
 				{
 					delay = 0;
 				}
+				if(delay > delayCap)
+				{
+					delay = delayCap;
+				}
 			}
-			setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, delay * 100);
-			setTimeout(secondToLast, delay * 100, content);
+			setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, delay * 1000);
+			setTimeout(secondToLast, delay * 1000, content);
 			// $.unblockUI(); 
 		}
 		else
