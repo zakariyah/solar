@@ -581,6 +581,7 @@ var WaitingTimeElapsed = function(socket)
 
 var GameManager = function(socket, gameManagerEndFunctionFromMain, endGameFunction)
 {
+	// 5 mins for the first round and 2 mins for subsequesnt rounds
 	var totalGameTime = 6000;
 	var intervalGame = 1000;
 	var agitationStart = 30;

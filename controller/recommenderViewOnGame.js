@@ -11,7 +11,7 @@ var RecommenderViewOnGame = function(agent)
 
 	var recommender = agent;
 	var thresholdRound = 5;
-
+	var introHasBeenSaid = false;
 
 	var getInformationAboutOpponentAtRoundWithProp = function(round, properties)
 	{
@@ -90,7 +90,7 @@ var RecommenderViewOnGame = function(agent)
 		var recommendation = recommender.latestChoice;
 		var choice = options[recommendation];
 		var choices = '';
-		var introHasBeenSaid = false;
+		// introHasBeenSaid = false;
 		var stateOfExperts = recommender.getStateOfAgent();
 		if(stateOfExperts[0] == 1)
 		{
@@ -110,15 +110,15 @@ var RecommenderViewOnGame = function(agent)
 		}
 		
 
-		if(round < thresholdRound && !introHasBeenSaid)
+		if(round < thresholdRound && (!introHasBeenSaid))
 		{
 			introHasBeenSaid = true;
-			rec.push("In this game, you and your associate can influence one another through your chosen actions. Based on this, I suggest you focus on either:
- guiding your associate");
+			rec.push("In this game, you and your associate can influence one another through your chosen actions. Based on this, I suggest you focus on either: ");
 			rec.push("guiding your associate");
 			rec.push("following your associate's guidance");
 			rec.push("play as you wish for a while, and see how your associate reacts");
-			rec.push("focus on minimizing your own loss, regardless of the consequences on your associate, by playing B");
+			rec.push("focus on minimizing your own loss, regardless of the consequences on your associate");
+			rec.push("However play " + choice + " now");
 			return rec;			
 		}
 		else if(round < thresholdRound)
@@ -372,7 +372,10 @@ var RecommenderViewOnGame = function(agent)
 			myOptions.push("Expert is BR, text not yet stated");
 			myOptions.push("Expert is BR, text not yet stated");
 		}
-		
+		else
+		{
+			myOptions.push("Text not yet implemented for state expert name " + expertName);
+		}
 		return [myOptions, whyForOptions];
 	}
 
