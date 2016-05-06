@@ -562,20 +562,20 @@ var PrisonersDilemma = function()
 			var elapsedTime = gameManager.getElapsedTime();
 			elapsedTimes.push(elapsedTime);
 			
-			var delay = 0.1;
+			var delay = 0.01;
 			var delayCap = 10;
-			if(elapsedTimes.length > 1)
-			{
-				delay = elapsedTimes[elapsedTimes.length-2] - elapsedTimes[elapsedTimes.length - 1];	
-				if(delay < 0)
-				{
-					delay = 0;
-				}
-				if(delay > delayCap)
-				{
-					delay = delayCap;
-				}
-			}
+			// if(elapsedTimes.length > 1)
+			// {
+			// 	delay = elapsedTimes[elapsedTimes.length-2] - elapsedTimes[elapsedTimes.length - 1];	
+			// 	if(delay < 0)
+			// 	{
+			// 		delay = 0;
+			// 	}
+			// 	if(delay > delayCap)
+			// 	{
+			// 		delay = delayCap;
+			// 	}
+			// }
 			setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, delay * 1000);
 			setTimeout(secondToLast, delay * 1000, content);
 			// $.unblockUI(); 
