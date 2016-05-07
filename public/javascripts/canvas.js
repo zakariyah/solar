@@ -822,7 +822,7 @@ var PrisonersDilemma = function()
 		}
 		gameManager.startTimer();
 		var briefInfo = content.text;
-		console.log('brief ' + JSON.stringify(content));
+		// console.log('brief ' + JSON.stringify(content));
 		var myTotalPayoff = briefInfo.total;
 		var opponentTotal = briefInfo.totalOpponent;
 		gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
@@ -895,7 +895,7 @@ var PrisonersDilemma = function()
 			{
 				delay = 0;
 			}
-			console.log('delay is ' + delay);
+			// console.log('delay is ' + delay);
 			setTimeout($.unblockUI, 0.5 * 500);
 			setTimeout(secondToLast, 0.5 * 500, content);
 			// $.unblockUI(); 

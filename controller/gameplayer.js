@@ -124,7 +124,7 @@ function gameplayer(id, socket, isAgent, index, hiitNumber) // index can take on
 		{
 			return this.recommender.getAgentState();
 		}
-		console.log('okay here, no recommender for ' + this.id);
+		// console.log('okay here, no recommender for ' + this.id);
 		return null;
 	}
 

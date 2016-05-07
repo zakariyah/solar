@@ -547,6 +547,7 @@ var PrisonersDilemma = function()
 
 	var serverMessage = function(content)
 	{	
+		// console.log('log is ' + JSON.stringify(content));
 		if(content.count == 0)
 		{
 			waitingTimeElapsed.stopTimer();
@@ -564,18 +565,21 @@ var PrisonersDilemma = function()
 			
 			var delay = 0.01;
 			var delayCap = 10;
-			// if(elapsedTimes.length > 1)
-			// {
-			// 	delay = elapsedTimes[elapsedTimes.length-2] - elapsedTimes[elapsedTimes.length - 1];	
-			// 	if(delay < 0)
-			// 	{
-			// 		delay = 0;
-			// 	}
-			// 	if(delay > delayCap)
-			// 	{
-			// 		delay = delayCap;
-			// 	}
-			// }
+			if(content.opponentSenseless)
+			{
+				if(elapsedTimes.length > 1)
+				{
+					delay = elapsedTimes[elapsedTimes.length-2] - elapsedTimes[elapsedTimes.length - 1];	
+					if(delay < 0)
+					{
+						delay = 0;
+					}
+					if(delay > delayCap)
+					{
+						delay = delayCap;
+					}
+				}
+			}
 			setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, delay * 1000);
 			setTimeout(secondToLast, delay * 1000, content);
 			// $.unblockUI(); 
