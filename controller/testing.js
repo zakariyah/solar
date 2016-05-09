@@ -25,7 +25,7 @@ player1.setHasRecommender(false);
 
 
 var testRecommend = new testRecommend(TFTagent, 200, 0.7);
-console.log(testRecommend.playGame());
+// console.log(testRecommend.playGame());
 
 
 // var previousMove = 1;
