@@ -70,7 +70,7 @@ ionew.sockets.on('connection', function (socket) {
 						if(!playerObject.isAgent)
 						{ // only the non agent gets the recommendation
 							// not needed for first game
-							// playerObject.setHasRecommender(false);
+							playerObject.setHasRecommender(false);
 						}						
 					}
 
