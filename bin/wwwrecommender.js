@@ -6,7 +6,7 @@ var app = require('../app');
 var io = require('socket.io');
 // var cookieParser = require('cookie-parser');
 var connecter = require('../database');
-connecter('mongodb://127.0.0.1/gameTestV');
+connecter('mongodb://127.0.0.1/gameTestSecond');
 var SessionSockets = require('session.socket.io');
 var gameController = require('../controller/gameController');
 var gameplayer = require('../controller/gameplayer');
@@ -70,7 +70,7 @@ ionew.sockets.on('connection', function (socket) {
 						if(!playerObject.isAgent)
 						{ // only the non agent gets the recommendation
 							// not needed for first game
-							playerObject.setHasRecommender(false);
+							// playerObject.setHasRecommender(false);
 						}						
 					}
 
