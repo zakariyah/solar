@@ -1,3 +1,55 @@
+var AgentStateInfos = function()
+{
+	var distinctExpertWasChosen, anExpertHasBeenExecutedForCompleteCycle, profitedFromDefection;
+	var expertType, aspiration, target, targetForOpponent;
+	this.setStates = function(states)
+	{
+		distinctExpertWasChosen = states[0];
+		anExpertHasBeenExecutedForCompleteCycle  = states[1];
+		profitedFromDefection = states[2];
+		expertType = states[3];
+		aspiration = states[4];
+		target = states[5];
+		targetForOpponent = states[6];
+	}
+
+	this.getStatesText = function(states, recommendation)
+	{
+		if(!states)
+		{
+			return '';
+		}
+		this.setStates(states);
+		var stateText = ' ' ; //<p>';
+		if(distinctExpertWasChosen)
+		{
+			stateText += '<p> A distinct expert has been chosen. ';
+		}
+		if(anExpertHasBeenExecutedForCompleteCycle)
+		{
+			stateText += '<p> The expert has executed a complete cycle. ';
+		}
+		if(profitedFromDefection)
+		{
+			stateText += '<p> The opponent profited from the defection and is thus guilty. ';
+		}
+
+		var options = ['A', 'B'];
+		stateText += ' <p>Expert Type ' + expertType + '. ';
+		if(aspiration)
+		{
+			aspiration = aspiration.toFixed(3);
+		}
+		stateText += ' <p>Aspiration ' + aspiration + '. ';
+		stateText += ' <p>Target ' + target + '. ';
+		stateText += ' <p>Target for opponent ' + targetForOpponent + '. ';
+		stateText += '<p> Recommended action : ' + options[recommendation - 1] + ' ';
+		stateText += '</p>';
+
+		return stateText;
+	}
+}
+
 var Blocker = function()
 {
 	this.block = function(options)
@@ -519,6 +571,14 @@ var PrisonersDilemma = function()
         new Quiz('page', 3, false, false, toCheckForNext);
 	}
 
+	var setAgentVariables = function(content)
+	{
+		if(content.agentState)
+		{
+			agentVariablesDiv.innerHTML  = (new AgentStateInfos()).getStatesText(content.agentState.agentVariables, content.recommendation);
+		}
+		
+	}
 
 	var secondToLast = function(content)
 	{
@@ -539,7 +599,7 @@ var PrisonersDilemma = function()
 		// questionsToAsk.moveToNextRound(content);
 		// document.getElementById('questionAndFeedback').style.visibility = 'hidden';
 		// gameHistory.setHistoryDivHtml();
-		// setAgentVariables(content);
+		setAgentVariables(content);
 		myCanvasContainer.resetAll(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);		
 		document.getElementById('roundNumber').style.display = 'inline';
 		

@@ -1,62 +1,6 @@
-1. chat and tutorial and exams 4 hrs
-2. Aamena's work 1 hr
-3. Google vision api - 1hr
-4. Revise machine learning algorithms
-5. Hacker rank javascript
 
-key: AIzaSyBWKIHrS-h5AxXIS23dbz9EjvcAB0dB0O8
+print out and fix an expert
 
+s1 and s2 can be used to determine if the actions are the same
 
-curl -v -k -s -H "Content-Type: application/json"   https://vision.googleapis.com/v1/images:annotate?key=AIzaSyBWKIHrS-h5AxXIS23dbz9EjvcAB0dB0O8   --data-binary @request.txt
-
-
-tighten the navigation
-Add the tutorial
-Add the questionaire part 1 hr
-
-
-Fix the chat box to use the options label 1hr
-
-
-Aamena's work 1hr
-
-
-Machine learning algorithms: numpy, scipy, and ski-learn.
-Read statistics
-Hacker rank javascript
-
-
-Do Machine learning algorithms: numpy, scipy, and ski-learn.
-Make small video of back camera of first mosque one solah then generalize
-
-
-
-1. Fix the minor issues, tutorial, color. 30 mins done
-Fix opponent score later 
-Pause and split video
-2. Set up round number before every score and rewrite it. done
-2. Make the algorithm give feedback. 1hr3
-3. Change the payoff matrix  
-4. Make the algorithm save the current expert.
-
-
-1. Fix the payoff in the tutorial
-2. 
-
-
-
-Note
-1. cap the delay -- done
-2. Add the explain more button 
-3. Make the latest text appear
-4. Play another set of games
-5. Pay money to the game players 
-6. Make sure the time is fixed -- done
-
-
-
-
-1. remove tit for tat delay
-2. 5 mins for the first round and 2 mins for subsequesnt rounds
-3. Recommended this round
-4. Add the explain more button
+the inertia is in the update function of a.js (learner)
