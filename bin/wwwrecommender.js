@@ -24,7 +24,7 @@ var testRecommend = require('../tester/testRecommend');
 
 var playerHiitNumberMap = {};
 
-app.set('port', process.env.PORT || 4000);
+app.set('port', process.env.PORT || 5000);
 var server = app.listen(app.get('port'), function() {
   debug('Express server listening on port ' + server.address().port);
   
@@ -44,14 +44,15 @@ var gameCounter = 0;
 var firstPlayerJustEntered = true;
 var playersSocketDict = {};
 
+console.log('I was called here now');
 
-var numberOfHumanToHumanGames = 6;
+var numberOfHumanToHumanGames = 100000; // very high for human to human games
 var gameTypes = gameProperties.gameTypes; 
 ionew.sockets.on('connection', function (socket) {
-
+	console.log('I was called here now 2');
 	var waitingTimeElapsedFunction = function()
 	{
-	
+			console.log('was called waiting');
 			if(!(socket.id in gameMap)) // if player has not been already mapped
 			{
 	
@@ -72,7 +73,7 @@ ionew.sockets.on('connection', function (socket) {
 						if(!playerObject.isAgent)
 						{ // only the non agent gets the recommendation
 							// not needed for first game
-							// playerObject.setHasRecommender(false);
+							playerObject.setHasRecommender(false);
 						}						
 					}
 
@@ -92,6 +93,7 @@ ionew.sockets.on('connection', function (socket) {
 
 	socket.on('join', function(hiitNumber)
 	{
+		console.log('join called');
 		if(firstPlayerJustEntered)
 		{
 			gameControllerArray[gameCounter] = new gameController(2);
@@ -157,7 +159,7 @@ ionew.sockets.on('connection', function (socket) {
 		} 
 		else if(gameType == "realRecommenders")
 		{
-			// console.log('here realRecommenders');
+			console.log('here realRecommenders');
 			var player = new gameplayer(gameCounter, socket, false, 1,playerHiitNumberMap[socket.id]);
 			gameControllerArray[gameCounter].addPlayer(player);
 			if(gameControllerArray[gameCounter].isFilled())
@@ -178,7 +180,7 @@ ionew.sockets.on('connection', function (socket) {
 		}
 		else if(gameType == "oneRealRecommender")
 		{
-			// console.log('here oneRealRecommender');
+			console.log('here oneRealRecommender');
 			var player = new gameplayer(gameCounter, socket, false, 1, playerHiitNumberMap[socket.id]);
 			gameControllerArray[gameCounter].addPlayer(player);
 			if(gameControllerArray[gameCounter].isFilled())
@@ -264,7 +266,7 @@ ionew.sockets.on('connection', function (socket) {
 						var agentState = playerToSendMessage.getRecommenderVariables();
 						playerToSendMessage.sessionSocket.emit('serverMessage', {count : 0, text : message, rounds : numberOfRounds, recommenderOptionValue : recommenderOption, recommendation : recc, agentState : agentState});
 						playerToSendMessage.sessionSocket.emit('start');
-						// console.log('server message and start emmited');
+						console.log('server message and start emmited');
 				}
 			}
 	}
@@ -516,7 +518,5 @@ socket.on('chatHistory', function(historyOfChats) {
 		socket.emit('showGame', result);
 		
 	});
-
-
 
 });

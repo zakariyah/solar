@@ -1,3 +1,24 @@
+var Blocker = function()
+{
+	this.block = function(options)
+	{
+		// for(i in options)
+		// {
+		// 	options[i].style.display = 'none';
+		// }
+	}
+
+	this.unblock = function(options)
+	{
+		// for(i in options)
+		// 	{
+		// 		options[i].style.display = 'inline';
+		// 	}
+	}
+
+}
+
+
 var AgentStateInfos = function()
 {
 	var distinctExpertWasChosen, anExpertHasBeenExecutedForCompleteCycle, profitedFromDefection;
@@ -100,6 +121,11 @@ var OptionButton = function(htmlId1, htmlId2, nextRound)
 	var isClicked = [false, false];
 	var nextRoundFunction = nextRound;
 	// alert( '1' + JSON.stringify(nextRound));
+
+	this.getButtons = function()
+	{
+		return but;
+	}
 
 	var butClick = function(butNumber)
 	{
@@ -406,8 +432,14 @@ var CanvasContainer = function(socket)
 		  
 		  var timeOfAction = that.getGameManager().getElapsedTime();
 		  socket.emit('clientMessage', {'gamePlay' : val, 'timeOfAction' : timeOfAction});
-		  $.blockUI({ message: '<h1><img src="/images/ajax-loader.gif" /> <p> Moving to next round. Please wait.... </h1>' });
+		  // $.blockUI({ message: '<h1><img src="/images/ajax-loader.gif" /> <p> Moving to next round. Please wait.... </h1>' });
+		  (new Blocker()).block(myOptions.getActionButtons().getButtons());
 		}
+	}
+
+	this.getOptions = function()
+	{
+		return myOptions;
 	}
 
 	this.startGame = function(chatBox)
@@ -567,10 +599,19 @@ var WaitingTimeElapsed = function(socket)
 		document.getElementById('timerBegin').innerHTML = count + " second" + ((count > 1) ? "s" : "") + " remaining";
 	}
 
+	// var stopWaitingTimeFunction = function()
+	// {
+	// 	document.getElementById('actionAndReview').style.display = 'block';
+	// 	document.getElementById('timerBegin').innerHTML = '';
+	// 	console.log('was called b');
+	// 	// this.stopTimer();	
+	// }
+
 	var waitingTimeEndFunction = function()
 	{
 		document.getElementById('actionAndReview').style.display = 'block';
 		document.getElementById('timerBegin').innerHTML = '';
+		console.log('was called b');
 		socket.emit('waitingTimeElapsed');
 	}
 
@@ -666,8 +707,8 @@ var PrisonersDilemma = function()
 	var gameHistory = new GameHistory('gameHistory', 'gameHistoryTable', 'myTotalPayoff');
 	var hiitNumber = document.getElementById("hiitNumber").innerHTML;
 	
-	// var socket = io.connect('http://localhost:4000');
-	var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:4000/');
+	var socket = io.connect('http://localhost:5000');
+	// var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:5000/');
 	var myCanvasContainer =  new CanvasContainer(socket);
 	var hasRecommender;
 
@@ -679,7 +720,7 @@ var PrisonersDilemma = function()
 	var rowChat = document.getElementById('rowChat');
 
 	var gameManager;
-
+	var blocker = new Blocker();
 	var agentVariablesDiv = document.getElementById('informationAlgo');
 
 	agentSettings = new AgentStateSettings();
@@ -854,28 +895,34 @@ var PrisonersDilemma = function()
 	{	
 		if(content.count == 0)
 		{
+			console.log('was called a');
 			waitingTimeElapsed. stopTimer();
 			hasRecommender = content.recommenderOptionValue;
 			// startRealGame(hasRecommender);
+			console.log('was called 1');
 			myCanvasContainer.startGame(chatBox);
 			gameManager.startTimer();
+			console.log('was called 2');
 			// gameTimer.startTimer();
 			//// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
 			//// document.getElementById('agentState').innerHTML = agentStates;
 			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
-			
+			console.log('was called 3');
 			setAgentVariables(content);
 			questionsToAsk.moveToNextRound(content, false);
 			if(!hasRecommender)
 	  		{
+	  				console.log('was called 6');
 				  	document.getElementById('chatBoxContainer').style.display = 'none';
 				  	document.getElementById('chatBoxContainerLink').style.display = 'none';
 	  				// document.getElementById('questionAndFeedback').style.display = 'block';	
 	  		}
 	  		else //if(hasRecommender)
 	  		{
+	  			console.log('was called 5');
 	  			document.getElementById('questionAndFeedback').style.visibility = 'visible';	
 	  		}
+	  		console.log('was called 4');
 		}
 		else if(content.count < content.rounds)
 		{
@@ -896,7 +943,8 @@ var PrisonersDilemma = function()
 				delay = 0;
 			}
 			// console.log('delay is ' + delay);
-			setTimeout($.unblockUI, 0.5 * 500);
+			// setTimeout($.unblockUI, 0.5 * 500);
+			setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, delay * 1000);
 			setTimeout(secondToLast, 0.5 * 500, content);
 			// $.unblockUI(); 
 		}
@@ -906,7 +954,8 @@ var PrisonersDilemma = function()
       		var cummulative = content.cumm;
       		var numberOfRounds = content.rounds;
       		endGame(cummulative, numberOfRounds,hasRecommender)
-      		setTimeout($.unblockUI, 1000);
+      		// setTimeout($.unblockUI, 1000);
+      		      		setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, 500);
 		}
 	}
 

@@ -40,26 +40,26 @@ var RecommenderViewOnGame = function(agent)
 			}
 			if(bully > 50)
 			{
-				opponentInfo.push('He seems to be a bully');	
+				opponentInfo.push('He seems to be a bully  <button class="button">Explain</button>');	
 			}
 			else
 			{
-				opponentInfo.push('He seems to be a nice guy');		
+				opponentInfo.push('He seems to be a nice guy <button class="button">Explain</button>');		
 			}
 			if(reciprocateDefection > 50)
 			{
-				opponentInfo.push('He also tries to reciprocate seemingly bad behaviour');
+				opponentInfo.push('He also tries to reciprocate seemingly bad behaviour <button class="button">Explain</button>');
 			}
 			if(round > thresholdRound)
 			{
 				var isLeader = properties.opponentIsLeader;
 				if(isLeader)
 				{
-					opponentInfo.push('He is also quite assertive');
+					opponentInfo.push('He is also quite assertive <button class="button">Explain</button>');
 				}
 				else
 				{
-					opponentInfo.push('He is quite passive');
+					opponentInfo.push('He is quite passive <button class="button">Explain</button>');
 				}
 			}
 		}
@@ -94,7 +94,7 @@ var RecommenderViewOnGame = function(agent)
 		var stateOfExperts = recommender.getStateOfAgent();
 		if(stateOfExperts[0] == 1)
 		{
-			rec.push("Let us try something different! You might get a better payoff");
+			rec.push("Let us try something different! You might get a better payoff <button class='button'>Explain</button>");
 			if(stateOfExperts[3] == 1)
 			{
 				rec.push("You can both do better than this.");
@@ -308,29 +308,29 @@ var RecommenderViewOnGame = function(agent)
 		{
 			if(vals[1] == 1)
 			{
-				myOptions.push("Enforce cooperation by always playing 'A'. If your associate does not cooperate, punish him.");
+				myOptions.push("Enforce cooperation by always playing 'A'. If your associate does not cooperate, punish him. <button class='button'>Explain</button>");
 				// myOptions.push("");
-				myOptions.push("It is a fair solution as cooperation will give both of you high and equal payoffs.");
+				myOptions.push("It is a fair solution as cooperation will give both of you high and equal payoffs. <button class='button'>Explain</button>");
 			}
 			else if(vals[1] == 2)
 			{
-				myOptions.push("Protect yourself, always play 'B'");
-				myOptions.push("You are at risk of being exploited so you need to protect yourself.");
+				myOptions.push("Protect yourself, always play 'B' <button class='button'>Explain</button>");
+				myOptions.push("You are at risk of being exploited so you need to protect yourself. <button class='button'>Explain</button>");
 			}
 			else if(vals[1] == 3)
 			{
 				myOptions.push("Both of you take turns receiving the highest payoff. You do so by playing (B, A) while your associate plays (A,B). If your associate does not cooperate, punish him.");
-				myOptions.push("It's a fair solution as both of you will receive high and equal payoffs.");
+				myOptions.push("It's a fair solution as both of you will receive high and equal payoffs. <button class='button'>Explain</button>");
 			}
 			else if(vals[1] == 4)
 			{
 				myOptions.push("Alternate between the two actions. You do so by playing (A,B) while your associate plays (A,B). If your associate does not cooperate, punish him.");	
-				myOptions.push("It's a fair solution as both of you will receive equal payoffs.");
+				myOptions.push("It's a fair solution as both of you will receive equal payoffs. <button class='button'>Explain</button>");
 			}
 			else if(vals[1] == 5)
 			{
 				myOptions.push("If he is being cooperative, then alternate between (A,B)");
-				myOptions.push("You deserve a higher payoff if he lets you!");
+				myOptions.push("You deserve a higher payoff if he lets you! <button class='button'>Explain</button>");
 			}
 		}
 		else if(expertName == 'follower')
@@ -339,38 +339,38 @@ var RecommenderViewOnGame = function(agent)
 			{
 				myOptions.push("Always cooperate by playing 'A'.");
 				// myOptions.push("");
-				myOptions.push("It's a fair solution as cooperation will give both of you high and equal payoffs.");
+				myOptions.push("It's a fair solution as cooperation will give both of you high and equal payoffs.<button class='button'>Explain</button>");
 			}
 			else if(vals[1] == 2)
 			{
 				myOptions.push("Protect yourself, always play 'B'");
-				myOptions.push("You are at risk of being exploited so you need to protect yourself.");
+				myOptions.push("You are at risk of being exploited so you need to protect yourself. <button class='button'>Explain</button>");
 			}
 			else if(vals[1] == 3)
 			{
 				myOptions.push("Take turns receiving the highest payoff. You do so by playing (B, A) while your associate plays (A,B).");
-				myOptions.push("It's a fair solution as both of you will receive high and equal payoffs.");
+				myOptions.push("It's a fair solution as both of you will receive high and equal payoffs. <button class='button'>Explain</button>");
 			}
 			else if(vals[1] == 4)
 			{
 				myOptions.push("Alternate between the two actions. You do so by playing (A,B) while your associate plays (A,B). If your associate does not cooperate, punish him.");	
-				myOptions.push("It's a fair solution as both of you will receive equal payoffs.");
+				myOptions.push("It's a fair solution as both of you will receive equal payoffs. <button class='button'>Explain</button>");
 			}
 			else if(vals[1] == 5)
 			{
 				myOptions.push("Let your associate have his way. Always play 'A' regardless of whatever he plays.");
-				myOptions.push("It seems your associate is expecting you to comply with him. He is likely to punish you in future rounds if you don't.");
+				myOptions.push("It seems your associate is expecting you to comply with him. He is likely to punish you in future rounds if you don't. <button class='button'>Explain</button>");
 			}
 		}
 		else if(expertName == 'minmax')
 		{
 			myOptions.push("Protect yourself, always play 'B'");
-			myOptions.push("You are at risk of being exploited so you need to protect yourself.");
+			myOptions.push("You are at risk of being exploited so you need to protect yourself. <button class='button'>Explain</button>");
 		}
 		else if(expertName == 'bestResponse')
 		{
 			myOptions.push("Expert is BR, text not yet stated");
-			myOptions.push("Expert is BR, text not yet stated");
+			myOptions.push("Expert is BR, text not yet stated <button class='button'>Explain</button>");
 		}
 		else
 		{
