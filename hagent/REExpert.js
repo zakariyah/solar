@@ -1,4 +1,21 @@
-var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
+var FSM = require('./FSM');
+
+var Leader1 = require('../sScript/leader2');
+var Leader2 = require('../sScript/leader2');
+var Leader3 = require('../sScript/leader3');
+var Leader4 = require('../sScript/leader4');
+var Leader5 = require('../sScript/leader5');
+var Leader6 = require('../sScript/leader5');
+
+var Follower1 = require('../sScript/follower1');
+var Follower2 = require('../sScript/follower2');
+var Follower3 = require('../sScript/follower3');
+var Follower4 = require('../sScript/follower4');
+var Follower5 = require('../sScript/follower5');
+var Follower6 = require('../sScript/follower5');
+
+
+var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 {
 	this.expertName = 'REExpert';
 	this.M = _M;
@@ -9,7 +26,12 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
 	this.omega = 1;
 	this.s1 = _s1;
 	this.s2 = _s2;
-	console.log("s1 and s2 " + this.s1 + " " + this.s2);
+	var weird = false;
+	this.num = num;
+	this.numberOfTimesCalled = 0;
+	var beenCalled = 0;
+
+	// console.log("s1 and s2 " + this.s1 + " " + this.s2);
 	this.payoffDifference = ''; //  bully, generous, fair
 	this.sameActions = false;
 
@@ -33,42 +55,129 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
 		return arrayVals.reduce(function(a, b) { return a + b; }, 0);
 	}
 
+	var stateMachine = false;
+
 	// this is hardcoded for two player prisoners dilema
-	if(sumOfValsInArray(this.acts[0]) == 0 && sumOfValsInArray(this.acts[1]) == 0)
+	if(this.s1 == 0 && this.s2 == 0)
 	{
 		this.sameActions = true;
 		this.typeOfExpert = 1; // cc, cc
+		var agentType;
+		if(this.num % 2 == 0)
+		{
+
+		 	agentType = new Leader1();
+		}
+		else
+		{
+			// it is a follower
+			agentType = new Follower1();
+		}
+		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
 	}
-	else if(sumOfValsInArray(this.acts[0]) == 2 && sumOfValsInArray(this.acts[1]) == 2)
+	else if(this.s1 == 0 && this.s2 == 1)
 	{
 		this.sameActions = true;
 		this.typeOfExpert = 2; // dd, dd
+		var agentType;
+		if(this.num % 2 == 0)
+		{
+
+		 	agentType = new Leader5();
+		}
+		else
+		{
+			// it is a follower
+			agentType = new Follower5();
+		}
+		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
 	}
 
-	else if(sumOfValsInArray(this.acts[0]) == 1 && sumOfValsInArray(this.acts[1]) == 1)
+	else if(this.s1 == 0 && this.s2 == 2)
 	{
 			this.typeOfExpert = 3; // dc, cd	 or cd, dc
 			this.sameActions = false;
+			var agentType;
+			if(this.num % 2 == 0)
+			{
+
+			 	agentType = new Leader6();
+			}
+			else
+			{
+				// it is a follower
+				agentType = new Follower6();
+			}
+			stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
 	}
 	
-	else if(sumOfValsInArray(this.acts[0]) == 0 && sumOfValsInArray(this.acts[1]) == 2)
+	else if(this.s1 == 0 && this.s2 == 3)
 	{
 		this.sameActions = false;
-		this.typeOfExpert = 4; // cc, dd
+		this.typeOfExpert = 4; // cc, dd  We both play cc and also play dd
+				var agentType;
+		if(this.num % 2 == 0)
+		{
+
+		 	agentType = new Leader4();
+		}
+		else
+		{
+			// it is a follower
+			agentType = new Follower4();
+		}
+		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
 	}
 	
-	else if(sumOfValsInArray(this.acts[0]) == 0 && sumOfValsInArray(this.acts[1]) == 1)
+	else if(this.s1 == 1 && this.s2 == 2)
 	{
 		this.sameActions = false;
 		this.typeOfExpert = 5; // cc, dc
-	}
+				var agentType;
+		if(this.num % 2 == 0)
+		{
 
+		 	agentType = new Leader3();
+		}
+		else
+		{
+			// it is a follower
+			agentType = new Follower3();
+		}
+		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
+	}
+	else if(this.s1 == 3 && this.s2 == 3)
+	{
+		weird = true;
+				var agentType;
+		if(this.num % 2 == 0)
+		{
+
+		 	agentType = new Leader2();
+		}
+		else
+		{
+			// it is a follower
+			agentType = new Follower2();
+		}
+		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
+	}
 
 	this.barR = [];
 	// expected payoff target
 	// console.log(this.acts);
-	this.barR[0] = ( this.M[0][this.acts[0][0]][this.acts[1][0]] + this.M[0][this.acts[0][1]][this.acts[1][1]])/ 2.0;
-	this.barR[1] = ( this.M[1][this.acts[0][0]][this.acts[1][0]] + this.M[1][this.acts[0][1]][this.acts[1][1]])/ 2.0;
+
+	this.barRLittle = [];
+	this.barRLittle[0] = [this.M[0][this.acts[0][0]][this.acts[1][0]] , this.M[0][this.acts[0][1]][this.acts[1][1]]];
+	this.barRLittle[1] = [this.M[1][this.acts[0][0]][this.acts[1][0]] , this.M[1][this.acts[0][1]][this.acts[1][1]]];
+
+	this.getMyAspirationForARound = function()
+	{
+		return this.barRLittle[this.me];
+	}
+
+	this.barR[0] = ( this.barRLittle[0][0] + this.barRLittle[0][1])/ 2.0;
+	this.barR[1] = ( this.barRLittle[1][0] + this.barRLittle[1][1])/ 2.0;
 
 	if(this.barR[0] > this.barR[1])
 	{
@@ -199,6 +308,7 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
 
 	this.act = function(index)
 	{
+		beenCalled += 1;
 		if(this.guilty)
 		{
 			return this.generateAction(index, this.attack[index].ms);
@@ -471,8 +581,20 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1)
 		return -1;
 	}
 
+	this.getStateMachine = function()
+	{
+		if(weird)
+		{
+			console.log('unknown type of leader '  + this.acts + ' si and s2 ' + this.s1 + ' ' + this.s2);
+		}
+		return stateMachine;
+	}
+
+	this.printExpertInformation = function()
+	{
+		console.log('Expert information ' + i + ' bar : ' + this.barR + ' acts ' + this.acts[0] + ' acs ' + this.acts[1] + ' s1 ' + this.s1 + ' s2 : ' + this.s2);
+	}
 
 }
-
 
 module.exports = REExpert;

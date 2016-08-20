@@ -1,3 +1,7 @@
+var FSM = require('./FSM');
+
+var Leader = require('../sScript/leader2');
+
 var Rmax = function(_me, _A, _M, _omega, _K, _gamma)
 { // best response
 	this.expertName = 'RMax';
@@ -18,6 +22,11 @@ var Rmax = function(_me, _A, _M, _omega, _K, _gamma)
 	{
 		this.numJointActions *= this.A[i];
 	}
+
+	var stateMachine;
+	var leader = new Leader();
+	stateMachine = new FSM('S0', leader.getTransitionMap(), leader.getEvents(), leader.getMessages(), leader.CATCH_ALL_EVENT);
+
 	this.numStates = Math.pow(this.numJointActions, this.omega);
 	// console.log("num states " + this.numStates);
 	this.kappa = [];
@@ -361,6 +370,12 @@ var Rmax = function(_me, _A, _M, _omega, _K, _gamma)
 				console.log(" some values ");
 			}
 		}
+	}
+
+	
+	this.getStateMachine = function()
+	{
+		return stateMachine;
 	}
 
 }

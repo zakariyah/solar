@@ -1,24 +1,3 @@
-1. Get out the compliance
-2. Create a state machine variable for each expert
-3. Tie it up with the game at the start
-4. Print values out
-5. Save all the variables
-6. 
-
-
-3. Remove the why
-4. Add the fourth button
-
-
-to do next
-
-1. Get event to fire
-2. Set all the experts
-3. Print values out
-4. Save all the chat box
-5. 
-
-
 function Transition(startState, endState, event, transitionMessage) {
     this.startState = startState;
     this.endState = endState;
@@ -33,13 +12,14 @@ Transition.prototype.getTransitionLog = function () {
         ' was triggered by event ' + this.triggerEvent;
 };
 
-function State(stateName, transitionMap) {
+function State(stateName, transitionMap, catchAll) {
     this.name = stateName;
     this.transitionMap = transitionMap;
+    this.CATCH_ALL_EVENT = catchAll;
 }
 
 State.prototype.getTransitionInfoForEvent = function (event) {
-    var stateInfo = this.transitionMap[event] || this.transitionMap[CATCH_ALL_EVENT];
+    var stateInfo = this.transitionMap[event] || this.transitionMap[this.CATCH_ALL_EVENT];
     if (!stateInfo) {
         throw new Error('Unknown event: ' + event + 'for state: ' + this.stateName);
     }
@@ -47,7 +27,7 @@ State.prototype.getTransitionInfoForEvent = function (event) {
     return stateInfo;
 }
 
-function FSM(startStateName, transitionMap) {
+function FSM(startStateName, transitionMap, EVENTS, MESSAGES, catchAll) {
     if (!startStateName) {
         throw new Error('Must specify a start state!');
     }
@@ -55,8 +35,12 @@ function FSM(startStateName, transitionMap) {
     this.transitionMap = transitionMap;
     Object.freeze(this.transitionMap);
 
+    this.EVENTS = EVENTS;
+    this.MESSAGES = MESSAGES;
+    
+
     var startStateInfo = this.transitionMap[startStateName];
-    var startState = new State(startStateName, startStateInfo);
+    var startState = new State(startStateName, startStateInfo,  catchAll);
 
     this.history = [];
     this.currentState = startState;
@@ -64,7 +48,7 @@ function FSM(startStateName, transitionMap) {
 }
 
 FSM.prototype.transition = function (event) {
-    if (!EVENTS[event]) {
+    if (!this.EVENTS[event]) {
         throw new Error('Unknown event!: ' + event);
     }
 
@@ -77,6 +61,7 @@ FSM.prototype.transition = function (event) {
     var transition = new Transition(this.currentState, newState, event, this.currentMessage);
     this.currentState = newState;
     this.history.unshift(transition);
+    return this.currentMessage;
 }
 
 FSM.prototype.getMessageForTransition = function (transitionInfo) {
@@ -88,12 +73,12 @@ FSM.prototype.getMessageForTransition = function (transitionInfo) {
     if (randMessagesLen) {
         var selection = Math.floor(Math.random() * randMessagesLen);
         var randMessageId = randMessageIds[selection];
-        message = MESSAGES[randMessageId] + ' ';; 
+        message = this.MESSAGES[randMessageId] + ' ';; 
     }
 
     for (var i = 0, len = messageIds.length; i < len; i++) {
         var messageId = messageIds[i];
-        var messageText = MESSAGES[messageId];
+        var messageText = this.MESSAGES[messageId];
         message += messageText + ' ';
     }
 
@@ -111,23 +96,4 @@ FSM.prototype.getHistory = function () {
     return logs.join('\n');
 }
 
-var f = new FSM('S0', PURE_LEADER_TRANSITION_MAP);
-
-//Trace out path S0-> S1-> S2 ->S7->S8->S3->S4->S2->S3
-f.transition('f'); //S1
-f.getHistory();
-f.transition('d'); //S2
-f.getHistory();
-f.transition('g'); //S7
-f.getHistory();
-f.transition('f'); //S8
-f.getHistory();
-f.transition('g'); //S3
-f.getHistory();
-f.transition('s'); //S4
-f.getHistory();
-f.transition('d'); //S2
-f.getHistory();
-f.transition('s'); //S3
-f.getHistory();
-f.transition('gfdsafdafsad'); //Exception! Invalid event; still at S3
+module.exports = FSM;

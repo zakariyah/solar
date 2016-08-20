@@ -31,7 +31,7 @@ var StateOfAgent = function(jefePlusPlus)
 			return;
 		}
 		var rec = 0;
-		var nice = history[0][1] == 1;
+		var nice = history[0][1] == 1;  // check this variable
 		var bul = 0;
 		for(var i = 0; i < history.length; i++)
 		{

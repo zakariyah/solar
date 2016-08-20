@@ -11,10 +11,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	this.CanReceiveHigherPayoff = false;
 	this.latestChoice = -1;
 	this.gameHistory = [];
-	this.recommendationHistory = [];
-	
-	var numberOfRoundsAfterCycle = -1;
-	
+
 	this.presentExpertInformation = [];
 
 	this.expertName;
@@ -46,8 +43,6 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	var SolutionPair  = require('./SolutionPair');
 	var REExpert  = require('./REExpert');
 	var minimaxLog  = require('./minmax');
-
-	this.im = new iModel(this.me, this.A, 1);
 
 	this.getStateOfAgent = function()
 	{
@@ -193,7 +188,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		// console.log("maximins: " + this.mnmx[0].mv +" " + this.mnmx[1].mv);
 		this.REcount = 0;
 		this.re = [];
-		console.log("creating experts  ========================");
+		// console.log("solution pairs " + numSolutionPairs);
 		for( var i = 0; i < numSolutionPairs; i++)
 		{
 			// console.log("Theta.one:" + Theta[i].one + " mnmx.mv:" + this.mnmx[0].mv + " Theta[i].two:" + Theta[i].two + " mnmx[1].mv:" + this.mnmx[1].mv);
@@ -201,32 +196,10 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			{
 				// console.log("creating something");
 				// creating an expert for solution pairs that are greater than maximin for both players
-				this.re[this.REcount] = new REExpert(this.me, this.M, this.A, Theta[i].s1, Theta[i].s2, this.attack0, this.attack1, i);
-				if(this.re[this.REcount].enforceable)
-				{
-					console.log('No ' + this.REcount + ' is enforceable');
-					this.re[this.REcount].printExpertInformation();
-				}
-				else
-				{
-					console.log('No ' + this.REcount + ' is not enforceable');
-					this.re[this.REcount].printExpertInformation();
-				}
-				if(this.im.match(this.re[this.REcount].asTheFollower.teacher))
-				{
-					console.log('Follower is useful');
-					this.re[this.REcount].printExpertInformation();	
-				}
-				else
-				{
-					console.log('Follower is not useful');
-					this.re[this.REcount].printExpertInformation();		
-				}
-				console.log('next');
+				this.re[this.REcount] = new REExpert(this.me, this.M, this.A, Theta[i].s1, Theta[i].s2, this.attack0, this.attack1);
 				this.REcount ++;
 			}
 		}
-		console.log("finished creating experts  ========================");
 	}
 
 	this.determineExperts = function()
@@ -235,7 +208,6 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		this.resetCycle();
 		this.determineStrategyPairs();
 		var numEs = this.REcount * 2 + 2;
-		console.log(' I have this number of experts ' + numEs);
 		this.br = new Rmax(this.me, this.A, this.M, 1, 0, 0.95);
 		this.satisficingExperts =  [];
 		for(var i = 0; i< numEs; i++)
@@ -278,7 +250,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		return;
 	}
 
-	
+	this.im = new iModel(this.me, this.A, 1);
 	
 	this.setAspirationFolkEgal = function()
 	{
@@ -395,11 +367,10 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var highestNumber = 37542;
 		if(this.estado < 0)
 		{
-			// console.log('estado is less than zero');
+			console.log('estado is less than zero');
 			this.latestChoice = Math.floor(Math.random() * highestNumber) % this.A[this.me];
 			this.expertName = 'maximinBegin';
 			this.presentExpertInformation = [0,0];
-			this.recommendationHistory.push(this.latestChoice);
 			return this.latestChoice;
 		}
 		if(this.cycled)
@@ -439,7 +410,6 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			}
 
 			this.cycled = false;
-			numberOfRoundsAfterCycle = -1;
 		}
 
 		var a;
@@ -474,14 +444,11 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			this.presentExpertInformation = [this.re[Math.floor((this.experto - 2)/ 2)].payoffDifference, this.re[Math.floor((this.experto - 2)/ 2)].typeOfExpert];
 		}
 		this.latestChoice = a;
-		this.recommendationHistory.push(this.latestChoice);
-		numberOfRoundsAfterCycle += 1;
 		return a;
 	}
 
 	this.update = function(acts)
 	{
-
 		this.gameHistory.push(acts);
 		this.anExpertHasBeenExecutedForCompleteCycle = false;
 		this.distinctExpertWasChosen = false;
@@ -537,7 +504,6 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		{
 			if(this.tau == (this.numStates - 1))
 				{
-					// numberOfRoundsAfterCycle += 1;
 					this.cycled = true;
 					this.anExpertHasBeenExecutedForCompleteCycle = true;
 				}
@@ -546,7 +512,6 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		{
 			if(this.beenThere[this.estado])
 			{
-				// numberOfRoundsAfterCycle += 1;
 				this.cycled = true;
 				this.anExpertHasBeenExecutedForCompleteCycle = true;
 			}
@@ -746,7 +711,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			this.learner.aspiration = this.re[index].barR[this.me];
 			if(this.learner.aspiration < this.mnmx[this.me].mv)
 				this.learner.aspiration = this.mnmx[this.me].mv;
-			// console.log(" initial aspiration level " + this.me + ", " + this.aspiration);
+			console.log(" initial aspiration level " + this.me + ", " + this.aspiration);
 		}
 	}
 
@@ -983,65 +948,6 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		return [this.distinctExpertWasChosen, this.anExpertHasBeenExecutedForCompleteCycle, this.profitedFromDefection, this.expertName, this.learner.aspiration, target, targetForOpponent ]
 	}
 
-	this.getCurrentStateMachine = function()
-	{
-		console.log('print expert ' + this.experto);
-		if(this.experto == 0)
-		{//maximin
-			return false;
-		}
-		else if(this.experto == 1)
-		{// best response
-			return this.br.getStateMachine();
-			
-		}
-		else if((this.experto % 2) == 0)
-		{ // leader part of algorithm
-			return this.re[(this.experto - 2) / 2].getStateMachine();
-		}
-		else
-		{ // follower part of algorithm
-			// console.log('experto is ' + this.experto); 
-			return this.re[Math.floor((this.experto - 2)/ 2)].getStateMachine();
-		}
-		
-		return false;
-
-	}
-
-	this.getLastOptionForOpponent = function()
-	{
-		// this is for leaders
-		var acts = this.gameHistory[(this.gameHistory.length) - 1];
-		// console.log('numberOfRoundsAfterCycle ' + numberOfRoundsAfterCycle);
-		var vale = numberOfRoundsAfterCycle % 2 // assuming that there are only two actions in a cycle
-		return acts[vale][1];
-	}
-
-	this.isSatisfied = function()
-	{
-		if(this.experto <= 1)
-		{
-			console.log('there might be a problem');
-			return false;
-		}
-
-		var vale = numberOfRoundsAfterCycle % 2
-		var acts = this.gameHistory[this.gameHistory.length - 1];
-		var gotten = this.M[this.me][acts[0]][acts[1]];
-
-		if((this.experto % 2) == 0)
-		{ // leader part of algorithm
-			var aspArray = this.re[(this.experto - 2) / 2].getMyAspirationForARound();
-		}
-		else
-		{ // follower part of algorithm
-			var aspArray = this.re[Math.floor((this.experto - 2)/ 2)].getMyAspirationForARound();
-		}
-		
-		var asp = aspArray[vale];	
-		return gotten >= asp;
-	}
 }
 
 module.exports = jefe_plus;

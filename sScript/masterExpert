@@ -1,23 +1,48 @@
-1. Get out the compliance
-2. Create a state machine variable for each expert
-3. Tie it up with the game at the start
-4. Print values out
-5. Save all the variables
-6. 
+//MASTER EXPERT META-ALGORITHM
 
+var EVENTS = {
+    'n': 'new expert selected and not guilty',
+    'ng': 'new expert selected and guilty',
+    'nb': 'new expert selected and better payoffs possible'
+    'ngb': 'new expert, guilty and better payoffs possible'
+};
 
-3. Remove the why
-4. Add the fourth button
+//Make into a constant to prevent modifications
+Object.freeze(EVENTS);
 
+var MESSAGES = [
+    'Here is the strategy',
+    'Let\'s try something different',
+    'How about trying a new strategy',
+    'You can both do better than this',
+];
 
-to do next
+//Not used here
+var CATCH_ALL_EVENT = 'ALL';
 
-1. Get event to fire
-2. Set all the experts
-3. Print values out
-4. Save all the chat box
-5. 
-
+//Transition maps
+var PURE_LEADER_TRANSITION_MAP = {
+    'S0': {
+        'n': {
+            messageIds: [1],
+            endState: 'S0'
+        },
+        'ng': {
+            randMessageIds: [2, 3],
+            messageIds: [],
+            endState: 'S0'
+        },
+        'nb': {
+            messageIds: [1, 4],
+            endState: 'S0'
+        },
+        'ngb': {
+            randMessageIds: [2,3],
+            messageIds: [4],
+            endState: 'S0'
+        }
+    }
+};
 
 function Transition(startState, endState, event, transitionMessage) {
     this.startState = startState;
@@ -131,3 +156,6 @@ f.getHistory();
 f.transition('s'); //S3
 f.getHistory();
 f.transition('gfdsafdafsad'); //Exception! Invalid event; still at S3
+console.log(f.getHistory()); 
+console.log(f.currentMessage);
+console.log(f.currentState);
