@@ -1033,7 +1033,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		if(this.getRound() < 2 | this.experto < 2)
 			return true
 		// this is for leaders
-		console.log('-===========================' + this.experto + '  ' + this.re.length) ;
+		// console.log('-===========================' + this.experto + '  ' + this.re.length) ;
 
 		var acts = false;
 		if(this.experto % 2 == 0)
@@ -1045,10 +1045,10 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		{
 			acts = this.re[Math.floor((this.experto - 2)/ 2)].acts;	
 		}
-		console.log('acts here is  ' + acts);
+		// console.log('acts here is  ' + acts);
 		var vale = numberOfRoundsAfterCycle % 2 // assuming that there are only two actions in a cycle
-		console.log('acts vale is  ' + vale);
-		console.log('-===========================');
+		// console.log('acts vale is  ' + vale);
+		// console.log('-===========================');
 		return acts[vale][1];
 	}
 

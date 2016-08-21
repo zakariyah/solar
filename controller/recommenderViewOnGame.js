@@ -8,6 +8,8 @@ var RecommenderViewOnGame = function(agent)
 	{ // checks to see if the player complied with the recommendation given
 		// var playerAct = recommender
 		var history = recommender.gameHistory;
+		// console.log('checing compliance +++++++++++');
+		// console.log('history ' + history);
 		var len = history.length;
 		
 		if(len == 0)
@@ -15,14 +17,16 @@ var RecommenderViewOnGame = function(agent)
 			return false;
 		}
 		var hist = recommender.recommendationHistory
+		// console.log('recommendation history ' + hist);
+		// console.log('ending compliance +++++++++++' + hist.length + '  ' + history.length );
 
-		return hist[len[hist] - 1] == history[len - 1][0];
+		return hist[hist.length - 2] == history[len - 1][0];
 	}
 
 
 	var isOpponentCompliant = function()
 	{ 
-		// checks to check if the opponent 
+		// checks if the opponent 
 		var optionForOpponent = recommender.getLastOptionForOpponent();
 		var history = recommender.gameHistory;
 		var len = history.length;
