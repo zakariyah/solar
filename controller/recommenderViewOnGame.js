@@ -371,11 +371,11 @@ var RecommenderViewOnGame = function(agent)
 			{
 				return 'nc2';
 			}
-			else if(opponentIsGuilty)
+			else if(opponentIsGuilty())
 			{
 				return 'g';
 			}
-			else if(isSatisfied)
+			else if(isSatisfied())
 			{
 				return 's';
 			}
@@ -390,7 +390,7 @@ var RecommenderViewOnGame = function(agent)
 			{
 				return 'nc2';
 			}
-			else if(isSatisfied)
+			else if(isSatisfied())
 			{
 				return 's';
 			}
@@ -401,7 +401,7 @@ var RecommenderViewOnGame = function(agent)
 			{
 				return 'nc1';
 			}
-			else if(isSatisfied)
+			else if(isSatisfied())
 			{
 				return 's';
 			}	
@@ -412,7 +412,7 @@ var RecommenderViewOnGame = function(agent)
 			{
 				return 'nc1';
 			}
-			else if(isSatisfied)
+			else if(isSatisfied())
 			{
 				return 's';
 			}

@@ -1038,7 +1038,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var acts = false;
 		if(this.experto % 2 == 0)
 		{
-
+		
 		 acts = this.re[(this.experto - 2) / 2].acts;
 		}
 		else
