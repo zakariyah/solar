@@ -347,6 +347,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	// 	var Theta = [];
 	// 	this.createSolutionPairs(Theta);
 
+
 	// 	this.mnmx[0]= this.computeMaximin(0);
 	// 	this.mnmx[1]= this.computeMaximin(1);
 	// 	this.attack0 = this.computeAttack(0);
@@ -983,6 +984,24 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		return [this.distinctExpertWasChosen, this.anExpertHasBeenExecutedForCompleteCycle, this.profitedFromDefection, this.expertName, this.learner.aspiration, target, targetForOpponent ]
 	}
 
+	this.getCurrentExpertInfo = function()
+	{	
+		if(this.experto < 2)
+		{
+			return '';
+		}
+
+		if((this.experto % 2) == 0)
+		{ // leader part of algorithm
+			return this.re[(this.experto - 2) / 2].printExpertInformation();
+		}
+		else
+		{ // follower part of algorithm
+			// console.log('experto is ' + this.experto); 
+			return this.re[Math.floor((this.experto - 2)/ 2)].printExpertInformation();
+		}
+	}
+
 	this.getCurrentStateMachine = function()
 	{
 		console.log('print expert ' + this.experto);
@@ -1011,10 +1030,25 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 
 	this.getLastOptionForOpponent = function()
 	{
+		if(this.getRound() < 2 | this.experto < 2)
+			return true
 		// this is for leaders
-		var acts = this.gameHistory[(this.gameHistory.length) - 1];
-		// console.log('numberOfRoundsAfterCycle ' + numberOfRoundsAfterCycle);
+		console.log('-===========================' + this.experto + '  ' + this.re.length) ;
+
+		var acts = false;
+		if(this.experto % 2 == 0)
+		{
+
+		 acts = this.re[(this.experto - 2) / 2].acts;
+		}
+		else
+		{
+			acts = this.re[Math.floor((this.experto - 2)/ 2)].acts;	
+		}
+		console.log('acts here is  ' + acts);
 		var vale = numberOfRoundsAfterCycle % 2 // assuming that there are only two actions in a cycle
+		console.log('acts vale is  ' + vale);
+		console.log('-===========================');
 		return acts[vale][1];
 	}
 
@@ -1022,7 +1056,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	{
 		if(this.experto <= 1)
 		{
-			console.log('there might be a problem');
+			// console.log('there might be a problem');
 			return false;
 		}
 

@@ -1,6 +1,6 @@
 var FSM = require('./FSM');
 
-var Leader = require('../sScript/leader2');
+var Leader = require('../sScript/mbrl');
 
 var Rmax = function(_me, _A, _M, _omega, _K, _gamma)
 { // best response

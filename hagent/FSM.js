@@ -45,6 +45,8 @@ function FSM(startStateName, transitionMap, EVENTS, MESSAGES, catchAll) {
     this.history = [];
     this.currentState = startState;
     this.currentMessage = '';
+    this.startStateName = startStateName;
+    this.catchAll = catchAll;
 }
 
 FSM.prototype.transition = function (event) {
@@ -62,6 +64,16 @@ FSM.prototype.transition = function (event) {
     this.currentState = newState;
     this.history.unshift(transition);
     return this.currentMessage;
+}
+
+FSM.prototype.goToFirstState = function () {
+    var startStateInfo = this.transitionMap[this.startStateName];
+    var startState = new State(this.startStateName, startStateInfo,  this.catchAll);
+
+    this.history = [];
+    this.currentState = startState;
+    this.currentMessage = '';
+
 }
 
 FSM.prototype.getMessageForTransition = function (transitionInfo) {
@@ -94,6 +106,11 @@ FSM.prototype.getHistory = function () {
     }
 
     return logs.join('\n');
+}
+
+FSM.prototype.getFirstMessage = function () {
+    
+    return this.MESSAGES[0];
 }
 
 module.exports = FSM;

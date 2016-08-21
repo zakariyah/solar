@@ -13,13 +13,13 @@ var FSMInfo = function()
     //Make into a constant to prevent modifications
     Object.freeze(EVENTS);
 
-    var MESSAGES = [
-        'You did not follow my previous suggestion',
-        'You refused to follow my guidance',
-        'He has been cooperative!',
-        'Things are looking good',
-        'He hasn\'t been cooperative ',
-        'So in this round, play "recommended action"'
+    var MESSAGES = [ // check messages here again
+        ' mbrl You did not follow my previous suggestion',
+        ' You refused to follow my guidance',
+        ' He has been cooperative!',
+        ' Things are looking good',
+        ' He has not been cooperative',
+        ' So in this round, play recommended action'
     ];
 
     //Used by S0 to always transition back to S0
@@ -28,16 +28,11 @@ var FSMInfo = function()
     //Transition maps
     var MBRL_TRANSITION_MAP = {
         'S0': {
-            's': {
-                randMessageIds: [2, 3],
-                messageIds: [5],
-                endState: 'S1'
-            },
-            'ns': {
-                messageIds: [4, 5],
+            'ALL': {
+                messageIds: [0],
                 endState: 'S1'
             }
-        }
+        },
           'S1': {
             'nc1': {
                 randMessageIds: [0, 1],
@@ -64,7 +59,7 @@ var FSMInfo = function()
     }
     this.getTransitionMap = function()
     {
-        return LEADER2_TRANSITION_MAP;
+        return MBRL_TRANSITION_MAP;
     }
 
     this.getMessages = function()

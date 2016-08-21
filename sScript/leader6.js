@@ -1,4 +1,4 @@
-//LEADER1 EXPERT (Pure and Fair)
+//LEADER6 EXPERT Action: <(d;C); (c;D)> Payoff: 0.8, 0.3 (alt and bully)
 
 var FSMInfo = function()
 {
@@ -11,13 +11,11 @@ var FSMInfo = function()
         'g': ' associate is guilty'
     };
 
-    // check nc1 first, if player did not comply then no need to check on the opponent
-    // if player however complied, then we check associates' compliance next
     //Make into a constant to prevent modifications
     Object.freeze(EVENTS);
 
     var MESSAGES = [
-        'Always play C',
+        'Try alternating alternate between {A} and {B}',
         'You did not follow my previous suggestion',
         'You refused to follow my guidance',
         'Your associate did not comply',
@@ -28,14 +26,14 @@ var FSMInfo = function()
         'Keep it up',
         'Dont get tempted!',
         'Things are getting better',
-        'So in this round, play recommended action'
+        'It is your turn to  play "recommended action"',
     ];
 
     //Used by S0 to always transition to S1
     this.CATCH_ALL_EVENT = 'ALL';
 
     //Transition maps
-    var LEADER2_TRANSITION_MAP = {
+    var LEADER3_TRANSITION_MAP = {
         'S0': {
             'ALL': {
                 messageIds: [0],
@@ -59,7 +57,7 @@ var FSMInfo = function()
                 endState: 'S6'
             },
             's': {
-                messageIds: [6, 11],
+                messageIds: [5, 11],
                 endState: 'S2'
             }
         },
@@ -76,7 +74,7 @@ var FSMInfo = function()
             },
             'g': {
                 randMessageIds: [3, 4],
-                messageIds: [5,11],
+                messageIds: [5, 11],
                 endState: 'S6'
             },
             's': {
@@ -165,7 +163,7 @@ var FSMInfo = function()
                 endState: 'S6'
             },
             's': {
-                messageIds: [10, 11],
+                messageIds: [10],
                 endState: 'S3'
             }
         }
@@ -178,7 +176,7 @@ var FSMInfo = function()
     }
     this.getTransitionMap = function()
     {
-        return LEADER2_TRANSITION_MAP;
+        return LEADER3_TRANSITION_MAP;
     }
 
     this.getMessages = function()

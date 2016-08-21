@@ -1,18 +1,18 @@
 var FSM = require('./FSM');
 
-var Leader1 = require('../sScript/leader2');
+var Leader1 = require('../sScript/leader1');
 var Leader2 = require('../sScript/leader2');
 var Leader3 = require('../sScript/leader3');
 var Leader4 = require('../sScript/leader4');
 var Leader5 = require('../sScript/leader5');
-var Leader6 = require('../sScript/leader5');
+var Leader6 = require('../sScript/leader6');
 
 var Follower1 = require('../sScript/follower1');
 var Follower2 = require('../sScript/follower2');
 var Follower3 = require('../sScript/follower3');
 var Follower4 = require('../sScript/follower4');
 var Follower5 = require('../sScript/follower5');
-var Follower6 = require('../sScript/follower5');
+var Follower6 = require('../sScript/follower6');
 
 
 var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
@@ -311,6 +311,7 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 		beenCalled += 1;
 		if(this.guilty)
 		{
+			// console.log('the guy was punished');
 			return this.generateAction(index, this.attack[index].ms);
 		}
 
@@ -326,7 +327,8 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 		if(acciones != undefined)
 		{
 			this.update(this.me, acciones);
-		}		
+		}	
+		stateMachine.goToFirstState();
 	}
 
 	// console.log("making assessment");
@@ -592,7 +594,7 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 
 	this.printExpertInformation = function()
 	{
-		console.log('Expert information ' + i + ' bar : ' + this.barR + ' acts ' + this.acts[0] + ' acs ' + this.acts[1] + ' s1 ' + this.s1 + ' s2 : ' + this.s2);
+		return 'Expert information ' + i + ' bar : ' + this.barR + ' acts ' + this.acts[0] + ' acs ' + this.acts[1] + ' s1 ' + this.s1 + ' s2 : ' + this.s2;
 	}
 
 }

@@ -14,8 +14,11 @@ var RecommenderViewOnGame = function(agent)
 		{
 			return false;
 		}
-		return recommender.latestChoice == history[len - 1][0];
+		var hist = recommender.recommendationHistory
+
+		return hist[len[hist] - 1] == history[len - 1][0];
 	}
+
 
 	var isOpponentCompliant = function()
 	{ 
@@ -116,92 +119,116 @@ var RecommenderViewOnGame = function(agent)
 		var rec = [];
 		var options = ['A', 'B'];
 		var recommendation = recommender.latestChoice;
+		var info = recommender.getCurrentExpertInfo();
+
 		var choice = options[recommendation];
 		var choices = '';
 		// introHasBeenSaid = false;
-		var stateOfExperts = recommender.getStateOfAgent();
-		if(stateOfExperts[0] == 1)
+
+		rec = ['Choose ' + choice ];
+		rec.push('Choice is ' + recommendation);
+		
+		if(recommender.getRound() > 1)
 		{
-			rec.push("Let us try something different! You might get a better payoff <button class='button'>Explain</button>");
-			if(stateOfExperts[3] == 1)
-			{
-				rec.push("You can both do better than this.");
-			}
-		}
-		else if(stateOfExperts[1] == 1)
-		{
-			rec.push("Let us quit punishing your associate and try something different.");
-			if(stateOfExperts[2] == 1)
-			{
-				rec.push("You can both do better than this.");
+			rec.push('opponent last option according to my expert was ' + recommender.getLastOptionForOpponent());	
+			if(recommender.getCurrentStateMachine())
+			{	
+				rec.push('expert first message is ' + recommender.getCurrentStateMachine().getFirstMessage());	
 			}
 		}
 		
+		rec.push(info);
 
-		if(round < thresholdRound && (!introHasBeenSaid))
-		{
-			introHasBeenSaid = true;
-			rec.push("In this game, you and your associate can influence one another through your chosen actions. Based on this, I suggest you focus on either: ");
-			rec.push("guiding your associate");
-			rec.push("following your associate's guidance");
-			rec.push("play as you wish for a while, and see how your associate reacts");
-			rec.push("focus on minimizing your own loss, regardless of the consequences on your associate");
-			rec.push("However play " + choice + " now");
-			return rec;			
-		}
-		else if(round < thresholdRound)
-		{
-			rec.push('Stick to the recommendation I gave earlier on and let us see how it would play out');
-			return rec;
-		}
-
-		if(typeOfExpert === 'leader')
-		{
-			choices = ['Why not try to influence your associate? Chooose ' + choice, 'Try bossing him around by choosing ' + choice];
-		}
-		else if(typeOfExpert === 'follower')
-		{
-			choices = ['Choosing  ' + choice + ' helps both of you do well', 'You need to accept a compromise, therefore choose ' + choice];
-		}
-		else if(typeOfExpert === 'bestResponse')
-		{
-			var state = '';
-			if(recommendation == 0)
-			{
-				state = 'cooperative';
-			}
-			else
-			{
-				state = 'uncooperative';
-			}
-			choices = ['He has been ' + state + ', so choose ' + choice, 'Your best option is to choose ' + choice];
-			// rec.push('You can play independently of your associate; just choose what is best for you');
-		}
-		else if(typeOfExpert === 'minmax')
-		{
-			choices = ["Things aren't looking good, Focus on minimizing your own loss by choosing " + choice, "Your associate is exploiting you, Focus on minimizing your own loss by choosing " + choice];
-			// rec.push('You might need to protect yourself from loss, play safe!');
-		}
-		rec.push(chooseOneRandomly(choices));
 		return rec;
+		
+		// var stateOfExperts = recommender.getStateOfAgent();
+		// if(stateOfExperts[0] == 1)
+		// {
+		// 	rec.push("Let us try something different! You might get a better payoff <button class='button'>Explain</button>");
+		// 	if(stateOfExperts[3] == 1)
+		// 	{
+		// 		rec.push("You can both do better than this.");
+		// 	}
+		// }
+		// else if(stateOfExperts[1] == 1)
+		// {
+		// 	rec.push("Let us quit punishing your associate and try something different.");
+		// 	if(stateOfExperts[2] == 1)
+		// 	{
+		// 		rec.push("You can both do better than this.");
+		// 	}
+		// }
+		
+
+		// if(round < thresholdRound && (!introHasBeenSaid))
+		// {
+		// 	introHasBeenSaid = true;
+		// 	rec.push("In this game, you and your associate can influence one another through your chosen actions. Based on this, I suggest you focus on either: ");
+		// 	rec.push("guiding your associate");
+		// 	rec.push("following your associate's guidance");
+		// 	rec.push("play as you wish for a while, and see how your associate reacts");
+		// 	rec.push("focus on minimizing your own loss, regardless of the consequences on your associate");
+		// 	rec.push("However play " + choice + " now");
+		// 	return rec;			
+		// }
+		// else if(round < thresholdRound)
+		// {
+		// 	rec.push('Stick to the recommendation I gave earlier on and let us see how it would play out');
+		// 	return rec;
+		// }
+
+		// if(typeOfExpert === 'leader')
+		// {
+		// 	choices = ['Why not try to influence your associate? Chooose ' + choice, 'Try bossing him around by choosing ' + choice];
+		// }
+		// else if(typeOfExpert === 'follower')
+		// {
+		// 	choices = ['Choosing  ' + choice + ' helps both of you do well', 'You need to accept a compromise, therefore choose ' + choice];
+		// }
+		// else if(typeOfExpert === 'bestResponse')
+		// {
+		// 	var state = '';
+		// 	if(recommendation == 0)
+		// 	{
+		// 		state = 'cooperative';
+		// 	}
+		// 	else
+		// 	{
+		// 		state = 'uncooperative';
+		// 	}
+		// 	choices = ['He has been ' + state + ', so choose ' + choice, 'Your best option is to choose ' + choice];
+		// 	// rec.push('You can play independently of your associate; just choose what is best for you');
+		// }
+		// else if(typeOfExpert === 'minmax')
+		// {
+		// 	choices = ["Things aren't looking good, Focus on minimizing your own loss by choosing " + choice, "Your associate is exploiting you, Focus on minimizing your own loss by choosing " + choice];
+		// 	// rec.push('You might need to protect yourself from loss, play safe!');
+		// }
+		// rec.push(chooseOneRandomly(choices));
+		
+		// rec = ['Choose ' + choice ];
+		// rec.push('opponent first message is ' + recommender.getCurrentStateMachine().getFirstMessage());
+		// rec.push('opponent last option was ' + recommender.getLastOptionForOpponent());
+
+		// return rec;
 	}
 
 
 	this.getRecommendation = function()
 	{
 		var round = recommender.getRound();
-		// var typeOfExpert = recommender.getTypeOfExpert();
-		// var recoHtml = getRecommendationHtmlForExpertType(typeOfExpert, round);
+		var typeOfExpert = recommender.getTypeOfExpert();
+		var recoHtml = getRecommendationHtmlForExpertType(typeOfExpert, round);
 		// var options = ['A', 'B'];
 		// var recommendation = recommender.latestChoice;
 		// var recoHtml = []; // try to capture various emotions. 1.Assertiveness.
 		// recoHtml.push('I recommend that you play ' + options[recommendation]);
-		var options = ['A', 'B'];
-		var recommendation = recommender.latestChoice;
-		var choice = options[recommendation];
+		// var options = ['A', 'B'];
+		// var recommendation = recommender.latestChoice;
+		// var choice = options[recommendation];
 
-
-		return ''; //recoHtml'';
+		console.log('reco ' + recoHtml);
+		return recoHtml;
 	}
 
 	this.getReason = function()
