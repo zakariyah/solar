@@ -1,4 +1,4 @@
-//LEADER6 EXPERT Action: <(d;C); (c;D)> Payoff: 0.8, 0.3 (alt and bully)
+//LEADER6 EXPERT Action: <(d;C); (c;c)> Payoff: 0.8, 0.3 (alt and bully)
 
 var FSMInfo = function()
 {

@@ -55,113 +55,58 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 		return arrayVals.reduce(function(a, b) { return a + b; }, 0);
 	}
 
-	var stateMachine = false;
+	var stateMachine = [false, false];
+	var agentTypeL, agentTypeF;
 
 	// this is hardcoded for two player prisoners dilema
 	if(this.s1 == 0 && this.s2 == 0)
 	{
 		this.sameActions = true;
 		this.typeOfExpert = 1; // cc, cc
-		var agentType;
-		if(this.num % 2 == 0)
-		{
+		agentTypeL = new Leader1();
+		agentTypeF = new Follower1(); 
 
-		 	agentType = new Leader1();
-		}
-		else
-		{
-			// it is a follower
-			agentType = new Follower1();
-		}
-		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
 	}
 	else if(this.s1 == 0 && this.s2 == 1)
 	{
 		this.sameActions = true;
 		this.typeOfExpert = 2; // dd, dd
-		var agentType;
-		if(this.num % 2 == 0)
-		{
-
-		 	agentType = new Leader5();
-		}
-		else
-		{
-			// it is a follower
-			agentType = new Follower5();
-		}
-		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
+		agentTypeL = new Leader5();
+		agentTypeF = new Follower5();
 	}
 
 	else if(this.s1 == 0 && this.s2 == 2)
 	{
-			this.typeOfExpert = 3; // dc, cd	 or cd, dc
-			this.sameActions = false;
-			var agentType;
-			if(this.num % 2 == 0)
-			{
-
-			 	agentType = new Leader6();
-			}
-			else
-			{
-				// it is a follower
-				agentType = new Follower6();
-			}
-			stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
+		this.typeOfExpert = 3; // dc, cd	 or cd, dc
+		this.sameActions = false;
+		agentTypeL = new Leader6();
+		agentTypeF = new Follower6();
 	}
-	
 	else if(this.s1 == 0 && this.s2 == 3)
 	{
 		this.sameActions = false;
 		this.typeOfExpert = 4; // cc, dd  We both play cc and also play dd
-				var agentType;
-		if(this.num % 2 == 0)
-		{
-
-		 	agentType = new Leader4();
-		}
-		else
-		{
-			// it is a follower
-			agentType = new Follower4();
-		}
-		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
+		agentTypeL = new Leader4();
+		agentTypeF = new Follower4();		
 	}
-	
 	else if(this.s1 == 1 && this.s2 == 2)
 	{
 		this.sameActions = false;
 		this.typeOfExpert = 5; // cc, dc
-				var agentType;
-		if(this.num % 2 == 0)
-		{
-
-		 	agentType = new Leader3();
-		}
-		else
-		{
-			// it is a follower
-			agentType = new Follower3();
-		}
-		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
+		agentTypeL = new Leader3();
+		agentTypeF = new Follower3();
 	}
 	else if(this.s1 == 3 && this.s2 == 3)
 	{
 		weird = true;
-				var agentType;
-		if(this.num % 2 == 0)
-		{
-
-		 	agentType = new Leader2();
-		}
-		else
-		{
-			// it is a follower
-			agentType = new Follower2();
-		}
-		stateMachine = new FSM('S0', agentType.getTransitionMap(), agentType.getEvents(), agentType.getMessages(), agentType.CATCH_ALL_EVENT);
+		agentTypeL = new Leader2();
+		agentTypeF = new Follower2();
 	}
+
+	
+	stateMachine[0] = new FSM('S0', agentTypeL.getTransitionMap(), agentTypeL.getEvents(), agentTypeL.getMessages(), agentTypeL.CATCH_ALL_EVENT);
+	stateMachine[1] = new FSM('S0', agentTypeF.getTransitionMap(), agentTypeF.getEvents(), agentTypeF.getMessages(), agentTypeF.CATCH_ALL_EVENT);
+
 
 	this.barR = [];
 	// expected payoff target
@@ -328,7 +273,13 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 		{
 			this.update(this.me, acciones);
 		}	
-		stateMachine.goToFirstState();
+		this.goToFirstState();
+	}
+
+	this.goToFirstState = function()
+	{
+		stateMachine[0].goToFirstState();
+		stateMachine[1].goToFirstState();
 	}
 
 	// console.log("making assessment");

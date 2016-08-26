@@ -204,13 +204,15 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 				this.re[this.REcount] = new REExpert(this.me, this.M, this.A, Theta[i].s1, Theta[i].s2, this.attack0, this.attack1, i);
 				if(this.re[this.REcount].enforceable)
 				{
-					console.log('No ' + this.REcount + ' is enforceable');
-					this.re[this.REcount].printExpertInformation();
+					console.log('---------- ' + this.REcount + ' is enforceable');
+					console.log(this.re[this.REcount].printExpertInformation());
+					// console.log('++++++++++++ ' + this.re[this.REcount].getStateMachine().getFirstMessage());
 				}
 				else
 				{
-					console.log('No ' + this.REcount + ' is not enforceable');
-					this.re[this.REcount].printExpertInformation();
+					console.log(' -------------No ' + this.REcount + ' is not enforceable');
+					console.log(this.re[this.REcount].printExpertInformation());
+					// console.log('++++++++++++ ' + this.re[this.REcount].getStateMachine().getFirstMessage());
 				}
 				if(this.im.match(this.re[this.REcount].asTheFollower.teacher))
 				{
@@ -225,6 +227,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 				console.log('next');
 				this.REcount ++;
 			}
+
 		}
 		console.log("finished creating experts  ========================");
 	}
@@ -1016,12 +1019,12 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		}
 		else if((this.experto % 2) == 0)
 		{ // leader part of algorithm
-			return this.re[(this.experto - 2) / 2].getStateMachine();
+			return this.re[(this.experto - 2) / 2].getStateMachine()[0];
 		}
 		else
 		{ // follower part of algorithm
 			// console.log('experto is ' + this.experto); 
-			return this.re[Math.floor((this.experto - 2)/ 2)].getStateMachine();
+			return this.re[Math.floor((this.experto - 2)/ 2)].getStateMachine()[1];
 		}
 		
 		return false;
