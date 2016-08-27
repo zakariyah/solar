@@ -339,60 +339,6 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	
 	
 
-	// this.determineStrategyPairs = function()
-	// {
-	// 	var numSolutionPairs = 0;
-	// 	for(var i = 0; i < this.numStates; i++)
-	// 	{
-	// 		numSolutionPairs += (i + 1);
-	// 	}
-
-	// 	var Theta = [];
-	// 	this.createSolutionPairs(Theta);
-
-
-	// 	this.mnmx[0]= this.computeMaximin(0);
-	// 	this.mnmx[1]= this.computeMaximin(1);
-	// 	this.attack0 = this.computeAttack(0);
-	// 	this.attack1 = this.computeAttack(1);
-
-	// 	// console.log("maximins: " + this.mnmx[0].mv +" " + this.mnmx[1].mv);
-	// 	this.REcount = 0;
-	// 	this.re = [];
-	// 	for( var i = 0; i < this.numSolutionPairs; i++)
-	// 	{
-	// 		if((Theta[i].one >= this.mnmx[0].mv) && (Theta[i].one > 0) && (Theta[i].two >= this.mnmx[1].mv) && (Theta[i].two > 0))
-	// 		{
-	// 			// console.log("creating something");
-	// 			this.re[this.REcount] = new REExpert(this.me, this.M, this.A, Theta[i].s1, Theta[i].s2, this.attack0, this.attack1);
-	// 			this.REcount ++;
-	// 		}
-	// 	}
-	// }
-
-	// this.createSolutionPairs = function(Theta)
-	// {
-	// 	var c = 0;
-	// 	for(var i = 0; i < this.numStates; i++)
-	// 	{
-	// 		for(var j = i; j < this.numStates; j++)
-	// 		{
-	// 			Theta[c] = new SolutionPair();
-	// 			Theta[c].s1 = i;
-	// 			Theta[c].s2 = j;
-	// 			Theta[c].one = (this.pay(0, Theta[c].s1) + this.pay(0, Theta[c].s2)) / 2.0;
-	// 			Theta[c].two = (this.pay(1, Theta[c].s1) + this.pay(1, Theta[c].s2)) / 2.0;
-
-	// 			Theta[c].min = Theta[c].one;
-	// 			if(Theta[c].one > Theta[c].two)
-	// 			{
-	// 				Theta[c].min = Theta[c].two;
-	// 			}
-	// 			c++;
-	// 		}
-	// 	}
-	// }
-
 
 	this.move = function()
 	{
@@ -431,6 +377,13 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 				// this tries to reset the chosen expert.
 				this.re[ind].reset(this.previousActs);
 			}
+			if(this.experto == 1)
+			{
+				// console.log(this.experto + "  ==  1" );
+				this.br.resetStateMachine();
+			}
+
+
 			// to know if old expert was chosen. 
 			// my own code
 			if(this.experto == oldExperto)
@@ -757,7 +710,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 
 	this.printStrat = function(strat)
 	{
-		console.log("<");
+		// console.log("<");
 		var i, j;
 		if(strat == 0)
 		{
@@ -810,8 +763,8 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			}
 		}
 
-		console.log(" never selected an action : " + this.me + ", " + num );
-		console.log(this.pt[0] + " " + this.pt[1]);
+		// console.log(" never selected an action : " + this.me + ", " + num );
+		// console.log(this.pt[0] + " " + this.pt[1]);
 		return -1;
 	}
 
@@ -1079,6 +1032,66 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var asp = aspArray[vale];	
 		return gotten >= asp;
 	}
+
+	var shuffleArray = function(array) {
+	    for (var i = array.length - 1; i > 0; i--) {
+	        var j = Math.floor(Math.random() * (i + 1));
+	        var temp = array[i];
+	        array[i] = array[j];
+	        array[j] = temp;
+	    }
+	    return array;
+	}
+
+	this.getPartOfSatisficing = function()
+	{
+		var parts = [];
+		var numOfSatExperts = 0;
+		var expertIndex = [];
+		for(var i = 0; i < this.satisficingExperts.length; i++)
+		{
+			if(this.satisficingExperts[i])
+			{
+				numOfSatExperts += 1;
+				expertIndex.push(i);
+			}
+		}
+
+		// console.log('00000000000000000000000000000000000');
+		// console.log('number of satisficingExperts is ' + numOfSatExperts)
+		// console.log('indices are ' +  expertIndex);
+		// console.log('00000000000000000000000000000000000');
+		expertIndex = shuffleArray(expertIndex);
+		// console.log('shuffled indices are ' +  expertIndex);
+		var limit = 3;
+		if(limit > expertIndex.length)
+		{
+			limit = expertIndex.length;
+		}
+
+		for(var j = 0; j < limit; j++)
+		{
+			var num = expertIndex[j];
+			if(num == 1)
+			{
+				parts.push({'expertName' : 'bestResponse'});
+			}
+			else if(num == 0)
+			{
+				parts.push({'expertName' : 'minimax'});
+			}
+			else if(num % 2 == 0)
+			{
+				parts.push({expertName : 'leader', expertInformation : this.re[Math.floor((num - 2)/ 2)].typeOfExpert});
+			}
+			else
+			{
+				parts.push({expertName : 'follower', expertInformation : this.re[Math.floor((num - 2)/ 2)].typeOfExpert});
+			}
+		}
+		return parts;
+	}
 }
+
 
 module.exports = jefe_plus;

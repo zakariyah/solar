@@ -12,6 +12,7 @@ var gameController = require('../controller/gameController');
 var gameplayer = require('../controller/gameplayer');
 var gameProperties = require('../controller/gameProperties');
 
+var saveChatHistory = require('../controller/saveChatHistory');
 // for testing
 var TFT = require('../tester/TFT');
 var TF2T = require('../tester/TF2T');
@@ -44,15 +45,15 @@ var gameCounter = 0;
 var firstPlayerJustEntered = true;
 var playersSocketDict = {};
 
-console.log('I was called here now');
+// console.log('I was called here now');
 
 var numberOfHumanToHumanGames = 100000; // very high for human to human games
 var gameTypes = gameProperties.gameTypes; 
 ionew.sockets.on('connection', function (socket) {
-	console.log('I was called here now 2');
+	// console.log('I was called here now 2');
 	var waitingTimeElapsedFunction = function()
 	{
-			console.log('was called waiting');
+			// console.log('was called waiting');
 			if(!(socket.id in gameMap)) // if player has not been already mapped
 			{
 	
@@ -93,7 +94,7 @@ ionew.sockets.on('connection', function (socket) {
 
 	socket.on('join', function(hiitNumber)
 	{
-		console.log('join called');
+		// console.log('join called');
 		if(firstPlayerJustEntered)
 		{
 			gameControllerArray[gameCounter] = new gameController(2);
@@ -454,6 +455,15 @@ socket.on('disconnect', function()
 	}
 });
 
+socket.on('saveChatHistory', function(chatHistory)
+{
+	// var question = chatHistory.question;
+	// var answer = chatHistory.answer;
+	saveChatHistory(chatHistory, socket.id);
+	// console.log('%%%%%%%%%%%%%%%%% debe %%%%%%%%%%%%%%%%%');
+
+
+});
 
 socket.on('timeOfAction', function(timeOfAction) { // used to set the time action took place
 		var presentSocketGameCounter = playersSocketDict[socket.id];

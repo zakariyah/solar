@@ -145,94 +145,50 @@ var RecommenderViewOnGame = function(agent)
 
 		return rec;
 		
-		// var stateOfExperts = recommender.getStateOfAgent();
-		// if(stateOfExperts[0] == 1)
-		// {
-		// 	rec.push("Let us try something different! You might get a better payoff <button class='button'>Explain</button>");
-		// 	if(stateOfExperts[3] == 1)
-		// 	{
-		// 		rec.push("You can both do better than this.");
-		// 	}
-		// }
-		// else if(stateOfExperts[1] == 1)
-		// {
-		// 	rec.push("Let us quit punishing your associate and try something different.");
-		// 	if(stateOfExperts[2] == 1)
-		// 	{
-		// 		rec.push("You can both do better than this.");
-		// 	}
-		// }
-		
-
-		// if(round < thresholdRound && (!introHasBeenSaid))
-		// {
-		// 	introHasBeenSaid = true;
-		// 	rec.push("In this game, you and your associate can influence one another through your chosen actions. Based on this, I suggest you focus on either: ");
-		// 	rec.push("guiding your associate");
-		// 	rec.push("following your associate's guidance");
-		// 	rec.push("play as you wish for a while, and see how your associate reacts");
-		// 	rec.push("focus on minimizing your own loss, regardless of the consequences on your associate");
-		// 	rec.push("However play " + choice + " now");
-		// 	return rec;			
-		// }
-		// else if(round < thresholdRound)
-		// {
-		// 	rec.push('Stick to the recommendation I gave earlier on and let us see how it would play out');
-		// 	return rec;
-		// }
-
-		// if(typeOfExpert === 'leader')
-		// {
-		// 	choices = ['Why not try to influence your associate? Chooose ' + choice, 'Try bossing him around by choosing ' + choice];
-		// }
-		// else if(typeOfExpert === 'follower')
-		// {
-		// 	choices = ['Choosing  ' + choice + ' helps both of you do well', 'You need to accept a compromise, therefore choose ' + choice];
-		// }
-		// else if(typeOfExpert === 'bestResponse')
-		// {
-		// 	var state = '';
-		// 	if(recommendation == 0)
-		// 	{
-		// 		state = 'cooperative';
-		// 	}
-		// 	else
-		// 	{
-		// 		state = 'uncooperative';
-		// 	}
-		// 	choices = ['He has been ' + state + ', so choose ' + choice, 'Your best option is to choose ' + choice];
-		// 	// rec.push('You can play independently of your associate; just choose what is best for you');
-		// }
-		// else if(typeOfExpert === 'minmax')
-		// {
-		// 	choices = ["Things aren't looking good, Focus on minimizing your own loss by choosing " + choice, "Your associate is exploiting you, Focus on minimizing your own loss by choosing " + choice];
-		// 	// rec.push('You might need to protect yourself from loss, play safe!');
-		// }
-		// rec.push(chooseOneRandomly(choices));
-		
-		// rec = ['Choose ' + choice ];
-		// rec.push('opponent first message is ' + recommender.getCurrentStateMachine().getFirstMessage());
-		// rec.push('opponent last option was ' + recommender.getLastOptionForOpponent());
-
-		// return rec;
 	}
 
 
 	this.getRecommendation = function()
 	{
+		var myOptions = [];
+		var vals = recommender.presentExpertInformation;
+		var expertName = recommender.expertName;
 		var round = recommender.getRound();
-		var typeOfExpert = recommender.getTypeOfExpert();
-		var recoHtml = getRecommendationHtmlForExpertType(typeOfExpert, round);
-		// var options = ['A', 'B'];
-		// var recommendation = recommender.latestChoice;
-		// var recoHtml = []; // try to capture various emotions. 1.Assertiveness.
-		// recoHtml.push('I recommend that you play ' + options[recommendation]);
-		// var options = ['A', 'B'];
-		// var recommendation = recommender.latestChoice;
-		// var choice = options[recommendation];
 
-		console.log('reco ' + recoHtml);
-		return recoHtml;
+		// console.log('Expert name is  ' + expertName + " " + vals);
+		// var whyForOptions = [];
+		var stateMachine;
+
+		var event  = getEventToFire(expertName);
+		var options = ['A', 'B'];
+		var recommendation = recommender.latestChoice;
+
+		var choice = options[recommendation];
+
+		
+		if(round <  1)
+		{
+			myOptions.push('Let us start with ' + choice);
+		}
+		else
+		{
+			stateMachine = recommender.getCurrentStateMachine();
+			if(expertName == 'minmax')
+			{
+				myOptions.push("maximin Protect yourself, always play 'B'");
+				myOptions.push("You are at risk of being exploited so you need to protect yourself. ");
+			}
+			else if(expertName == 'leader' | expertName == 'follower' | expertName == 'bestResponse')
+			{
+				myOptions.push(stateMachine.transition(event, choice));
+			}
+			else
+			{
+				myOptions.push("Text not yet implemented for state expert name " + expertName);
+			}	
+		}
+		
+		return myOptions;
 	}
 
 	this.getReason = function()
@@ -345,8 +301,10 @@ var RecommenderViewOnGame = function(agent)
 
 	this.howToDoBetter = function()
 	{
+		// returns an array
 		var expertDoingBetter = recommender.getBetterExperts();
 		var betterHtml = [];
+		var whyForOptions = [];
 		if(expertDoingBetter)
 		{
 			betterHtml.push('You and the other player can make an average of ' + (expertDoingBetter[0] * 5).toFixed(2) + ' and ' + expertDoingBetter[1] * 5 + ' per round respectively');
@@ -424,121 +382,122 @@ var RecommenderViewOnGame = function(agent)
 		return 's';
 	}
 
+	var generateRandomNumber = function()
+	{
+		var num = Math.floor(Math.random() * 100000000) + 1;
+		return num;
+	}
+
+	// var onClickExplain = function(explainId)
+	// {
+	// 	return function()
+	// 	{
+	// 		var explain = document.getElementById('explain' +explainId);
+	// 		explain.style.display = 'inline';
+	// 	}
+	// }
+
 	this.whatAreMyOptions = function()
 	{
+		// returns two arrays as an array
+		// var num = generateRandomNumber();
 		var myOptions = [];
-		var vals = recommender.presentExpertInformation;
-		var expertName = recommender.expertName;
-		var round = recommender.getRound();
+		// var vals = recommender.presentExpertInformation;
+		// var expertName = recommender.expertName;
+		var satisficingExperts = recommender.getPartOfSatisficing();
 
-		console.log('Expert name is  ' + expertName + " " + vals);
+		// console.log('Expert name is  ' + expertName + " " + vals);
 		var whyForOptions = [];
-		var stateMachine;
-		// if(recommender)
-		// {
-		// 	stateMachine = recommender.getCurrentStateMachine();
-		// }
-		// else
-		// {
-		// 	console.log('this. recommender is null');
-		// }
-		
-		var event = 's';
-
-		event = getEventToFire(expertName);
-		
-		
-		// if(expertName == 'leader')
-		// {
-			
-			// if(vals[1] == 1)
-			// {
-			// 	myOptions.push("Enforce cooperation by always playing 'A'. If your associate does not cooperate, punish him. <button class='button'>Explain</button>");
-			// 	// myOptions.push("");
-			// 	myOptions.push("It is a fair solution as cooperation will give both of you high and equal payoffs. <button class='button'>Explain</button>");
-			// }
-			// else if(vals[1] == 2)
-			// {
-			// 	myOptions.push("Protect yourself, always play 'B' <button class='button'>Explain</button>");
-			// 	myOptions.push("You are at risk of being exploited so you need to protect yourself. <button class='button'>Explain</button>");
-			// }
-			// else if(vals[1] == 3)
-			// {
-			// 	myOptions.push("Both of you take turns receiving the highest payoff. You do so by playing (B, A) while your associate plays (A,B). If your associate does not cooperate, punish him.");
-			// 	myOptions.push("It's a fair solution as both of you will receive high and equal payoffs. <button class='button'>Explain</button>");
-			// }
-			// else if(vals[1] == 4)
-			// {
-			// 	myOptions.push("Alternate between the two actions. You do so by playing (A,B) while your associate plays (A,B). If your associate does not cooperate, punish him.");	
-			// 	myOptions.push("It's a fair solution as both of you will receive equal payoffs. <button class='button'>Explain</button>");
-			// }
-			// else if(vals[1] == 5)
-			// {
-			// 	myOptions.push("If he is being cooperative, then alternate between (A,B)");
-			// 	myOptions.push("You deserve a higher payoff if he lets you! <button class='button'>Explain</button>");
-			// }
-		// }
-		
-		// else if(expertName == 'follower')
-		// {
-		// 	if(vals[1] == 1)
-		// 	{
-		// 		myOptions.push("Always cooperate by playing 'A'.");
-		// 		// myOptions.push("");
-		// 		myOptions.push("It's a fair solution as cooperation will give both of you high and equal payoffs.<button class='button'>Explain</button>");
-		// 	}
-		// 	else if(vals[1] == 2)
-		// 	{
-		// 		myOptions.push("Protect yourself, always play 'B'");
-		// 		myOptions.push("You are at risk of being exploited so you need to protect yourself. <button class='button'>Explain</button>");
-		// 	}
-		// 	else if(vals[1] == 3)
-		// 	{
-		// 		myOptions.push("Take turns receiving the highest payoff. You do so by playing (B, A) while your associate plays (A,B).");
-		// 		myOptions.push("It's a fair solution as both of you will receive high and equal payoffs. <button class='button'>Explain</button>");
-		// 	}
-		// 	else if(vals[1] == 4)
-		// 	{
-		// 		myOptions.push("Alternate between the two actions. You do so by playing (A,B) while your associate plays (A,B). If your associate does not cooperate, punish him.");	
-		// 		myOptions.push("It's a fair solution as both of you will receive equal payoffs. <button class='button'>Explain</button>");
-		// 	}
-		// 	else if(vals[1] == 5)
-		// 	{
-		// 		myOptions.push("Let your associate have his way. Always play 'A' regardless of whatever he plays.");
-		// 		myOptions.push("It seems your associate is expecting you to comply with him. He is likely to punish you in future rounds if you don't. <button class='button'>Explain</button>");
-		// 	}
-		// }
-
-		// console.log('round is ' + round);
-		if(round <=  1)
+		// console.log('^^^^^^^^^^^^^^^^^^^^^');
+		for(var i = 0 ; i < satisficingExperts.length; i++)
 		{
-			myOptions.push('The game has just started');
-		}
-		else
-		{
-			stateMachine = recommender.getCurrentStateMachine();
-			if(expertName == 'minmax')
+			// console.log(satisficingExperts[i]);
+			var vals = satisficingExperts[i].expertInformation;
+			var expertName = satisficingExperts[i].expertName;
+			if(expertName == 'leader')
 			{
-				myOptions.push("Protect yourself, always play 'B'");
-				myOptions.push("You are at risk of being exploited so you need to protect yourself. <button class='button'>Explain</button>");
+				if(vals == 1)
+				{
+					myOptions.push("Enforce cooperation by always playing 'A'.");
+					myOptions.push("If your associate does not cooperate, punish him by playing 'B'. This is a great solution as cooperation will give both of you high and equal payoffs.");
+				}
+				else if(vals == 2)
+				{
+					myOptions.push("Protect yourself! ");
+					myOptions.push("Always play 'B'. You are at risk of being exploited so you need to protect yourself.");
+				}
+				else if(vals == 3)
+				{
+					myOptions.push("Both of you can take turns receiving the highest possible payoff.")
+					myOptions.push("You do so by playing (B) when your associate plays (A) and vice versa. If your associate does not comply, punish him. This is a good solution as both of you will receive high and equal payoffs.");
+				}
+				else if(vals == 4)
+				{
+					myOptions.push("Alternate between the two actions ");	
+					myOptions.push("You do so by both playing /'A/' in one round and both playing /'B/' in the proceeding round. If your associate does not comply, punish him. It's a fair solution as both of you will receive equal payoffs.");
+				}
+				else if(vals == 5)
+				{
+					myOptions.push("Always cooperate. ");
+					myOptions.push("You continue to play 'A' even though your associate does not reciprocate. This is okay as you still do better that not cooperating at all.");
+				}
+				else if(vals == 6)
+				{
+					myOptions.push("Alternate between the two actions. ");
+					myOptions.push("If he is being cooperative, then alternate between (A,B). You deserve a higher payoff if he lets you!");
+				}
 			}
-			else if(expertName == 'leader' | expertName == 'follower' | expertName == 'bestResponse')
+			else if(expertName == 'follower')
 			{
-				myOptions.push(stateMachine.transition(event));
+				if(vals == 1)
+				{
+					myOptions.push("Always cooperate by playing 'A'. ");
+					myOptions.push("It's a great solution as cooperation will give both of you high and equal payoffs.");
+				}
+				else if(vals == 2)
+				{
+					myOptions.push("Protect yourself, always play 'B' ");
+					myOptions.push("You are at risk of being exploited so you need to protect yourself.");
+				}
+				else if(vals == 3)
+				{
+					myOptions.push("Both of you can take turns receiving the highest possible payoff. ");
+					myOptions.push("You do so by playing (B) when your associate plays (A) and vice versa. It's a good solution as both of you will receive high and equal payoffs.");
+				}
+				else if(vals == 4)
+				{
+					myOptions.push("Alternate between the two actions. ");	
+					myOptions.push("You do so by both playing 'A' in one round and both playing 'B' in the proceeding round. It's a fair solution as both of you will receive equal payoffs.");
+				}
+				else if(vals == 5)
+				{
+					myOptions.push("Always cooperate by playing 'A' ");	
+					myOptions.push("It seems your associate is expecting you to comply with him. He is likely to punish you in in future rounds if you don't. This is okay as you still do better that not cooperating at all.");
+				}
+				else if(vals == 6)
+				{
+					myOptions.push("Alternate between the two actions. ");
+					myOptions.push("If he is being cooperative, then alternate between (A, B). That way, you get a higher payoff.");
+				}
 			}
-			// else if(expertName == 'bestResponse')
-			// {
-			// 	myOptions.push("Expert is BR, text not yet stated");
-			// 	myOptions.push("Expert is BR, text not yet stated <button class='button'>Explain</button>");
-			// }
+			else if(expertName == 'minmax')
+			{
+				myOptions.push("Protect yourself! ");
+				myOptions.push("Always play 'B'. You are at risk of being exploited so you need to protect yourself.");
+			}
+			else if(expertName == 'bestResponse')
+			{
+				myOptions.push("Play along with your associate. If he plays 'A', then reciprocate by playing 'A' too");
+				myOptions.push("If he does otherwise, then retaliate by playing 'B'. ");
+			}
 			else
 			{
 				myOptions.push("Text not yet implemented for state expert name " + expertName);
-			}	
+			}
 		}
-		
-		console.log('my options are ' + myOptions);
+		// console.log('^^^^^^^^^^^^^^^^^^^^^done');
 		return [myOptions, whyForOptions];
+		
 	}
 
 	this.getSolutionForRound = function()
@@ -547,5 +506,4 @@ var RecommenderViewOnGame = function(agent)
 		return {'doBetter' : this.howToDoBetter(), 'reason' : this.getReason(), 'reasonOtherwise' : this.getReasonForNotDoingOtherwise(), 'whatAreMyOptions' : this.whatAreMyOptions(), 'recommendation' : this.getRecommendation(), 'opponentInfo' : this.getInformationAboutOpponent(), 'agentChoice' : recommender.latestChoice, 'agentVariables' : recommender.getAgentVariables()};
 	}
 }
-
 module.exports = RecommenderViewOnGame;

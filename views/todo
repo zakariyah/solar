@@ -4,3 +4,9 @@ print out and fix an expert
 s1 and s2 can be used to determine if the actions are the same
 
 the inertia is in the update function of a.js (learner)
+
+
+1. Make the user submit values
+2. Fix the other question
+3. Fix the display
+4. 

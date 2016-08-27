@@ -2,17 +2,21 @@ var mongoose = require('mongoose');
   var chatHistorySchema = new mongoose.Schema({
   gameid: { type: String }
   , playerid: { type: String },
-  history: {type : Array}
+  question: {type : String},
+  answer : {type:String},
+  round : {type: Number}
 });
 
-chatHistorySchema.statics.createChatHistory = function(gameId, id, history) {
+chatHistorySchema.statics.createChatHistory = function(gameId, id, question, answer, round) {
 
     var newChatHistory = new this({
        playerid: id,
        gameid: gameId,
-       history: history
+       question: question,
+       answer : answer,
+       round : round
     });
-    // console.log(hiitInfo);
+    // console.log('question given 7&&&&&&&&&&&&&&&& is ' + question);
     newChatHistory.save(function(err) {
         if (err)
             throw new Error('Could not create move');

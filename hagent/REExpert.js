@@ -70,14 +70,14 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 	else if(this.s1 == 0 && this.s2 == 1)
 	{
 		this.sameActions = true;
-		this.typeOfExpert = 2; // dd, dd
+		this.typeOfExpert = 5; //2; // dd, dd
 		agentTypeL = new Leader5();
 		agentTypeF = new Follower5();
 	}
 
 	else if(this.s1 == 0 && this.s2 == 2)
 	{
-		this.typeOfExpert = 3; // dc, cd	 or cd, dc
+		this.typeOfExpert = 6; //3; // dc, cd	 or cd, dc
 		this.sameActions = false;
 		agentTypeL = new Leader6();
 		agentTypeF = new Follower6();
@@ -92,20 +92,25 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 	else if(this.s1 == 1 && this.s2 == 2)
 	{
 		this.sameActions = false;
-		this.typeOfExpert = 5; // cc, dc
+		this.typeOfExpert = 3; //5; // cc, dc
 		agentTypeL = new Leader3();
 		agentTypeF = new Follower3();
 	}
 	else if(this.s1 == 3 && this.s2 == 3)
 	{
-		weird = true;
+		// weird = true;
+		this.typeOfExpert = 2; //5; // cc, dc
 		agentTypeL = new Leader2();
 		agentTypeF = new Follower2();
 	}
+	else
+	{
+		weird = true;
+	}
 
 	
-	stateMachine[0] = new FSM('S0', agentTypeL.getTransitionMap(), agentTypeL.getEvents(), agentTypeL.getMessages(), agentTypeL.CATCH_ALL_EVENT);
-	stateMachine[1] = new FSM('S0', agentTypeF.getTransitionMap(), agentTypeF.getEvents(), agentTypeF.getMessages(), agentTypeF.CATCH_ALL_EVENT);
+	stateMachine[0] = new FSM('S0', agentTypeL.getTransitionMap(), agentTypeL.getEvents(), agentTypeL.getMessages(), agentTypeL.CATCH_ALL_EVENT, agentTypeL);
+	stateMachine[1] = new FSM('S0', agentTypeF.getTransitionMap(), agentTypeF.getEvents(), agentTypeF.getMessages(), agentTypeF.CATCH_ALL_EVENT, agentTypeF);
 
 
 	this.barR = [];
@@ -541,6 +546,11 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 			console.log('unknown type of leader '  + this.acts + ' si and s2 ' + this.s1 + ' ' + this.s2);
 		}
 		return stateMachine;
+	}
+
+	this.getPartsInfo = function()
+	{
+		
 	}
 
 	this.printExpertInformation = function()

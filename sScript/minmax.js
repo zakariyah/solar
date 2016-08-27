@@ -63,6 +63,13 @@ var FSMInfo = function()
         return MESSAGES;
     }
 
+    this.updateMessage = function(choice)
+    {
+        var lenOfMesage = MESSAGES.length;
+        var newMessages = MESSAGES.slice();
+        newMessages[lenOfMesage - 1] = newMessages[lenOfMesage - 1] + choice;
+        return newMessages;
+    }
 }
 
 

@@ -27,13 +27,14 @@ State.prototype.getTransitionInfoForEvent = function (event) {
     return stateInfo;
 }
 
-function FSM(startStateName, transitionMap, EVENTS, MESSAGES, catchAll) {
+function FSM(startStateName, transitionMap, EVENTS, MESSAGES, catchAll, stateAll) {
     if (!startStateName) {
         throw new Error('Must specify a start state!');
     }
 
     this.transitionMap = transitionMap;
     Object.freeze(this.transitionMap);
+    this.stateAll = stateAll;
 
     this.EVENTS = EVENTS;
     this.MESSAGES = MESSAGES;
@@ -49,11 +50,12 @@ function FSM(startStateName, transitionMap, EVENTS, MESSAGES, catchAll) {
     this.catchAll = catchAll;
 }
 
-FSM.prototype.transition = function (event) {
+FSM.prototype.transition = function (event, choice) {
     if (!this.EVENTS[event]) {
         throw new Error('Unknown event!: ' + event);
     }
 
+    this.MESSAGES = this.stateAll.updateMessage(choice);
     var transitionInfo = this.currentState.getTransitionInfoForEvent(event);
     var newStateName = transitionInfo.endState;
     var newStateTransitionInfo = this.transitionMap[newStateName];
@@ -65,6 +67,7 @@ FSM.prototype.transition = function (event) {
     this.history.unshift(transition);
     return this.currentMessage;
 }
+
 
 FSM.prototype.goToFirstState = function () {
     var startStateInfo = this.transitionMap[this.startStateName];

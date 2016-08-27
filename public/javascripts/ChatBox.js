@@ -245,8 +245,9 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 	}
 	
 
-	this.addHistory = function(history, totalOpponent, total)
+	this.addHistory = function(historyAll, totalOpponent, total)
 	{
+		var history = historyAll[historyAll.length - 1];
 		console.log('history is ' + history);
 		var position = 'right';
 		var assColor = '#e48f0f';
@@ -254,9 +255,9 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		var historyHtml = '<div class="col-sm-12" style="padding: 0px">';
 		historyHtml += '<div style="background-color: #E6E6FA; border-radius: 25px;">';
 		historyHtml += '<span class="col-md-6" style="text-align:left; color:#206fc5">';
-		historyHtml +=  'Your Choice: ' + history[0][0]  + '<br/>Your Score: ' + total + ' </span>';
+		historyHtml +=  'Your Choice: ' + history[0]  + '<br/>Your Score: ' + total + ' </span>';
 		historyHtml +=  '<span class="col-md-6" style="text-align:right; color:#e48f0f">';
-		historyHtml +=  'Associate\'s Choice: '  + history[0][1] + '<br/>Associate\'s Score: ' + totalOpponent + '</span>';
+		historyHtml +=  'Associate\'s Choice: '  + history[1] + '<br/>Associate\'s Score: ' + totalOpponent + '</span>';
 		// historyHtml +=  'Your Score: '  + history[0][2] + '</span>';
 		// historyHtml += 'Adewale';
 		historyHtml += '</div></div>';
@@ -479,12 +480,21 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 			// return getAnswerToFeedbackNumber(questionNumber);
 		}
 	}
+
+	var saveQuestionAndAnswer = function(question, answer)
+	{
+		// console.log('question is ' + question);
+		// console.log('answer is ' + answer);
+		myCanvasContainer.saveChatHistory(question, answer, getRoundNumber());
+	}
+
 	this.getSolutionToQuestion = function(questionNumber, isQuestion, buttonClicked)
 	{
 		if(isQuestion)
 		{
 			var question = isQuestion ? questions[questionNumber] : feedbacks[questionNumber];
-			var answer = getAnswerToQuestion(questionNumber, isQuestion);	
+			var answer = getAnswerToQuestion(questionNumber, isQuestion);
+			saveQuestionAndAnswer(question, answer);	
 			var roundNumber = getRoundNumber();
 			this.addToChatList(question, answer, roundNumber, buttonClicked, (isQuestion && (questionNumber == 1)));
 			chattingHistory.push([roundNumber, questionNumber, isQuestion, answer]);

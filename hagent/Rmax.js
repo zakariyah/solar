@@ -25,7 +25,17 @@ var Rmax = function(_me, _A, _M, _omega, _K, _gamma)
 
 	var stateMachine;
 	var leader = new Leader();
-	stateMachine = new FSM('S0', leader.getTransitionMap(), leader.getEvents(), leader.getMessages(), leader.CATCH_ALL_EVENT);
+	stateMachine = new FSM('S0', leader.getTransitionMap(), leader.getEvents(), leader.getMessages(), leader.CATCH_ALL_EVENT, leader);
+
+	this.getPartsInfo = function()
+	{
+
+	}
+
+	this.resetStateMachine = function()
+	{
+		stateMachine.goToFirstState();
+	}
 
 	this.numStates = Math.pow(this.numJointActions, this.omega);
 	// console.log("num states " + this.numStates);

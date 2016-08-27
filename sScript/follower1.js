@@ -25,7 +25,7 @@ var FSMInfo = function()
         'Keep it up',
         'Dont get tempted!',
         'Things are getting better',
-        'So in this round, play "recommended action"'
+        'So in this round, play '
     ];
 
     //Used by S0 to always transition to S1
@@ -138,6 +138,13 @@ var FSMInfo = function()
         return MESSAGES;
     }
 
+    this.updateMessage = function(choice)
+    {
+        var lenOfMesage = MESSAGES.length;
+        var newMessages = MESSAGES.slice();
+        newMessages[lenOfMesage - 1] = newMessages[lenOfMesage - 1] + choice;
+        return newMessages;
+    }
 }
 
 

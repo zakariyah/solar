@@ -220,10 +220,10 @@ var Options = function(nextRoundFunction)
 
 	this.setScore = function(scoreVal)
 	{
-// 		cumScore += scoreVal;
+	// 		cumScore += scoreVal;
 		roundNumber += 1;
 		earnings.innerHTML = (scoreVal * 0.01) + ' USD';
-// 		alert(cumScore + ' ' + scoreVal);
+	// 		alert(cumScore + ' ' + scoreVal);
 		score.innerHTML = Number(scoreVal / roundNumber).toFixed(2);;
 	}
 
@@ -396,6 +396,11 @@ var CanvasContainer = function(socket)
 		submitButton.style.display = visibility ? 'inline' : 'none';
 		submitButton.disabled = !visibility ;
 	}
+
+	this.saveChatHistory = function(question, answer, roundNumber)
+	{
+		socket.emit('saveChatHistory', {question: question, answer:answer, roundNumber : roundNumber});
+	}
 }
 
 
@@ -453,7 +458,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 30;
+	var totalWaitingTime = 3;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{
@@ -660,36 +665,6 @@ var PrisonersDilemma = function()
 		}
 	}
 
-	
-
-	// var startRealGame = function(hasRecommender)
-	// {
-	//   var htmlString = '<div class="alert"><span id="roundNumber" class="pull-left"></span> <span class="pull-right" id="timerBegin"></span></div>';
-	//   htmlString += "";
-
-	//   // htmlString += "<p> <strong class=\"alert alert-success\">Payoff Structure</strong></p>";
-	//   htmlString += "<div id='myOptions' class='col-sm-12' style='border: 1px solid black'></div>";
- //  	  htmlString += "<div id='opOptions' style='display:none'></div>";
- //  	  htmlString += "<div class='row'><table class='table'><tr><td id='myPayoff'  style='text-align:left;'></td><td></td><td></td><td id='otherPayoff'  style='text-align:right;'></td></tr></table></div>";
- //  	  htmlString += "<div id='nextRound' style='text-align: center;'><button class='button' id='nextButton'>Submit</button></div>";
- //  	  htmlString += "<div style='border: 1px #bce8f1 solid; display: none; font-size: 18px;  text-align: center; background-color: #d9edf7;   margin: 5px;'> <span id=\'timer\'></span> </div>" + "<div class='progress' style='display:none'><div id='progressBarMain' class='progress-bar progress-bar-success progress-bar-striped active' role='progressbar' aria-valuenow='5' aria-valuemin='0' aria-valuemax='100' style='width: 5%;'></div></div>";
-
-	//   var actionElement = document.getElementById('actions');
-	//   actionElement.innerHTML = htmlString;    
-	//   myCanvasContainer.startGame(radioButtonsOnclick);
-	//   if(!hasRecommender)
-	//   {
-	//   	document.getElementById('chatBoxContainer').style.display = 'none';
-	//   	document.getElementById('chatBoxContainerLink').style.display = 'none';
-	//   	// document.getElementById('questionAndFeedback').style.display = 'block';	
-	//   }
-	//   if(hasRecommender)
-	//   {
-	//   	document.getElementById('questionAndFeedback').style.visibility = 'visible';	
-	//   }
-	//   document.getElementById('nextButton').onclick = myCanvasContainer.nextRound(false, chatBox);
-
-	// }
 
 	var endGame = function(cummulative, numberOfRounds, playerHadRecommender)
 	{
@@ -717,36 +692,17 @@ var PrisonersDilemma = function()
 
 	var secondToLast = function(content)
 	{	
-		var roundBeforeShowingChat = 1;
-		if(content.count == roundBeforeShowingChat)
-		{
-			rowChat.style.display = 'block';
-		}
 		gameManager.startTimer();
 		var briefInfo = content.text;
-		// console.log('brief ' + JSON.stringify(content));
+		console.log('brief ' + JSON.stringify(content));
 		var myTotalPayoff = briefInfo.total;
 		var opponentTotal = briefInfo.totalOpponent;
 		gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
 		myCanvasContainer.makeSelectionImpossible();
 		myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff);
-	    // myCanvasContainer.setOpponentVisible(briefInfo.opponentChoiceInNumber);
-	    // myCanvasContainer.setPlayerVisible(briefInfo.playerChoiceInNumber);
-	    // myCanvasContainer.setPlayersPayoffText();
-	    // myCanvasContainer.showPlayerAndOpponentChoice(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);
-	    // // setAgentState(content.agentState);
-		// showPlayerChoicesForGivenTime(reco);
-		// document.getElementById('recommender').innerHTML = '';
-		// resultTimer.startTimer();
-		// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
-		// document.getElementById('agentState').innerHTML = agentStates;
 		document.getElementById('roundNumber').style.display = 'inline';
 		document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
-
-		// document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
 		questionsToAsk.moveToNextRound(content, gameHistory.getHistory());
-		// document.getElementById('questionAndFeedback').style.visibility = 'hidden';
-		// gameHistory.setHistoryDivHtml();
 		setAgentVariables(content);
 		myCanvasContainer.resetAll(briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber);		
 		document.getElementById('roundNumber').style.display = 'inline';		
@@ -754,6 +710,11 @@ var PrisonersDilemma = function()
 
 	var serverMessage = function(content)
 	{	
+		// var roundBeforeShowingChat = 1;
+		// if(content.count == roundBeforeShowingChat)
+		// {
+		// 	rowChat.style.display = 'block';
+		// }
 		if(content.count == 0)
 		{
 			console.log('was called a');
@@ -763,29 +724,27 @@ var PrisonersDilemma = function()
 			console.log('was called 1');
 			myCanvasContainer.startGame(chatBox);
 			gameManager.startTimer();
-			console.log('was called 2');
+			// console.log('was called 2');
 			// gameTimer.startTimer();
 			//// var agentStates = agentSettings.getAgentStateHtml(content.agentState);
 			//// document.getElementById('agentState').innerHTML = agentStates;
 			document.getElementById('roundNumber').innerHTML = 'Round ' + (content.count + 1);
-			console.log('was called 3');
+			// console.log('was called 3');
 			setAgentVariables(content);
 			questionsToAsk.moveToNextRound(content, false);
 			if(!hasRecommender)
 	  		{
-	  				console.log('was called 6');
-				  	document.getElementById('chatBoxContainer').style.display = 'none';
-				  	document.getElementById('chatBoxContainerLink').style.display = 'none';
-	  				document.getElementById('questionAndFeedback').style.display = 'none';	
+				document.getElementById('chatBoxContainer').style.display = 'none';
+				document.getElementById('chatBoxContainerLink').style.display = 'none';
+	  			document.getElementById('questionAndFeedback').style.display = 'none';	
+	  			rowChat.style.display= 'none';
 	  		}
-	  		else //if(hasRecommender)
+	  		else
 	  		{
-	  			console.log('was called 5');
-	  			// document.getElementById('questionAndFeedback').style.visibility = 'visible';	
+	  			rowChat.style.display = 'block';	
 	  		}
 	  		document.getElementById('actionAndReview').style.display = 'block';
 			document.getElementById('timerBegin').innerHTML = '';
-	  		console.log('was called 4');
 		}
 		else if(content.count < content.rounds)
 		{
