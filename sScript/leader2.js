@@ -32,7 +32,7 @@ var FSMInfo = function()
     var LEADER2_TRANSITION_MAP = {
         'S0': {
             'ALL': {
-                messageIds: [0],
+                messageIds: [0, 7],
                 endState: 'S1'
             }
         },

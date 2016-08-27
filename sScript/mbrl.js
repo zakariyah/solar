@@ -29,7 +29,7 @@ var FSMInfo = function()
     var MBRL_TRANSITION_MAP = {
         'S0': {
             'ALL': {
-                messageIds: [0],
+                messageIds: [0, 5],
                 endState: 'S1'
             }
         },
