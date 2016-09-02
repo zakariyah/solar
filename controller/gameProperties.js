@@ -8,8 +8,8 @@ gameProperties.type = 'PD';
 gameProperties.pdGameMatrix = [['A', 'A', 3, 3], ['A', 'B', 0, 5], ['B', 'A', 5, 0], ['B', 'B', 1, 1]];
 gameProperties.gameTypes  =    [ //'normal']; 
 // 'randomRecommenders', 
- // 'realRecommenders'
-'oneRealRecommender' 
+ 'realRecommenders'
+// 'oneRealRecommender' 
 //,'oneRandomRecommender'
 ];
 

@@ -18,7 +18,7 @@ var FSMInfo = function()
         ' You refused to follow my guidance',
         ' He has been cooperative!',
         ' Things are looking good',
-        ' He has not been cooperative',
+        ' You can do better',
         ' So in this round, play '
     ];
 

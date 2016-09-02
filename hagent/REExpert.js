@@ -31,7 +31,7 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 	this.numberOfTimesCalled = 0;
 	var beenCalled = 0;
 
-	console.log("s1 and s2 " + this.s1 + " " + this.s2);
+	// console.log("s1 and s2 " + this.s1 + " " + this.s2);
 	this.payoffDifference = ''; //  bully, generous, fair
 	this.sameActions = false;
 
@@ -555,7 +555,7 @@ var REExpert = function(_me, _M, _A, _s1, _s2, _attack0, _attack1, num)
 
 	this.printExpertInformation = function()
 	{
-		return 'Expert information ' + i + ' bar : ' + this.barR + ' acts ' + this.acts[0] + ' acs ' + this.acts[1] + ' s1 ' + this.s1 + ' s2 : ' + this.s2;
+		return '' ; //Expert information ' + i + ' bar : ' + this.barR + ' acts ' + this.acts[0] + ' acs ' + this.acts[1] + ' s1 ' + this.s1 + ' s2 : ' + this.s2;
 	}
 
 }

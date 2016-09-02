@@ -2,20 +2,19 @@ var Blocker = function()
 {
 	this.block = function(options)
 	{
-		// for(i in options)
-		// {
-		// 	options[i].style.display = 'none';
-		// }
+		for(i in options)
+		{
+			options[i].style.display = 'none';
+		}
 	}
 
 	this.unblock = function(options)
 	{
-		// for(i in options)
-		// 	{
-		// 		options[i].style.display = 'inline';
-		// 	}
+		for(i in options)
+		{
+			options[i].style.display = 'inline';
+		}
 	}
-
 }
 
 
@@ -458,7 +457,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 3;
+	var totalWaitingTime = 30;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{
@@ -721,7 +720,7 @@ var PrisonersDilemma = function()
 			waitingTimeElapsed. stopTimer();
 			hasRecommender = content.recommenderOptionValue;
 			// startRealGame(hasRecommender);
-			console.log('was called 1');
+			// console.log('was called 1');
 			myCanvasContainer.startGame(chatBox);
 			gameManager.startTimer();
 			// console.log('was called 2');
@@ -766,7 +765,7 @@ var PrisonersDilemma = function()
 			}
 			// console.log('delay is ' + delay);
 			// setTimeout($.unblockUI, 0.5 * 500);
-			setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, delay * 1000);
+			setTimeout(function(){(new Blocker()).unblock(myCanvasContainer.getOptions().getActionButtons().getButtons());}, 500);
 			setTimeout(secondToLast, 0.5 * 500, content);
 			// $.unblockUI(); 
 		}

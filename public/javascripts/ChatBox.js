@@ -139,6 +139,7 @@ var AdherenceHistory = function()
 
 	this.warnPlayerOfAdherence = function()
 	{
+		return false;  // to block this method
 		if(!this.shouldThePlayerBeWarned())
 		{
 			return false;

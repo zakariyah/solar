@@ -193,7 +193,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		// console.log("maximins: " + this.mnmx[0].mv +" " + this.mnmx[1].mv);
 		this.REcount = 0;
 		this.re = [];
-		console.log("creating experts  ========================");
+		// console.log("creating experts  ========================");
 		for( var i = 0; i < numSolutionPairs; i++)
 		{
 			// console.log("Theta.one:" + Theta[i].one + " mnmx.mv:" + this.mnmx[0].mv + " Theta[i].two:" + Theta[i].two + " mnmx[1].mv:" + this.mnmx[1].mv);
@@ -204,24 +204,24 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 				this.re[this.REcount] = new REExpert(this.me, this.M, this.A, Theta[i].s1, Theta[i].s2, this.attack0, this.attack1, i);
 				if(this.re[this.REcount].enforceable)
 				{
-					console.log('---------- ' + this.REcount + ' is enforceable');
-					console.log(this.re[this.REcount].printExpertInformation());
+					// console.log('---------- ' + this.REcount + ' is enforceable');
+					// console.log(this.re[this.REcount].printExpertInformation());
 					// console.log('++++++++++++ ' + this.re[this.REcount].getStateMachine().getFirstMessage());
 				}
 				else
 				{
-					console.log(' -------------No ' + this.REcount + ' is not enforceable');
-					console.log(this.re[this.REcount].printExpertInformation());
+					// console.log(' -------------No ' + this.REcount + ' is not enforceable');
+					// console.log(this.re[this.REcount].printExpertInformation());
 					// console.log('++++++++++++ ' + this.re[this.REcount].getStateMachine().getFirstMessage());
 				}
 				if(this.im.match(this.re[this.REcount].asTheFollower.teacher))
 				{
-					console.log('Follower is useful');
+					// console.log('Follower is useful');
 					this.re[this.REcount].printExpertInformation();	
 				}
 				else
 				{
-					console.log('Follower is not useful');
+					// console.log('Follower is not useful');
 					this.re[this.REcount].printExpertInformation();		
 				}
 				console.log('next');
@@ -229,7 +229,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			}
 
 		}
-		console.log("finished creating experts  ========================");
+		// console.log("finished creating experts  ========================");
 	}
 
 	this.determineExperts = function()
@@ -238,7 +238,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		this.resetCycle();
 		this.determineStrategyPairs();
 		var numEs = this.REcount * 2 + 2;
-		console.log(' I have this number of experts ' + numEs);
+		// console.log(' I have this number of experts ' + numEs);
 		this.br = new Rmax(this.me, this.A, this.M, 1, 0, 0.95);
 		this.satisficingExperts =  [];
 		for(var i = 0; i< numEs; i++)
@@ -1047,9 +1047,14 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	{
 		var parts = [];
 		var numOfSatExperts = 0;
+		// var satisficingPart = [this.experto];
 		var expertIndex = [];
 		for(var i = 0; i < this.satisficingExperts.length; i++)
 		{
+			if( i == this.experto)
+			{
+				continue;
+			}
 			if(this.satisficingExperts[i])
 			{
 				numOfSatExperts += 1;
@@ -1057,13 +1062,14 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			}
 		}
 
-		// console.log('00000000000000000000000000000000000');
-		// console.log('number of satisficingExperts is ' + numOfSatExperts)
-		// console.log('indices are ' +  expertIndex);
-		// console.log('00000000000000000000000000000000000');
 		expertIndex = shuffleArray(expertIndex);
-		// console.log('shuffled indices are ' +  expertIndex);
+
 		var limit = 3;
+		if(this.experto >= 0)
+		{
+			expertIndex.unshift(this.experto);	
+		}
+		
 		if(limit > expertIndex.length)
 		{
 			limit = expertIndex.length;

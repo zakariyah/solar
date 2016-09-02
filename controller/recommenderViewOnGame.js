@@ -495,6 +495,8 @@ var RecommenderViewOnGame = function(agent)
 				myOptions.push("Text not yet implemented for state expert name " + expertName);
 			}
 		}
+
+		myOptions[0] = '<b>' + myOptions[0] + '</b>';
 		// console.log('^^^^^^^^^^^^^^^^^^^^^done');
 		return [myOptions, whyForOptions];
 		
