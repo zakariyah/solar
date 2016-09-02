@@ -1,10 +1,10 @@
-var getExplanation = function(id)
+var getExplanation = function(id, roundNumberVal)
 {
 		// return function()
 		// {
-			console.log('vall ' + id);
-			document.getElementById('explanationbutton' + id).style.display = 'none';
-			document.getElementById('explanationspan' + id).style.display = 'block';
+	console.log('vall ' + id + ' : ' + roundNumberVal);
+	document.getElementById(roundNumberVal + 'explanationbutton' + id).style.display = 'none';
+	document.getElementById(roundNumberVal + 'explanationspan' + id).style.display = 'block';
 		// }
 }
 
@@ -227,7 +227,7 @@ var AgentStateSettings = function()
 		return agentState.doBetter;
 	}
 
-	this.getWhatAreMyOptions = function(agentState)
+	this.getWhatAreMyOptions = function(agentState, roundNumberVal)
 	{
 		// console.log('what are my options ' + agentState.whatAreMyOptions[0].length);
 		var whatAreMyOptions = agentState.whatAreMyOptions[0];
@@ -236,11 +236,10 @@ var AgentStateSettings = function()
 		{
 			for(var i = 0; i < whatAreMyOptions.length; i+= 2)
 			{
-				var spanId = 'explanationspan' + i;
-				var buttonId = 'explanationbutton' + i;
-				// var expFunction = getExplanation(spanId, buttonId);
-				console.log('vale ' + spanId + ' : ' + buttonId);
-				modifiedOptions.push(whatAreMyOptions[i] + "<button id='" +buttonId + "'  onclick='getExplanation("  + i + ")'> Explain </button> <span style='display:none' id = '" + spanId  + "'>" + whatAreMyOptions[i + 1] + "</span>");
+				var spanId = roundNumberVal + 'explanationspan' + i;
+				var buttonId = roundNumberVal + 'explanationbutton' + i;
+				console.log('vale ' + roundNumberVal);
+				modifiedOptions.push(whatAreMyOptions[i] + "<button id='" +buttonId + "'  onclick='getExplanation("  + i + ", " + roundNumberVal + ")'> Explain </button> <span style='display:none' id = '" + spanId  + "'>" + whatAreMyOptions[i + 1] + "</span>");
 			}
 		}
 		
@@ -494,7 +493,7 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		}
 		else if(questionNumber == 3)
 		{// change this
-			return agentSettings.getWhatAreMyOptions(contentFromServer.agentState)[0];
+			return agentSettings.getWhatAreMyOptions(contentFromServer.agentState, contentFromServer.count)[0];
 			// return agentSettings.getReasonProhibitingOtherAction(contentFromServer.agentState);
 		}
 		else if(questionNumber == 4)
