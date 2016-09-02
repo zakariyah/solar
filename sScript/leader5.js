@@ -26,7 +26,7 @@ var FSMInfo = function()
             'Keep it up',
             'Dont get tempted!',
             'Things are getting better',
-            'In this round,  play "recommended action"'
+            'In this round,  play '
         ];
 
         //Used by S0 to always transition to S1

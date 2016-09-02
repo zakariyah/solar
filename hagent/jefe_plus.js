@@ -1005,7 +1005,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var vale = numberOfRoundsAfterCycle % 2 // assuming that there are only two actions in a cycle
 		// console.log('acts vale is  ' + vale);
 		// console.log('-===========================');
-		return acts[vale][1];
+		return acts[1][vale];
 	}
 
 	this.isSatisfied = function()

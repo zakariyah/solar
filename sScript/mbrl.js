@@ -14,12 +14,12 @@ var FSMInfo = function()
     Object.freeze(EVENTS);
 
     var MESSAGES = [ // check messages here again
-        ' mbrl You did not follow my previous suggestion',
+        ' mbrl Let us try this',
         ' You refused to follow my guidance',
         ' He has been cooperative!',
         ' Things are looking good',
         ' He has not been cooperative',
-        ' So in this round, play recommended action'
+        ' So in this round, play '
     ];
 
     //Used by S0 to always transition back to S0
@@ -35,7 +35,7 @@ var FSMInfo = function()
         },
           'S1': {
             'nc1': {
-                randMessageIds: [0, 1],
+                randMessageIds: [1],
                 messageIds: [5],
                 endState: 'S1'
             },

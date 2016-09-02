@@ -18,7 +18,7 @@ var FSMInfo = function()
         'You refused to follow my guidance',
         'Your associate is exploiting you, protect yourself!',
         'Minimize your possible loss ',
-        'So in this round, play "recommended action"'
+        'So in this round, play '
     ];
 
     //Used by S0 to always transition back to S0

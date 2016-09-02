@@ -21,7 +21,7 @@ var FSMInfo = function()
         'Good teamwork',
         'Keep it up',
         'Things are getting better',
-        'In this round, play "recommended action"'
+        'In this round, play '
     ];
 
     //Used by S0 to always transition to S1
