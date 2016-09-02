@@ -75,7 +75,7 @@ router.post('/entryMain', function(req, res) {
 	var hiit = req.session.hiitNumber;
 	// if(typeof hiit === 'undefined')
 	// {
-	// 	res.render('informationMain', { title: 'Entry', playerIsPresent : 'you are not known'});	
+	// 	res.render('inf ormationMain', { title: 'Entry', playerIsPresent : 'you are not known'});	
 	// 	return;
 	// }
 	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');

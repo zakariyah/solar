@@ -1,3 +1,14 @@
+var getExplanation = function(id)
+{
+		// return function()
+		// {
+			console.log('vall ' + id);
+			document.getElementById('explanationbutton' + id).style.display = 'none';
+			document.getElementById('explanationspan' + id).style.display = 'block';
+		// }
+}
+
+
 var AdherenceHistory = function()
 {
 	var history = []; // contains the player choice, recommended action, opponent choice, isWarningGiven, wasRecommendationAsked, intrusion
@@ -201,7 +212,16 @@ var AgentStateSettings = function()
 	{
 		return agentState.reasonOtherwise;
 	}
-	
+		
+	// var getExplanation = function(spanId, buttonId)
+	// {
+	// 	return function()
+	// 	{
+	// 		document.getElementById(buttonId).style.display = 'none';
+	// 		document.getElementById(spanId).style.display = 'inline';
+	// 	}
+	// }
+
 	this.getHowToDoBetter = function(agentState)
 	{
 		return agentState.doBetter;
@@ -209,7 +229,23 @@ var AgentStateSettings = function()
 
 	this.getWhatAreMyOptions = function(agentState)
 	{
-		return agentState.whatAreMyOptions;
+		// console.log('what are my options ' + agentState.whatAreMyOptions[0].length);
+		var whatAreMyOptions = agentState.whatAreMyOptions[0];
+		var modifiedOptions = [];
+		if(whatAreMyOptions.length % 2 ==0)
+		{
+			for(var i = 0; i < whatAreMyOptions.length; i+= 2)
+			{
+				var spanId = 'explanationspan' + i;
+				var buttonId = 'explanationbutton' + i;
+				// var expFunction = getExplanation(spanId, buttonId);
+				console.log('vale ' + spanId + ' : ' + buttonId);
+				modifiedOptions.push(whatAreMyOptions[i] + "<button id='" +buttonId + "'  onclick='getExplanation("  + i + ")'> Explain </button> <span style='display:none' id = '" + spanId  + "'>" + whatAreMyOptions[i + 1] + "</span>");
+			}
+		}
+		
+		return [modifiedOptions, ''];
+		// return agentState.whatAreMyOptions;
 	}
 }	
 
@@ -377,7 +413,6 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		chatPanelBody.scrollTop = chatPanelBody.scrollHeight;
 		// problem likely to be here
 		// chatlist is replacing itself.
-
 
 		if(!isQuestion)
 		{

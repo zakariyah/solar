@@ -694,7 +694,7 @@ var PrisonersDilemma = function()
 	{	
 		gameManager.startTimer();
 		var briefInfo = content.text;
-		console.log('brief ' + JSON.stringify(content));
+		// console.log('brief ' + JSON.stringify(content));
 		var myTotalPayoff = briefInfo.total;
 		var opponentTotal = briefInfo.totalOpponent;
 		gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
