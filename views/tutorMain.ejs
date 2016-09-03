@@ -87,19 +87,24 @@
                           <p>
                           To help you make the right choices in the game, you will have the ability to chat with a Bot. This Bot is an intelligent algorithm that knows how to play the game very well, so you might want to listen to it. You are however free to decide when to ask for help and how often you do so. There are 3 possible questions that you can ask the Bot.
                           <div>
-                            <img src="/images/tutorial/actionPhase.png" class='col-md-12' style="display: block; margin: 0 auto;" />
+                            <img src="/images/tutorial/whatOptions.png" class='col-md-12' style="display: block; margin: 0 auto;" />
 
                             </div>
                             <p>Question 1: What are my Options?
-                            <p> Description of the answer: When you ask the Bot this question, it responds with a list of 2/3 possible “ways” you can play the game form the current round. Each option is a complete plan, stating the actions you should take, the actions expected of your associate, what you should do if your associate does not comply and why that option is good. It is best to follow the option for the specified number of rounds to get the maximum benefit. An example is shown in the screenshot below:
-<p>Question 2: What should I do know?
-<p>Description of the answer: When you ask the Bot this question, it tells you the specific action to pick in the present round. It also gives you a feedback about what happened in the previous round. For example, it tells you whether you followed its recommendation or not and whether your associate complied with his/her half of the plan. It also lets you know if you are doing great or you can do better!
-<p>Question 3: Tell me about my associate?
-<p>Description of the answer: If you would like to know specific details about your associate, this is the question to ask. It tells you on average how mean (does not cooperate) or cooperative, how lenient (willing to let you get away with a defection) and how forgiving (punishes a defection but willing to still cooperate afterwards) he/she has been.
-Your conversation with the Bot will be available in a dialogue box throughout the game and you can freely scroll up or down to view your chat history.
-                        </div>
+                            <p> Description of the answer: When you ask the Bot this question, it responds with a list of three possible “ways” you can play the game form the current round. Each option is a complete plan, stating the actions you should take, the actions expected of your associate, what you should do if your associate does not comply and why that option is good. It is best to follow the option for the specified number of rounds to get the maximum benefit. An example is shown in the screenshot below:
 
-                            <div id='page5' style='display:none'>
+                        </div>
+          <div id='page5' style='display:none'>
+          <p>What should I do know?
+<p>Description of the answer: When you ask the Bot this question, it tells you the specific action to pick in the present round. It also gives you a feedback about what happened in the previous round. For example, it tells you whether you followed its recommendation or not and whether your associate complied with his/her half of the plan. It also lets you know if you are doing great or you can do better!
+
+          
+          <div>
+                  <img src="/images/tutorial/whatShould.png" style="display: block;"  class='col-md-12'/>
+      </div>
+                            </div>
+
+            <div id='page6' style='display:none'>
           At the end of the round, the points obtained by both of you will be highlighted for you to see. Your points in each round will depend on your choice and the choice of your opponent. This gives rise to the four possible scenarios as shown in the screenshot below. In each cell, the first number represents your points and second number represents the points of your associate. A history of your choices and points earned will also be available in the dialogue box below the game. The scenario below occurs when you choose A and the other player chooses B.
           
           <div>
@@ -107,7 +112,7 @@ Your conversation with the Bot will be available in a dialogue box throughout th
       </div>
                             </div>
 
-                            <div id='page6' style='display:none'>
+                            <div id='page7' style='display:none'>
                               <p> <b> YOUR EARNINGS</b>
           Your accumulated earnings is obtained by summing your points over all rounds of the game thus far. These points are then converted to money by multiplying each point by $0.02.
           
@@ -121,7 +126,7 @@ Your conversation with the Bot will be available in a dialogue box throughout th
                             </div>
 
                       
-                            <div id='page7' style='display:none'>
+                            <div id='page8' style='display:none'>
                               <p><b>Note the circumstances in which participants will not be paid:</b>
           <ol><li>Once in the waiting room, they leave the waiting room before the waiting room timer runs out. </li>
           <li>Once in a game, they try to return an assignment or stop/close a game at any time before the final payment screen.</li></ol>
@@ -129,7 +134,7 @@ Your conversation with the Bot will be available in a dialogue box throughout th
                 </div>
 
                       
-                            <div id='page8' style='display:none'>
+                            <div id='page9' style='display:none'>
                   
                   <b>We hope the tutorial was useful. You will start the game, once you submit correct answers to all the following questions.</b>
                   <img src="/images/tutorial/actionPhase.png" class='col-md-12' style="display: block; margin: 0 auto;" />
@@ -189,8 +194,8 @@ Your conversation with the Bot will be available in a dialogue box throughout th
 
 <script src="/javascripts/PostExperiment.js"></script>
 <script type="text/javascript">
-var pagesHeader = ['INTRODUCTION', 'YOUR ASSOCIATE', 'YOUR CHOICES', 'YOUR TEACHER', 'YOUR POINTS', 'YOUR EARNINGS AND FEEDBACK', 'DISQUALIFICATION', 'QUIZ'];
-new Quiz('page', 8, true, false, false, pagesHeader);
+var pagesHeader = ['INTRODUCTION', 'YOUR ASSOCIATE', 'YOUR CHOICES', 'YOUR TEACHER', 'QUESTION 2', 'YOUR POINTS', 'YOUR EARNINGS AND FEEDBACK', 'DISQUALIFICATION', 'QUIZ'];
+new Quiz('page', 9, true, false, false, pagesHeader);
 </script>
 </body>
 </html>
