@@ -518,8 +518,8 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 
 	var saveQuestionAndAnswer = function(question, answer)
 	{
-		// console.log('question is ' + question);
-		// console.log('answer is ' + answer);
+		console.log('question is ' + question);
+		console.log('answer is ' + answer);
 		myCanvasContainer.saveChatHistory(question, answer, getRoundNumber());
 	}
 
