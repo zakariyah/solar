@@ -464,17 +464,21 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 	{
 		createOnlyHeader(getRoundNumber());	
 		var roundNumber = getRoundNumber();
-		var numberOfRoundsBetweenFeedbacks = 2;
+		var numberOfRoundsBetweenFeedbacks = 7;
 		if(((roundNumber % numberOfRoundsBetweenFeedbacks) == 0) && roundNumber > 0)
 		{
 			console.log('event name ' + contentFromServer.agentState.eventName);
 			if(contentFromServer.agentState.eventName == 's')
 			{
-				var question = contentFromServer.agentState.recommendation; //'Why don\'t you ask for advice.';
-				var chatItem = createOneChatItem(false, 'S-script', question, roundNumber);
-				showChat(chatItem, false, false);
-				chattingHistory.push([roundNumber, 'intrusion', false, 'intrusion']);
+				var question = contentFromServer.agentState.recommendation; //'Why don\'t you ask for advice.';	
 			}
+			else
+			{
+				var question = 'You can do better';
+			}
+			var chatItem = createOneChatItem(false, 'S-script', question, roundNumber);
+			showChat(chatItem, false, false);
+			chattingHistory.push([roundNumber, 'intrusion', false, 'intrusion']);
 		}
 	}
 
