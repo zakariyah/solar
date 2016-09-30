@@ -57,7 +57,7 @@ var FSMInfo = function()
                     endState: 'S6'
                 },
                 's': {
-                    messageIds: [5, 11],
+                    messageIds: [6, 11],
                     endState: 'S2'
                 }
             },

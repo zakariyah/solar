@@ -462,7 +462,12 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 
 	this.createHeaderOnly = function()
 	{
-		createOnlyHeader(getRoundNumber());	
+		createOnlyHeader(getRoundNumber());
+		this.intrudeToGetAttention();	
+	}
+
+	this.intrudeToGetAttention = function()
+	{
 		var roundNumber = getRoundNumber();
 		var numberOfRoundsBetweenFeedbacks = 7;
 		if(((roundNumber % numberOfRoundsBetweenFeedbacks) == 0) && roundNumber > 0)

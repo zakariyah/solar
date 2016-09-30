@@ -9,20 +9,13 @@ var mongoose = require('mongoose');
 enjoy: String,
 familiarity: String
 , risk: String,
-cooperative: String,
-forgiving: String,
-predictable: String,
-vengeful: String,
-selfish: String,
+age: String,
+gender: String,
 cooperative1: String,
 forgiving1: String,
 predictable1: String,
 vengeful1: String,
 selfish1: String,
-thought: String,
-preference: String,
-reason1:String,
-reason2:String
 });
 
 postQuizSurveySchema.statics.createPostQuiz = function(information) {
@@ -36,20 +29,13 @@ postQuizSurveySchema.statics.createPostQuiz = function(information) {
 enjoy: information.enjoy,
 familiarity: information.familiarity
 , risk: information.risk,
-cooperative: information.cooperative,
-forgiving: information.forgiving,
-predictable: information.predictable,
-vengeful: information.vengeful,
-selfish: information.selfish,
+age: information.age,
+gender: information.gender,
    		 cooperative1: information.cooperative1
 , forgiving1: information.forgiving1
 , predictable1: information.predictable1,
 vengeful1: information.vengeful1,
 selfish1: information.selfish1
-, thought: information.thought,
-preference: information.preference,
-reason1:information.reason1,
-reason2:information.reason2
     });
 
     newPostQuizSurvey.save(function(err) {

@@ -672,11 +672,14 @@ var PrisonersDilemma = function()
         htmlString += "<div class=\"panel panel-default \"><div class=\"panel-heading\"> Please fill in the survey below</div><div class=\"panel-body\">";
         htmlString += postQuizQuestions(playerHadRecommender, cummulative, numberOfRounds);
 
+        htmlString += "<div class='panel-footer'><button id='pagenext' >Next</button><button id='pagesubmit' style='display:none'>Submit</button></div>";
         htmlString += "</div></div>";
         var actionsElement = document.getElementById('fullPage');
         actionsElement.innerHTML = htmlString;
         document.getElementById('commentBox').innerHTML = '';
 	  	// document.getElementById('questionAndFeedback').innerHTML = '';	
+	  	var toCheckForNext = [['accessSkills', 'enjoy', 'familiarity', 'risk'], []];
+        new Quiz('page', 2, false, false, toCheckForNext);
 
 	}
 
@@ -693,7 +696,7 @@ var PrisonersDilemma = function()
 	{	
 		gameManager.startTimer();
 		var briefInfo = content.text;
-		console.log('brief ' + JSON.stringify(content));
+		// console.log('brief ' + JSON.stringify(content));
 		var myTotalPayoff = briefInfo.total;
 		var opponentTotal = briefInfo.totalOpponent;
 		gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
