@@ -465,9 +465,10 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		createOnlyHeader(getRoundNumber());	
 		var roundNumber = getRoundNumber();
 		var numberOfRoundsBetweenFeedbacks = 2;
-		if((roundNumber % numberOfRoundsBetweenFeedbacks) == 0)
+		if(((roundNumber % numberOfRoundsBetweenFeedbacks) == 0) && roundNumber > 0)
 		{
-			if(true) //contentFromServer.text.eventName == 's')
+			console.log('event name ' + contentFromServer.agentState.eventName);
+			if(contentFromServer.agentState.eventName == 's')
 			{
 				var question = contentFromServer.agentState.recommendation; //'Why don\'t you ask for advice.';
 				var chatItem = createOneChatItem(false, 'S-script', question, roundNumber);

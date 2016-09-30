@@ -75,26 +75,26 @@ var RecommenderViewOnGame = function(agent)
 			}
 			if(bully > 50)
 			{
-				opponentInfo.push('He seems to be a bully  <button class="button">Explain</button>');	
+				opponentInfo.push('Your associate seems to be a bully  <button class="button">Explain</button>');	
 			}
 			else
 			{
-				opponentInfo.push('He seems to be a nice guy <button class="button">Explain</button>');		
+				opponentInfo.push('Your associate seems to be a nice guy <button class="button">Explain</button>');		
 			}
 			if(reciprocateDefection > 50)
 			{
-				opponentInfo.push('He also tries to reciprocate seemingly bad behaviour <button class="button">Explain</button>');
+				opponentInfo.push('Your associate also tries to reciprocate seemingly bad behaviour <button class="button">Explain</button>');
 			}
 			if(round > thresholdRound)
 			{
 				var isLeader = properties.opponentIsLeader;
 				if(isLeader)
 				{
-					opponentInfo.push('He is also quite assertive <button class="button">Explain</button>');
+					opponentInfo.push('Your associate is also quite assertive <button class="button">Explain</button>');
 				}
 				else
 				{
-					opponentInfo.push('He is quite passive <button class="button">Explain</button>');
+					opponentInfo.push('Your associate is quite passive <button class="button">Explain</button>');
 				}
 			}
 		}
@@ -421,7 +421,7 @@ var RecommenderViewOnGame = function(agent)
 				if(vals == 1)
 				{
 					myOptions.push("Promote cooperation by always playing 'A'.");
-					myOptions.push("If your associate does not cooperate, punish him by playing 'B'. This is a great solution as cooperation will give both of you equally-high payoffs.");
+					myOptions.push("If your associate does not cooperate, punish him by playing 'B'. By doing so, cooperation will give both of you equally-high payoffs.");
 				}
 				else if(vals == 2)
 				{
@@ -454,7 +454,7 @@ var RecommenderViewOnGame = function(agent)
 				if(vals == 1)
 				{
 					myOptions.push("Always cooperate by playing 'A'. ");
-					myOptions.push("It's a great solution as cooperation will give both of you high and equal payoffs.");
+					myOptions.push("By doing so, cooperation will give both of you equally-high payoffs");
 				}
 				else if(vals == 2)
 				{
@@ -474,12 +474,12 @@ var RecommenderViewOnGame = function(agent)
 				else if(vals == 5)
 				{
 					myOptions.push("Always cooperate by playing 'A' ");	
-					myOptions.push("It seems your associate is expecting you to comply with him. He is likely to punish you in in future rounds if you don't. This is okay as you still do better that not cooperating at all.");
+					myOptions.push("It seems your associate is expecting you to comply with him. Your associate is likely to punish you in in future rounds if you don't. This is okay as you still do better that not cooperating at all.");
 				}
 				else if(vals == 6)
 				{
 					myOptions.push("Alternate between the two actions. ");
-					myOptions.push("If he is being cooperative, then alternate between (A, B). That way, you get a higher payoff.");
+					myOptions.push("If your associate is being cooperative, then alternate between (A, B). That way, you get a higher payoff.");
 				}
 			}
 			else if(expertName == 'minmax')
@@ -489,8 +489,8 @@ var RecommenderViewOnGame = function(agent)
 			}
 			else if(expertName == 'bestResponse')
 			{
-				myOptions.push("Play along with your associate. If he plays 'A', then reciprocate by playing 'A' too");
-				myOptions.push("Likewise if he plays B, then retaliate by also playing 'B'. ");
+				myOptions.push("Play along with your associate. If your associate plays 'A', then reciprocate by playing 'A' too");
+				myOptions.push("Likewise if your associate plays B, then retaliate by also playing 'B'. ");
 			}
 			else
 			{

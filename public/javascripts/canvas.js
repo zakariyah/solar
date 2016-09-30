@@ -457,7 +457,7 @@ var TimerFunction = function(countIn, intervalIn, periodicFunction, endFunction,
 
 var WaitingTimeElapsed = function(socket)
 {
-	var totalWaitingTime = 300;
+	var totalWaitingTime = 3;
 	var intervalWaiting = 1000;
 	var waitingTimePeriodicFunction = function(count)
 	{
@@ -572,8 +572,8 @@ var PrisonersDilemma = function()
 	var gameHistory = new GameHistory('gameHistory', 'gameHistoryTable', 'myTotalPayoff');
 	var hiitNumber = document.getElementById("hiitNumber").innerHTML;
 	
-	// var socket = io.connect('http://localhost:5000');
-	var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:5000/');
+	var socket = io.connect('http://localhost:5000');
+	// var socket = io.connect('http://ec2-52-88-237-252.us-west-2.compute.amazonaws.com:5000/');
 	var myCanvasContainer =  new CanvasContainer(socket);
 	var hasRecommender;
 
