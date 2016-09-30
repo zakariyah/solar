@@ -668,7 +668,7 @@ var PrisonersDilemma = function()
 	var endGame = function(cummulative, numberOfRounds, playerHadRecommender)
 	{
 		socket.emit('chatHistory', chatBox.getChattingHistory());
-		var htmlString = "<div class=\"alert alert-warning\"> Thank you very much, The game is over. You had a total of " + cummulative  +" points</div>";
+		var htmlString = "<div class=\"alert alert-warning\"> Thank you, the game is over. You had a total of " + cummulative  +" points</div>";
         htmlString += "<div class=\"panel panel-default \"><div class=\"panel-heading\"> Please fill in the survey below</div><div class=\"panel-body\">";
         htmlString += postQuizQuestions(playerHadRecommender, cummulative, numberOfRounds);
 
@@ -693,7 +693,7 @@ var PrisonersDilemma = function()
 	{	
 		gameManager.startTimer();
 		var briefInfo = content.text;
-		// console.log('brief ' + JSON.stringify(content));
+		console.log('brief ' + JSON.stringify(content));
 		var myTotalPayoff = briefInfo.total;
 		var opponentTotal = briefInfo.totalOpponent;
 		gameHistory.addToHistory([briefInfo.playerChoiceInNumber, briefInfo.opponentChoiceInNumber, myTotalPayoff])
@@ -716,7 +716,7 @@ var PrisonersDilemma = function()
 		// }
 		if(content.count == 0)
 		{
-			console.log('was called a');
+			// console.log('was called a');
 			waitingTimeElapsed. stopTimer();
 			hasRecommender = content.recommenderOptionValue;
 			// startRealGame(hasRecommender);

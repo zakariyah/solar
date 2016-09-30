@@ -147,6 +147,7 @@ var RecommenderViewOnGame = function(agent)
 		
 	}
 
+	this.eventName = '';
 
 	this.getRecommendation = function()
 	{
@@ -160,6 +161,7 @@ var RecommenderViewOnGame = function(agent)
 		var stateMachine;
 
 		var event  = getEventToFire(expertName);
+		this.eventName = event;
 		var options = ['A', 'B'];
 		var recommendation = recommender.latestChoice;
 
@@ -418,8 +420,8 @@ var RecommenderViewOnGame = function(agent)
 			{
 				if(vals == 1)
 				{
-					myOptions.push("Enforce cooperation by always playing 'A'.");
-					myOptions.push("If your associate does not cooperate, punish him by playing 'B'. This is a great solution as cooperation will give both of you high and equal payoffs.");
+					myOptions.push("Promote cooperation by always playing 'A'.");
+					myOptions.push("If your associate does not cooperate, punish him by playing 'B'. This is a great solution as cooperation will give both of you equally-high payoffs.");
 				}
 				else if(vals == 2)
 				{
@@ -439,12 +441,12 @@ var RecommenderViewOnGame = function(agent)
 				else if(vals == 5)
 				{
 					myOptions.push("Always cooperate. ");
-					myOptions.push("You continue to play 'A' even though your associate does not reciprocate. This is okay as you still do better that not cooperating at all.");
+					myOptions.push("You continue to play 'A' even if your associate does not reciprocate. This is okay as your associate might punish you if you do otherwise.");
 				}
 				else if(vals == 6)
 				{
 					myOptions.push("Alternate between the two actions. ");
-					myOptions.push("If he is being cooperative, then alternate between (A,B). You deserve a higher payoff if he lets you!");
+					myOptions.push("If your associate is being cooperative, then alternate between (A,B). You deserve a higher payoff if your associate lets you!");
 				}
 			}
 			else if(expertName == 'follower')
@@ -457,7 +459,7 @@ var RecommenderViewOnGame = function(agent)
 				else if(vals == 2)
 				{
 					myOptions.push("Protect yourself, always play 'B' ");
-					myOptions.push("You are at risk of being exploited so you need to protect yourself.");
+					myOptions.push("You are at risk of being exploited so you need to protect yourself by always playing 'B' to prevent further potential exploitation.");
 				}
 				else if(vals == 3)
 				{
@@ -488,7 +490,7 @@ var RecommenderViewOnGame = function(agent)
 			else if(expertName == 'bestResponse')
 			{
 				myOptions.push("Play along with your associate. If he plays 'A', then reciprocate by playing 'A' too");
-				myOptions.push("If he does otherwise, then retaliate by playing 'B'. ");
+				myOptions.push("Likewise if he plays B, then retaliate by also playing 'B'. ");
 			}
 			else
 			{
@@ -496,7 +498,19 @@ var RecommenderViewOnGame = function(agent)
 			}
 		}
 
-		myOptions[0] = '<b>' + myOptions[0] + '</b>';
+		for(var j = 0; j < myOptions.length; j += 2)
+		{
+			var ind = Math.floor(j/2);
+			if(j == 0)
+			{
+				myOptions[j] = '<b>Option 1: ' + myOptions[j] + '</b>';		
+			}
+			else
+			{
+				myOptions[j] = 'Option ' + (ind + 1) + ': ' + myOptions[j];
+			}
+		}
+		
 		// console.log('^^^^^^^^^^^^^^^^^^^^^done');
 		return [myOptions, whyForOptions];
 		
@@ -505,7 +519,7 @@ var RecommenderViewOnGame = function(agent)
 	this.getSolutionForRound = function()
 	{
 		console.log('round is here  ' + recommender.getRound());
-		return {'doBetter' : this.howToDoBetter(), 'reason' : this.getReason(), 'reasonOtherwise' : this.getReasonForNotDoingOtherwise(), 'whatAreMyOptions' : this.whatAreMyOptions(), 'recommendation' : this.getRecommendation(), 'opponentInfo' : this.getInformationAboutOpponent(), 'agentChoice' : recommender.latestChoice, 'agentVariables' : recommender.getAgentVariables()};
+		return {'doBetter' : this.howToDoBetter(), 'reason' : this.getReason(), 'reasonOtherwise' : this.getReasonForNotDoingOtherwise(), 'whatAreMyOptions' : this.whatAreMyOptions(), 'recommendation' : this.getRecommendation(), 'opponentInfo' : this.getInformationAboutOpponent(), 'agentChoice' : recommender.latestChoice, 'agentVariables' : recommender.getAgentVariables(), 'eventName' : this.eventName};
 	}
 }
 module.exports = RecommenderViewOnGame;

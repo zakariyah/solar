@@ -102,7 +102,7 @@ socket.on('serverMessage', function(content) {
     else
     {
       alert("here " + content.count + ": " + numberOfRounds + ":" + JSON.stringify(content));
-        var htmlString = "<div class=\"alert alert-warning\"> Thank you very much, The game is over</div>";
+        var htmlString = "<div class=\"alert alert-warning\"> Thank you, the game is over</div>";
         var actionsElement = document.getElementById('actions');
         actionsElement.innerHTML = htmlString;
         // goToURL("./postquizsurvey");

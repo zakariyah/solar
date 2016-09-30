@@ -559,7 +559,7 @@ var PrisonersDilemma = function()
 
 	var endGame = function(cummulative, numberOfRounds)
 	{
-		var htmlString = "<div class=\"alert alert-warning\"> Thank you very much, The game is over. You had a total of " + cummulative  +" points</div>";
+		var htmlString = "<div class=\"alert alert-warning\"> Thank you, the game is over. You had a total of " + cummulative  +" points</div>";
         htmlString += "<div class=\"panel panel-default \"><div class=\"panel-heading\"> Please fill in the survey below</div><div class=\"panel-body\">";
         var playerHadRecommender = false;
         htmlString += postQuizQuestions(playerHadRecommender, cummulative, numberOfRounds);

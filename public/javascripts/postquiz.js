@@ -3,7 +3,7 @@ function postQuizQuestions(hasRecommenders, cummulativeScore, numberOfRounds)
 	var postQuizHtmlQuiz = "<form name='postquizsurvey' method='post' action='./postquizsurvey' class='form-horizontal' role='form'><div class='form-group'>";
   
   postQuizHtmlQuiz += "<div class='form-group'><label><h2>";
-  postQuizHtmlQuiz += "In this part of the survey, we are interested in how you played the game and your perception of your fellow participant. Kindly choose one of the options to each question.";
+  postQuizHtmlQuiz += "We are interested in how you played the game and your perception of your fellow participant.";
   postQuizHtmlQuiz += "</h2></label></div>";
 
   postQuizHtmlQuiz += "<input type='hidden' name='cummulativeScore' value='" +cummulativeScore +"'>";
@@ -59,7 +59,7 @@ function postQuizQuestions(hasRecommenders, cummulativeScore, numberOfRounds)
 
 
     postQuizHtmlQuiz += "<div class='form-group'><label><h2>";
-  postQuizHtmlQuiz += "In this part of the survey, we will be asking questions related to your demography";
+  postQuizHtmlQuiz += "We will be asking questions related to your demography";
   postQuizHtmlQuiz += "</h2></label></div>";
 
 postQuizHtmlQuiz += "<div class='form-group'><label for='exampleInputEmail1' class='col-sm-2 control-label'>Age(years)</label><input type='hidden' name='q0' value='age'/>";  

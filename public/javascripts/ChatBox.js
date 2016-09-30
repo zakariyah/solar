@@ -2,7 +2,7 @@ var getExplanation = function(id, roundNumberVal)
 {
 		// return function()
 		// {
-	console.log('vall ' + id + ' : ' + roundNumberVal);
+	// console.log('vall ' + id + ' : ' + roundNumberVal);
 	document.getElementById(roundNumberVal + 'explanationbutton' + id).style.display = 'none';
 	document.getElementById(roundNumberVal + 'explanationspan' + id).style.display = 'block';
 		// }
@@ -240,7 +240,7 @@ var AgentStateSettings = function()
 				var spanId = roundNumberVal + 'explanationspan' + i;
 				var buttonId = roundNumberVal + 'explanationbutton' + i;
 				console.log('vale ' + roundNumberVal);
-				modifiedOptions.push(whatAreMyOptions[i] + "<button id='" +buttonId + "'  onclick='getExplanation("  + i + ", " + roundNumberVal + ")'> Explain </button> <span style='display:none' id = '" + spanId  + "'>" + whatAreMyOptions[i + 1] + "</span>");
+				modifiedOptions.push(whatAreMyOptions[i] + " <button id='" +buttonId + "'  onclick='getExplanation("  + i + ", " + roundNumberVal + ")'> Explain </button> <span style='display:none' id = '" + spanId  + "'>" + whatAreMyOptions[i + 1] + "</span>");
 			}
 		}
 		
@@ -378,7 +378,7 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		return chatItemHtml;
 	}
 
-	this.intrudePlayersGame =	  function(presentChoice)
+	this.intrudePlayersGame =function(presentChoice)
 	{
 		var warn = adherenceHistory.shouldTheExpertIntrude(presentChoice);
 		if(warn)
@@ -463,6 +463,18 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 	this.createHeaderOnly = function()
 	{
 		createOnlyHeader(getRoundNumber());	
+		var roundNumber = getRoundNumber();
+		var numberOfRoundsBetweenFeedbacks = 2;
+		if((roundNumber % numberOfRoundsBetweenFeedbacks) == 0)
+		{
+			if(true) //contentFromServer.text.eventName == 's')
+			{
+				var question = contentFromServer.agentState.recommendation; //'Why don\'t you ask for advice.';
+				var chatItem = createOneChatItem(false, 'S-script', question, roundNumber);
+				showChat(chatItem, false, false);
+				chattingHistory.push([roundNumber, 'intrusion', false, 'intrusion']);
+			}
+		}
 	}
 
 	var getRoundNumber = function()
@@ -571,7 +583,7 @@ var QuestionsToAsk = function(questionId, feedbackId, submitId, feedbackButtonId
 		{
 			chatBox.addHistory(history, contentFromServer.text.totalOpponent, contentFromServer.text.total);
 		}
-		chatBox.createHeaderOnly();
+		chatBox.createHeaderOnly();		
 	}
 
 	var refreshQuestions = function()
