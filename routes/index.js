@@ -73,25 +73,25 @@ router.get('/main', function(req, res) {
 
 router.post('/entryMain', function(req, res) {
 	var hiit = req.session.hiitNumber;
-	// if(typeof hiit === 'undefined')
-	// {
-	// 	res.render('inf ormationMain', { title: 'Entry', playerIsPresent : 'you are not known'});	
-	// 	return;
-	// }
+	if(typeof hiit === 'undefined')
+	{
+		res.render('inf ormationMain', { title: 'Entry', playerIsPresent : 'you are not known'});	
+		return;
+	}
 	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
 	entryVerifier(req, res, 'informationMain', 'entry', hiit);
 });
 
-router.get('/entryMain', function(req, res) {
-	var hiit = req.session.hiitNumber;
-	// if(typeof hiit === 'undefined')
-	// {
-	// 	res.render('informationMain', { title: 'Entry', playerIsPresent : 'you are not known'});	
-	// 	return;
-	// }
-	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
-	entryVerifier(req, res, 'informationMain', 'entry', hiit);
-});
+// router.get('/entryMain', function(req, res) {
+// 	var hiit = req.session.hiitNumber;
+// 	// if(typeof hiit === 'undefined')
+// 	// {
+// 	// 	res.render('informationMain', { title: 'Entry', playerIsPresent : 'you are not known'});	
+// 	// 	return;
+// 	// }
+// 	res.header('Cache-Control', 'no-cache, private, no-store, must-revalidate, max-stale=0, post-check=0, pre-check=0');
+// 	entryVerifier(req, res, 'informationMain', 'entry', hiit);
+// });
 
 router.get('/informationMain', function(req, res) {
   	res.render('informationMain', { title: 'Entry', playerIsPresent : ''});
@@ -100,7 +100,7 @@ router.get('/informationMain', function(req, res) {
 
 router.post('/postquizsurveyMain', function(req, res) {
 	req.body.playerid = req.session.hiitNumber;
-	console.log("session is: " + req.body.playerid);
+	// console.log("session is: " + req.body.playerid);
 	savePostQuiz(req);	
 	savePayment(req);
 	calculatePayment(req, res)	;
