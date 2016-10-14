@@ -109,6 +109,11 @@ var RecommenderViewOnGame = function(agent)
 				opponentInfo.push('Your associate is forgiving');
 				opponentInfo.push('Your associate often retaliates with a B when you play B after which he/she returns to playing A.');
 			}
+			else
+			{
+				opponentInfo.push('Your associate is not forgiving');
+				opponentInfo.push('Your associate often retaliates with a B when you play B after which he/she continues to play B.');
+			}
 
 		}
 		
