@@ -13,7 +13,7 @@ function isOneChecked(elementsName)
 
 function checkFormInput()
 {
-	var names = ['gender', 'age', 'cooperative1', 'forgiving1', 'vengeful1', 'selfish1', 'predictable1'];
+	var names = ['gender', 'age', 'cooperative1', 'forgiving1'];
 	for(var i in  names)
 	{
 		if(!isOneChecked(names[i]))
