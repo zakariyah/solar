@@ -667,7 +667,7 @@ var PrisonersDilemma = function()
 
 	var endGame = function(cummulative, numberOfRounds, playerHadRecommender)
 	{
-		socket.emit('chatHistory', chatBox.getChattingHistory());
+		// socket.emit('chatHistory', chatBox.getChattingHistory());
 		var htmlString = "<div class=\"alert alert-warning\"> Thank you, the game is over. You had a total of " + cummulative  +" points</div>";
         htmlString += "<div class=\"panel panel-default \"><div class=\"panel-heading\"> Please fill in the survey below</div><div class=\"panel-body\">";
         htmlString += postQuizQuestions(playerHadRecommender, cummulative, numberOfRounds);
@@ -688,8 +688,7 @@ var PrisonersDilemma = function()
 		if(content.agentState)
 		{
 			agentVariablesDiv.innerHTML  = (new AgentStateInfos()).getStatesText(content.agentState.agentVariables, content.recommendation);
-		}
-		
+		}		
 	}
 
 	var secondToLast = function(content)
