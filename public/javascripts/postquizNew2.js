@@ -157,26 +157,27 @@ htmlString += "<td><input type='radio' name='forgiving1' value='3'/> 3</td>";
 htmlString += "<td><input type='radio' name='forgiving1' value='4'/> 4</td>";
 htmlString += "<td><input type='radio' name='forgiving1' value='5'/> 5</td></tr>";
 
-htmlString += "<tr><td>Predictable</td>";
-htmlString += "<td><input type='radio' name='predictable1' value='1'/> 1</td>";
-htmlString += "<td> <input type='radio' name='predictable1' value='2'/> 2</td>";
-htmlString += "<td><input type='radio' name='predictable1' value='3'/> 3</td>";
-htmlString += "<td><input type='radio' name='predictable1' value='4'/> 4</td>";
-htmlString += "<td><input type='radio' name='predictable1' value='5'/> 5</td></tr>";
+// htmlString += "<tr><td>Predictable</td>";
+// htmlString += "<td><input type='radio' name='predictable1' value='1'/> 1</td>";
+// htmlString += "<td> <input type='radio' name='predictable1' value='2'/> 2</td>";
+// htmlString += "<td><input type='radio' name='predictable1' value='3'/> 3</td>";
+// htmlString += "<td><input type='radio' name='predictable1' value='4'/> 4</td>";
+// htmlString += "<td><input type='radio' name='predictable1' value='5'/> 5</td></tr>";
 
-htmlString += "<tr><td>Vengeful</td>";
-htmlString += "<td><input type='radio' name='vengeful1' value='1'/> 1</td>";
-htmlString += "<td> <input type='radio' name='vengeful1' value='2'/> 2</td>";
-htmlString += "<td><input type='radio' name='vengeful1' value='3'/> 3</td>";
-htmlString += "<td><input type='radio' name='vengeful1' value='4'/> 4</td>";
-htmlString += "<td><input type='radio' name='vengeful1' value='5'/> 5</td></tr>";
+// htmlString += "<tr><td>Vengeful</td>";
+// htmlString += "<td><input type='radio' name='vengeful1' value='1'/> 1</td>";
+// htmlString += "<td> <input type='radio' name='vengeful1' value='2'/> 2</td>";
+// htmlString += "<td><input type='radio' name='vengeful1' value='3'/> 3</td>";
+// htmlString += "<td><input type='radio' name='vengeful1' value='4'/> 4</td>";
+// htmlString += "<td><input type='radio' name='vengeful1' value='5'/> 5</td></tr>";
 
-htmlString += "<tr><td>Selfish</td>";
-htmlString += "<td><input type='radio' name='selfish1' value='1'/> 1</td>";
-htmlString += "<td> <input type='radio' name='selfish1' value='2'/> 2</td>";
-htmlString += "<td><input type='radio' name='selfish1' value='3'/> 3</td>";
-htmlString += "<td><input type='radio' name='selfish1' value='4'/> 4</td>";
-htmlString += "<td><input type='radio' name='selfish1' value='5'/> 5</td></tr>";
+// htmlString += "<tr><td>Selfish</td>";
+// htmlString += "<td><input type='radio' name='selfish1' value='1'/> 1</td>";
+// htmlString += "<td> <input type='radio' name='selfish1' value='2'/> 2</td>";
+// htmlString += "<td><input type='radio' name='selfish1' value='3'/> 3</td>";
+// htmlString += "<td><input type='radio' name='selfish1' value='4'/> 4</td>";
+// htmlString += "<td><input type='radio' name='selfish1' value='5'/> 5</td></tr>";
+
 htmlString += "</table></div></div>";
 
 htmlString += " <div class='form-group'><div class='col-sm-offset-6 col-sm-6'>";
