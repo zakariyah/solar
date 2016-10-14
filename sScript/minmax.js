@@ -14,7 +14,7 @@ var FSMInfo = function()
     Object.freeze(EVENTS);
 
     var MESSAGES = [
-        'minmax You did not follow my previous suggestion',
+        'You did not follow my previous suggestion',
         'You refused to follow my guidance',
         'Your associate is exploiting you, protect yourself!',
         'Minimize your possible loss ',

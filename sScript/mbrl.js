@@ -14,7 +14,7 @@ var FSMInfo = function()
     Object.freeze(EVENTS);
 
     var MESSAGES = [ // check messages here again
-        ' mbrl Let us try this',
+        ' Let us try this',
         ' You refused to follow my guidance',
         ' He has been cooperative!',
         ' Things are looking good',

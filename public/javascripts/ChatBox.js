@@ -8,6 +8,16 @@ var getExplanation = function(id, roundNumberVal)
 		// }
 }
 
+var getExplanationOpponent = function(id, roundNumberVal)
+{
+		// return function()
+		// {
+	// console.log('vall ' + id + ' : ' + roundNumberVal);
+	document.getElementById(roundNumberVal + 'explanationbutt' + id).style.display = 'none';
+	document.getElementById(roundNumberVal + 'explanationspa' + id).style.display = 'block';
+		// }
+}
+
 
 var AdherenceHistory = function()
 {
@@ -189,11 +199,48 @@ var AgentStateSettings = function()
 		return agentState.agentChoice;
 	}
 
+	this.getWhatAreMyOptions = function(agentState, roundNumberVal)
+	{
+		// console.log('what are my options ' + agentState.whatAreMyOptions[0].length);
+		var whatAreMyOptions = agentState.whatAreMyOptions[0];
+		var modifiedOptions = [];
+		if(whatAreMyOptions.length % 2 ==0)
+		{
+			for(var i = 0; i < whatAreMyOptions.length; i+= 2)
+			{
+				var spanId = roundNumberVal + 'explanationspan' + i;
+				var buttonId = roundNumberVal + 'explanationbutton' + i;
+				// console.log('vale ' + roundNumberVal);
+				modifiedOptions.push(whatAreMyOptions[i] + " <button id='" +buttonId + "'  onclick='getExplanation("  + i + ", " + roundNumberVal + ")'> Explain </button> <span style='display:none' id = '" + spanId  + "'>" + whatAreMyOptions[i + 1] + "</span>");
+			}
+		}
+		
+		return [modifiedOptions, ''];
+		// return agentState.whatAreMyOptions;
+	}
+
 	this.getOpponentInfoHtml = function(agentState, round)
 	{
 		var opponentState = agentState.opponentInfo;
 
-		return opponentState;
+		// round = round + 'opp';
+		var modifiedOptions = [];
+		if(opponentState.length % 2 ==0)
+		{
+			for(var i = 0; i < opponentState.length; i+= 2)
+			{
+				var spanId = round + 'explanationspa' + i;
+				var buttonId = round + 'explanationbutt' + i;
+				// console.log('vale ' + roundNumberVal);
+				modifiedOptions.push(opponentState[i] + " <button id='" +buttonId + "'  onclick='getExplanationOpponent("  + i + ", " + round + ")'> Explain </button> <span style='display:none' id = '" + spanId  + "'>" + opponentState[i + 1] + "</span>");
+			}
+		}
+		
+		console.log('modifiedOptions ' + modifiedOptions);	
+		return modifiedOptions;
+
+
+		// return opponentState;
 	}
 
 	this.getRecommendation = function(agentState, round)
@@ -213,40 +260,13 @@ var AgentStateSettings = function()
 	{
 		return agentState.reasonOtherwise;
 	}
-		
-	// var getExplanation = function(spanId, buttonId)
-	// {
-	// 	return function()
-	// 	{
-	// 		document.getElementById(buttonId).style.display = 'none';
-	// 		document.getElementById(spanId).style.display = 'inline';
-	// 	}
-	// }
 
 	this.getHowToDoBetter = function(agentState)
 	{
 		return agentState.doBetter;
 	}
 
-	this.getWhatAreMyOptions = function(agentState, roundNumberVal)
-	{
-		// console.log('what are my options ' + agentState.whatAreMyOptions[0].length);
-		var whatAreMyOptions = agentState.whatAreMyOptions[0];
-		var modifiedOptions = [];
-		if(whatAreMyOptions.length % 2 ==0)
-		{
-			for(var i = 0; i < whatAreMyOptions.length; i+= 2)
-			{
-				var spanId = roundNumberVal + 'explanationspan' + i;
-				var buttonId = roundNumberVal + 'explanationbutton' + i;
-				console.log('vale ' + roundNumberVal);
-				modifiedOptions.push(whatAreMyOptions[i] + " <button id='" +buttonId + "'  onclick='getExplanation("  + i + ", " + roundNumberVal + ")'> Explain </button> <span style='display:none' id = '" + spanId  + "'>" + whatAreMyOptions[i + 1] + "</span>");
-			}
-		}
-		
-		return [modifiedOptions, ''];
-		// return agentState.whatAreMyOptions;
-	}
+
 }	
 
 
@@ -551,6 +571,7 @@ var ChatBox = function(chatItemId, myCanvasContainer, adherenceHistory)
 		{
 			var question = isQuestion ? questions[questionNumber] : feedbacks[questionNumber];
 			var answer = getAnswerToQuestion(questionNumber, isQuestion);
+			console.log('length of answer is ' + answer.length + ' : ' + answer);
 			saveQuestionAndAnswer(question, answer);	
 			var roundNumber = getRoundNumber();
 			this.addToChatList(question, answer, roundNumber, buttonClicked, (isQuestion && (questionNumber == 1)));

@@ -51,7 +51,7 @@ var RecommenderViewOnGame = function(agent)
 	var getInformationAboutOpponentAtRoundWithProp = function(round, properties)
 	{
 		var opponentInfo = [];
-		var thresholdRound = 10;
+		var thresholdRound = 5;
 		if(round == 0)
 		{
 			opponentInfo.push('I can\'t say anything about the other player.');
@@ -63,6 +63,10 @@ var RecommenderViewOnGame = function(agent)
 			var bully = properties.bully;
 			var reciprocity = properties.reciprocity;
 			var reciprocateDefection = properties.reciprocateDefection;
+			var coop = properties.coop;
+			var lenient = properties.lenient;
+			var forgiveness = properties.forgiveness;
+
 			if(round < thresholdRound)
 			{
 				opponentInfo.push('The game is still quite fresh');
@@ -71,33 +75,42 @@ var RecommenderViewOnGame = function(agent)
 			}
 			else if(round < thresholdRound * 2)
 			{
-				opponentInfo.push('The game is still quite fresh but');
-			}
-			if(bully > 50)
-			{
-				opponentInfo.push('Your associate seems to be a bully  <button class="button">Explain</button>');	
-			}
-			else
-			{
-				opponentInfo.push('Your associate seems to be a nice guy <button class="button">Explain</button>');		
-			}
-			if(reciprocateDefection > 50)
-			{
-				opponentInfo.push('Your associate also tries to reciprocate seemingly bad behaviour <button class="button">Explain</button>');
-			}
-			if(round > thresholdRound)
-			{
-				var isLeader = properties.opponentIsLeader;
-				if(isLeader)
+				
+				if(coop > 50)
 				{
-					opponentInfo.push('Your associate is also quite assertive <button class="button">Explain</button>');
+					opponentInfo.push('So far, your associate seems willing to cooperate');
+					opponentInfo.push('Your associate has chosen option A more often that option B, if you reciprocate, you can both get a payoff of 3.');
 				}
 				else
 				{
-					opponentInfo.push('Your associate is quite passive <button class="button">Explain</button>');
+					opponentInfo.push('So far, your associate does not seem willing to cooperate');
+					opponentInfo.push('Your associate has chosen option B more often that option A.');
 				}
+
+				return opponentInfo;
 			}
+
+			if(bully > 50)
+			{
+				opponentInfo.push('Your associate seems to be a bully');	
+				opponentInfo.push('Your associate keeps choosing B while you chose A.');
+				return opponentInfo;
+			}
+
+			if(lenient)
+			{
+				opponentInfo.push('Your associate is lenient <button class="button">Explain</button>');
+				opponentInfo.push('Your associate is willing to choose A even after you chose B.');
+			}
+			
+			if(forgiveness)
+			{
+				opponentInfo.push('Your associate played A after  <button class="button">Explain</button>');	
+				opponentInfo.push('Your associate often retaliates with a B when you play B after which he/she returns to playing A.');
+			}
+
 		}
+		
 		return opponentInfo;
 	}
 

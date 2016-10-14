@@ -638,11 +638,6 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	}
 
 
-	
-
-	
-
-
 	this.setAspirationHigh = function()
 	{
 		if(this.REcount == 0)
@@ -799,6 +794,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		var nice = history[0][1] == 1;
 		var bul = 0;
 		var recD = [0,0];
+		var coop = 0;
 		for(var i = 0; i < history.length; i++)
 		{
 			if(i != 0)
@@ -822,8 +818,72 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 			{
 				bul += 1;
 			}
+
+			if(history[i][1] == 0)
+			{
+				coop += 1;
+			}
 		}
 
+	var lenient = 0;
+	var forgiveness = 0;
+	var lenientPossibility = 0;
+	var forgivenessPossibility = 0;
+
+	if(history.length > 6)
+	{
+		for (var i = history.length - 1; i > history.length - 6; i--)
+    	{
+	      	if(history[i - 1][0] == 0)
+	      	{
+	      		if(history[i][1] == 0) // check 2 consecutive rounds
+	      		{
+	        		lenient += 1;
+	      		}
+	      		lenientPossibility += 1;
+	      	}	
+	      	
+	      	if((history[i-2][0] == 1) & (history[i-1][1] == 1)) // check 3 consecutive rounds
+			{
+				if(history[i][1] == 0)
+				{
+					forgiveness += 1;
+				}
+				forgivenessPossibility += 1;
+			}
+    	}	
+
+    	if(forgivenessPossibility == 0)
+    	{
+    		forgiveness = false;
+    	}
+    	else
+    	{
+    		if(forgiveness/ forgivenessPossibility >= 0.5)
+    		{
+    			forgiveness = true;
+    		}
+    	}
+
+    	if(lenientPossibility == 0)
+    	{
+    		lenient = false;
+    	}
+    	else
+    	{
+    		if(lenient / lenientPossibility >= 0.5)
+    		{
+    			lenient = true;
+    		}
+    	}
+	}
+	else
+	{
+		lenient = false;
+		forgiveness = false;
+	}
+		
+		
 		if(recD[1] == 0)
 		{
 			recD = 0;
@@ -834,11 +894,12 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 		}
 		var reciprocity = rec / history.length * 100;
 		var bully = bul / history.length * 100;
+		coop = (coop/ history.length) * 100;
 		var niceness = nice;
 		var reciprocity = reciprocity.toFixed(2);
 		var bully = bully.toFixed(2);
 
-		return {reciprocity : reciprocity, bully : bully, niceness : niceness, reciprocateDefection : recD};
+		return {reciprocity : reciprocity, bully : bully, niceness : niceness, reciprocateDefection : recD, coop: coop, lenient:lenient, forgiveness: forgiveness};
 	}
 
 

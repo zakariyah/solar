@@ -14,7 +14,7 @@ var FSMInfo = function()
     Object.freeze(EVENTS);
 
     var MESSAGES = [
-        'f6 Alternate between {A} and {B}',
+        'Alternate between {A} and {B}',
         'You did not follow my previous suggestion',
         'You refused to follow my guidance',
         'Your associate did not comply',

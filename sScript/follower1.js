@@ -15,7 +15,7 @@ var FSMInfo = function()
     Object.freeze(EVENTS);
 
     var MESSAGES = [
-        'f1 Always play A',
+        'Always play A',
         'You did not follow my previous suggestion',
         'You refused to follow my guidance',
         'Your associate did not comply',
