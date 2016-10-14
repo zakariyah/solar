@@ -54,7 +54,7 @@ var RecommenderViewOnGame = function(agent)
 		var thresholdRound = 5;
 		if(round == 0)
 		{
-			opponentInfo.push('I can\'t say anything about the other player.');
+			opponentInfo.push('I can\'t say anything about your associate yet.');
 			opponentInfo.push('The game has just started');
 		}
 		else
@@ -69,8 +69,8 @@ var RecommenderViewOnGame = function(agent)
 
 			if(round < thresholdRound)
 			{
-				opponentInfo.push('The game is still quite fresh');
-				opponentInfo.push('I can\'t really say anything about the other player');
+				opponentInfo.push('It is still early in the game');
+				opponentInfo.push('I don\'t know much about your associate');
 				return opponentInfo;
 			}
 			else if(round < thresholdRound * 2)
@@ -99,13 +99,14 @@ var RecommenderViewOnGame = function(agent)
 
 			if(lenient)
 			{
-				opponentInfo.push('Your associate is lenient <button class="button">Explain</button>');
+				opponentInfo.push('Your associate is lenient.');
 				opponentInfo.push('Your associate is willing to choose A even after you chose B.');
+				return opponentInfo;
 			}
 			
 			if(forgiveness)
 			{
-				opponentInfo.push('Your associate played A after  <button class="button">Explain</button>');	
+				opponentInfo.push('Your associate is forgiving');
 				opponentInfo.push('Your associate often retaliates with a B when you play B after which he/she returns to playing A.');
 			}
 
