@@ -834,7 +834,7 @@ function jefe_plus(nombre, _me, _A, _M, _lambda ) //, _game[1024])
 	{
 		for (var i = history.length - 1; i > history.length - 6; i--)
     	{
-	      	if(history[i - 1][0] == 1)
+	      	if(history[i - 1][0] == 1 & history[i-1][1] == 0)
 	      	{
 	      		if(history[i][1] == 0) // check 2 consecutive rounds
 	      		{
